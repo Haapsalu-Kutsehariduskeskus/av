@@ -122,7 +122,7 @@ Web-tehnoloogia areng ja kulude vähenemine andsid hoogu LAN-i ja WAN-i konverge
 - **2000ndad:** mõõdetav mobiilsete terminalide kasv, interaktiivsete teenuste, mängude ja voogedastuse ilmumine.
 - **2010ndad:** IoT (Internet of Things) ja IoE (Internet of Everything) kontseptsioonide tekkimine.
 
-!IoT Humor](https://64.media.tumblr.com/97976c958cd9375747e2222e8ed04dc7/1f0c65287b4bbee3-af/s1280x1920/9a3a3ca1fc36db639e69e10191913e9f001b4536.jpg)
+ ![IoT Humor](https://64.media.tumblr.com/97976c958cd9375747e2222e8ed04dc7/1f0c65287b4bbee3-af/s1280x1920/9a3a3ca1fc36db639e69e10191913e9f001b4536.jpg)
 
 
 ### Question:
