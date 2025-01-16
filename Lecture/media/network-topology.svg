@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+    <!-- Background -->
+    <rect width="800" height="400" fill="white"/>
+    
+    <!-- Customer PC -->
+    <rect x="50" y="50" width="60" height="50" fill="#B8D1E6" stroke="#666"/>
+    <text x="80" y="120" text-anchor="middle" font-size="12">Customer PC</text>
+    
+    <!-- Customer Switch -->
+    <path d="M200 150 h60 v30 h-60 v-30" fill="#B8D1E6" stroke="#666"/>
+    <text x="230" y="200" text-anchor="middle" font-size="12">2960-24TT</text>
+    <text x="230" y="215" text-anchor="middle" font-size="12">Customer Switch</text>
+    
+    <!-- Local Server -->
+    <rect x="50" y="250" width="60" height="80" fill="#B8D1E6" stroke="#666"/>
+    <text x="80" y="350" text-anchor="middle" font-size="12">Server-PT</text>
+    <text x="80" y="365" text-anchor="middle" font-size="12">Local Server</text>
+    
+    <!-- Customer Router -->
+    <circle cx="350" cy="165" r="30" fill="#B8D1E6" stroke="#666"/>
+    <text x="350" y="215" text-anchor="middle" font-size="12">1841</text>
+    <text x="350" y="230" text-anchor="middle" font-size="12">Customer Router</text>
+    
+    <!-- ISP Router -->
+    <circle cx="500" cy="165" r="30" fill="#B8D1E6" stroke="#666"/>
+    <text x="500" y="215" text-anchor="middle" font-size="12">1841</text>
+    <text x="500" y="230" text-anchor="middle" font-size="12">ISP Router</text>
+    
+    <!-- ISP Switch -->
+    <path d="M600 150 h60 v30 h-60 v-30" fill="#B8D1E6" stroke="#666"/>
+    <text x="630" y="200" text-anchor="middle" font-size="12">2960-24TT</text>
+    <text x="630" y="215" text-anchor="middle" font-size="12">ISP Switch</text>
+    
+    <!-- ISP Server -->
+    <rect x="700" y="250" width="60" height="80" fill="#B8D1E6" stroke="#666"/>
+    <text x="730" y="350" text-anchor="middle" font-size="12">Server-PT</text>
+    <text x="730" y="365" text-anchor="middle" font-size="12">ISP Server</text>
+    
+    <!-- ISP Workstation -->
+    <rect x="700" y="50" width="60" height="50" fill="#B8D1E6" stroke="#666"/>
+    <text x="730" y="120" text-anchor="middle" font-size="12">ISP Workstation</text>
+    
+    <!-- Connections -->
+    <line x1="110" y1="75" x2="200" y2="165" stroke="green" stroke-width="2"/>
+    <line x1="80" y1="250" x2="200" y2="180" stroke="green" stroke-width="2"/>
+    <line x1="260" y1="165" x2="320" y2="165" stroke="green" stroke-width="2"/>
+    <line x1="380" y1="165" x2="470" y2="165" stroke="red" stroke-width="2"/>
+    <line x1="530" y1="165" x2="600" y2="165" stroke="green" stroke-width="2"/>
+    <line x1="660" y1="165" x2="700" y2="75" stroke="green" stroke-width="2"/>
+    <line x1="660" y1="180" x2="700" y2="290" stroke="green" stroke-width="2"/>
+</svg>

@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+    <!-- Title -->
+    <text x="400" y="40" text-anchor="middle" font-size="24" font-weight="bold">MAC Address Format (48 bits)</text>
+    
+    <!-- Example MAC address -->
+    <text x="400" y="70" text-anchor="middle" font-size="16">Example: 00:1A:2B:3C:4D:5E</text>
+
+    <!-- 6 Octets Arrow -->
+    <path d="M100,85 L700,85" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="400" y="80" text-anchor="middle" font-size="14">6 Octets</text>
+
+    <!-- Arrow definitions -->
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50"/>
+        </marker>
+    </defs>
+
+    <!-- Main 6 Octets Box -->
+    <g transform="translate(100, 100)">
+        <!-- Background rectangles for octets -->
+        <rect x="0" y="0" width="600" height="60" fill="#f8f9fa" stroke="#2c3e50"/>
+        
+        <!-- Octet divisions -->
+        <line x1="100" y1="0" x2="100" y2="60" stroke="#2c3e50"/>
+        <line x1="200" y1="0" x2="200" y2="60" stroke="#2c3e50"/>
+        <line x1="300" y1="0" x2="300" y2="60" stroke="#2c3e50"/>
+        <line x1="400" y1="0" x2="400" y2="60" stroke="#2c3e50"/>
+        <line x1="500" y1="0" x2="500" y2="60" stroke="#2c3e50"/>
+        
+        <!-- Octet labels -->
+        <text x="50" y="35" text-anchor="middle">1st Octet</text>
+        <text x="150" y="35" text-anchor="middle">2nd Octet</text>
+        <text x="250" y="35" text-anchor="middle">3rd Octet</text>
+        <text x="350" y="35" text-anchor="middle">4th Octet</text>
+        <text x="450" y="35" text-anchor="middle">5th Octet</text>
+        <text x="550" y="35" text-anchor="middle">6th Octet</text>
+    </g>
+
+    <!-- OUI and NIC Division Arrows -->
+    <path d="M100,185 L400,185" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <path d="M400,185 L700,185" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="250" y="180" text-anchor="middle" font-size="14">3 Octets</text>
+    <text x="550" y="180" text-anchor="middle" font-size="14">3 Octets</text>
+
+    <!-- OUI and NIC Division -->
+    <g transform="translate(100, 200)">
+        <rect x="0" y="0" width="300" height="60" fill="#ff7f50" stroke="#2c3e50"/>
+        <rect x="300" y="0" width="300" height="60" fill="#87ceeb" stroke="#2c3e50"/>
+        
+        <text x="150" y="35" text-anchor="middle" fill="white">Manufacturer ID (OUI)</text>
+        <text x="450" y="35" text-anchor="middle" fill="white">Device ID (NIC)</text>
+    </g>
+
+    <!-- First Byte Arrow -->
+    <path d="M100,305 L400,305" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="250" y="300" text-anchor="middle" font-size="14">8 bits</text>
+
+    <!-- First Byte Breakdown -->
+    <g transform="translate(100, 320)">
+        <!-- Bits box -->
+        <rect x="0" y="0" width="300" height="60" fill="#dcdcdc" stroke="#2c3e50"/>
+        
+        <!-- Bit divisions -->
+        <line x1="37.5" y1="0" x2="37.5" y2="60" stroke="#2c3e50"/>
+        <line x1="75" y1="0" x2="75" y2="60" stroke="#2c3e50"/>
+        <line x1="112.5" y1="0" x2="112.5" y2="60" stroke="#2c3e50"/>
+        <line x1="150" y1="0" x2="150" y2="60" stroke="#2c3e50"/>
+        <line x1="187.5" y1="0" x2="187.5" y2="60" stroke="#2c3e50"/>
+        <line x1="225" y1="0" x2="225" y2="60" stroke="#2c3e50"/>
+        <line x1="262.5" y1="0" x2="262.5" y2="60" stroke="#2c3e50"/>
+        
+        <!-- Bit labels -->
+        <text x="18.75" y="35" text-anchor="middle">b7</text>
+        <text x="56.25" y="35" text-anchor="middle">b6</text>
+        <text x="93.75" y="35" text-anchor="middle">b5</text>
+        <text x="131.25" y="35" text-anchor="middle">b4</text>
+        <text x="168.75" y="35" text-anchor="middle">b3</text>
+        <text x="206.25" y="35" text-anchor="middle">b2</text>
+        <text x="243.75" y="35" text-anchor="middle">b1</text>
+        <text x="281.25" y="35" text-anchor="middle">b0</text>
+    </g>
+
+    <!-- Connecting lines from bits to explanations -->
+    <path d="M381.25,350 L450,420" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <path d="M343.75,350 L450,500" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Special Bits Explanation -->
+    <g transform="translate(450, 420)">
+        <!-- Unicast/Multicast -->
+        <rect x="0" y="0" width="250" height="60" fill="#98fb98" stroke="#2c3e50"/>
+        <text x="125" y="35" text-anchor="middle" font-size="14">b0: Unicast (0) / Multicast (1)</text>
+        
+        <!-- Global/Local -->
+        <rect x="0" y="80" width="250" height="60" fill="#dda0dd" stroke="#2c3e50"/>
+        <text x="125" y="115" text-anchor="middle" font-size="14">b1: Global (0) / Local (1)</text>
+    </g>
+</svg>

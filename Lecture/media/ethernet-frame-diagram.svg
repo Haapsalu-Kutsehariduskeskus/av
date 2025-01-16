@@ -1,0 +1,100 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Ethernet II Frame -->
+    <g transform="translate(50,30)">
+        <text x="0" y="-10" font-size="14" font-weight="bold">Ethernet II Frame</text>
+        <!-- Frame components -->
+        <rect x="0" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="100" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="200" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="300" y="0" width="50" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="350" y="0" width="200" height="40" fill="#ffffff" stroke="black"/>
+        <rect x="550" y="0" width="80" height="40" fill="#ffffc0" stroke="black"/>
+        
+        <!-- Labels -->
+        <text x="50" y="25" text-anchor="middle" font-size="12">Preamble</text>
+        <text x="150" y="25" text-anchor="middle" font-size="12">Destination</text>
+        <text x="250" y="25" text-anchor="middle" font-size="12">Source</text>
+        <text x="325" y="25" text-anchor="middle" font-size="12">Type</text>
+        <text x="450" y="25" text-anchor="middle" font-size="12">Data</text>
+        <text x="590" y="25" text-anchor="middle" font-size="12">FCS</text>
+        
+        <!-- Byte sizes -->
+        <text x="50" y="-5" text-anchor="middle" font-size="10">8 bytes</text>
+        <text x="150" y="-5" text-anchor="middle" font-size="10">6 bytes</text>
+        <text x="250" y="-5" text-anchor="middle" font-size="10">6 bytes</text>
+        <text x="325" y="-5" text-anchor="middle" font-size="10">2 bytes</text>
+        <text x="590" y="-5" text-anchor="middle" font-size="10">4 bytes</text>
+    </g>
+
+    <!-- IEEE 802.3 Frame -->
+    <g transform="translate(50,120)">
+        <text x="0" y="-10" font-size="14" font-weight="bold">IEEE 802.3 Frame</text>
+        <!-- Frame components -->
+        <rect x="0" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="100" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="200" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="300" y="0" width="50" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="350" y="0" width="200" height="40" fill="#ffffff" stroke="black"/>
+        <rect x="550" y="0" width="80" height="40" fill="#ffffc0" stroke="black"/>
+        
+        <!-- Labels -->
+        <text x="50" y="25" text-anchor="middle" font-size="12">Preamble</text>
+        <text x="150" y="25" text-anchor="middle" font-size="12">Destination</text>
+        <text x="250" y="25" text-anchor="middle" font-size="12">Source</text>
+        <text x="325" y="25" text-anchor="middle" font-size="12">Length</text>
+        <text x="450" y="25" text-anchor="middle" font-size="12">Data</text>
+        <text x="590" y="25" text-anchor="middle" font-size="12">FCS</text>
+    </g>
+
+    <!-- IEEE 802.3 Frame with LLC -->
+    <g transform="translate(50,210)">
+        <text x="0" y="-10" font-size="14" font-weight="bold">IEEE 802.3 Frame with LLC</text>
+        <!-- Frame components -->
+        <rect x="0" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="100" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="200" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="300" y="0" width="50" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="350" y="0" width="40" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="390" y="0" width="40" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="430" y="0" width="40" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="470" y="0" width="80" height="40" fill="#ffffff" stroke="black"/>
+        <rect x="550" y="0" width="80" height="40" fill="#ffffc0" stroke="black"/>
+        
+        <!-- Labels -->
+        <text x="50" y="25" text-anchor="middle" font-size="12">Preamble</text>
+        <text x="150" y="25" text-anchor="middle" font-size="12">Destination</text>
+        <text x="250" y="25" text-anchor="middle" font-size="12">Source</text>
+        <text x="325" y="25" text-anchor="middle" font-size="12">Length</text>
+        <text x="370" y="25" text-anchor="middle" font-size="12">DSAP</text>
+        <text x="410" y="25" text-anchor="middle" font-size="12">SSAP</text>
+        <text x="450" y="25" text-anchor="middle" font-size="12">CTRL</text>
+        <text x="510" y="25" text-anchor="middle" font-size="12">Data</text>
+        <text x="590" y="25" text-anchor="middle" font-size="12">FCS</text>
+    </g>
+
+    <!-- IEEE 802.3 Frame with LLC/SNAP -->
+    <g transform="translate(50,300)">
+        <text x="0" y="-10" font-size="14" font-weight="bold">IEEE 802.3 Frame with LLC/SNAP</text>
+        <!-- Frame components -->
+        <rect x="0" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="100" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="200" y="0" width="100" height="40" fill="#ffffc0" stroke="black"/>
+        <rect x="300" y="0" width="50" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="350" y="0" width="50" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="400" y="0" width="50" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="450" y="0" width="50" height="40" fill="#ffb0b0" stroke="black"/>
+        <rect x="500" y="0" width="50" height="40" fill="#ffffff" stroke="black"/>
+        <rect x="550" y="0" width="80" height="40" fill="#ffffc0" stroke="black"/>
+        
+        <!-- Labels -->
+        <text x="50" y="25" text-anchor="middle" font-size="12">Preamble</text>
+        <text x="150" y="25" text-anchor="middle" font-size="12">Destination</text>
+        <text x="250" y="25" text-anchor="middle" font-size="12">Source</text>
+        <text x="325" y="25" text-anchor="middle" font-size="12">Length</text>
+        <text x="375" y="25" text-anchor="middle" font-size="12">LLC</text>
+        <text x="425" y="25" text-anchor="middle" font-size="12">OUI</text>
+        <text x="475" y="25" text-anchor="middle" font-size="12">Type</text>
+        <text x="525" y="25" text-anchor="middle" font-size="12">Data</text>
+        <text x="590" y="25" text-anchor="middle" font-size="12">FCS</text>
+    </g>
+</svg>
