@@ -165,31 +165,12 @@ Nii lihtne see ongi!
 
 Oletame, et oled IT-administraator ja pead leidma, millisesse võrku kuulub arvuti IP-aadressiga 192.168.10.5.
 
-```mermaid version-8.8.0
+```mermaid
 graph TD
-    subgraph "1. Algandmed"
-        A[IP: 192.168.10.5]
-        B[Mask: 255.255.255.0]
-    end
-    
-    subgraph "2. Binaarkuju"
-        C["IP:  11000000.10101000.00001010.00000101"]
-        D["Mask: 11111111.11111111.11111111.00000000"]
-    end
-    
-    subgraph "3. AND operatsioon"
-        E["AND = 11000000.10101000.00001010.00000000"]
-    end
-    
-    subgraph "4. Tulemus"
-        F[Võrguaadress: 192.168.10.0]
-    end
-    
-    A --> C
-    B --> D
-    C --> E
-    D --> E
-    E --> F
+    A[192.168.10.5] --> C[11000000.10101000.00001010.00000101]
+    B[255.255.255.0] --> D[11111111.11111111.11111111.00000000]
+    C & D --> E[11000000.10101000.00001010.00000000]
+    E --> F[192.168.10.0]
 ```
 
 ## Lähteandmed
