@@ -1,0 +1,46 @@
+<svg viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+    <!-- Application Data -->
+    <g transform="translate(20, 20)">
+        <rect width="200" height="40" fill="#f9f9f9" stroke="#333" stroke-width="1"/>
+        <text x="100" y="25" text-anchor="middle" font-family="Arial" font-size="12">Rakenduse Andmed</text>
+    </g>
+    
+    <!-- Arrow 1 -->
+    <g transform="translate(120, 65)">
+        <line x1="0" y1="0" x2="0" y2="20" stroke="#333" stroke-width="1"/>
+        <polygon points="-3,20 3,20 0,25" fill="#333"/>
+        <text x="35" y="15" font-family="Arial" font-size="10">+ TCP Päis</text>
+    </g>
+    
+    <!-- TCP Segment -->
+    <g transform="translate(20, 95)">
+        <rect width="200" height="40" fill="#e6f3ff" stroke="#333" stroke-width="1"/>
+        <text x="100" y="25" text-anchor="middle" font-family="Arial" font-size="12">TCP Segment</text>
+    </g>
+    
+    <!-- Arrow 2 -->
+    <g transform="translate(120, 140)">
+        <line x1="0" y1="0" x2="0" y2="20" stroke="#333" stroke-width="1"/>
+        <polygon points="-3,20 3,20 0,25" fill="#333"/>
+        <text x="35" y="15" font-family="Arial" font-size="10">+ IP Päis</text>
+    </g>
+    
+    <!-- IP Packet -->
+    <g transform="translate(20, 170)">
+        <rect width="200" height="40" fill="#e6ffe6" stroke="#333" stroke-width="1"/>
+        <text x="100" y="25" text-anchor="middle" font-family="Arial" font-size="12">IP Pakett</text>
+    </g>
+    
+    <!-- Arrow 3 -->
+    <g transform="translate(120, 215)">
+        <line x1="0" y1="0" x2="0" y2="20" stroke="#333" stroke-width="1"/>
+        <polygon points="-3,20 3,20 0,25" fill="#333"/>
+        <text x="40" y="15" font-family="Arial" font-size="10">+ Ethernet Päis</text>
+    </g>
+    
+    <!-- Ethernet Frame -->
+    <g transform="translate(20, 245)">
+        <rect width="200" height="40" fill="#ffe6e6" stroke="#333" stroke-width="1"/>
+        <text x="100" y="25" text-anchor="middle" font-family="Arial" font-size="12">Ethernet Kaader</text>
+    </g>
+</svg>

@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 700">
+  <!-- Title -->
+  <text x="350" y="30" font-size="16" font-weight="bold">NETWORK</text>
+  <text x="350" y="50" font-size="14">192.168.0.0/24</text>
+  
+  <!-- Main circle -->
+  <circle cx="400" cy="300" r="200" fill="none" stroke="black" stroke-width="1"/>
+  
+  <!-- Vertical and horizontal dividing lines -->
+  <line x1="400" y1="100" x2="400" y2="500" stroke="black" stroke-width="1"/>
+  <line x1="200" y1="300" x2="600" y2="300" stroke="black" stroke-width="1"/>
+  
+  <!-- Subnet labels -->
+  <text x="250" y="200" font-size="12">Subnet</text>
+  <text x="250" y="220" font-size="12">192.168.0.192/26</text>
+  
+  <text x="450" y="200" font-size="12">Subnet</text>
+  <text x="450" y="220" font-size="12">192.168.0.0/26</text>
+  
+  <text x="250" y="400" font-size="12">Subnet</text>
+  <text x="250" y="420" font-size="12">192.168.0.128/26</text>
+  
+  <text x="450" y="400" font-size="12">Subnet</text>
+  <text x="450" y="420" font-size="12">192.168.0.64/26</text>
+  
+  <!-- Multiple dots well outside the circle -->
+  <!-- Top quadrant -->
+  <circle cx="340" cy="70" r="2" fill="black"/>
+  <circle cx="355" cy="70" r="2" fill="black"/>
+  <circle cx="370" cy="70" r="2" fill="black"/>
+  <circle cx="385" cy="70" r="2" fill="black"/>
+  <circle cx="400" cy="70" r="2" fill="black"/>
+  <circle cx="415" cy="70" r="2" fill="black"/>
+  <circle cx="430" cy="70" r="2" fill="black"/>
+  <circle cx="445" cy="70" r="2" fill="black"/>
+  <circle cx="460" cy="70" r="2" fill="black"/>
+  
+  <!-- Right quadrant -->
+  <circle cx="630" cy="240" r="2" fill="black"/>
+  <circle cx="630" cy="255" r="2" fill="black"/>
+  <circle cx="630" cy="270" r="2" fill="black"/>
+  <circle cx="630" cy="285" r="2" fill="black"/>
+  <circle cx="630" cy="300" r="2" fill="black"/>
+  <circle cx="630" cy="315" r="2" fill="black"/>
+  <circle cx="630" cy="330" r="2" fill="black"/>
+  <circle cx="630" cy="345" r="2" fill="black"/>
+  <circle cx="630" cy="360" r="2" fill="black"/>
+  
+  <!-- Bottom quadrant -->
+  <circle cx="340" cy="530" r="2" fill="black"/>
+  <circle cx="355" cy="530" r="2" fill="black"/>
+  <circle cx="370" cy="530" r="2" fill="black"/>
+  <circle cx="385" cy="530" r="2" fill="black"/>
+  <circle cx="400" cy="530" r="2" fill="black"/>
+  <circle cx="415" cy="530" r="2" fill="black"/>
+  <circle cx="430" cy="530" r="2" fill="black"/>
+  <circle cx="445" cy="530" r="2" fill="black"/>
+  <circle cx="460" cy="530" r="2" fill="black"/>
+  
+  <!-- Left quadrant -->
+  <circle cx="170" cy="240" r="2" fill="black"/>
+  <circle cx="170" cy="255" r="2" fill="black"/>
+  <circle cx="170" cy="270" r="2" fill="black"/>
+  <circle cx="170" cy="285" r="2" fill="black"/>
+  <circle cx="170" cy="300" r="2" fill="black"/>
+  <circle cx="170" cy="315" r="2" fill="black"/>
+  <circle cx="170" cy="330" r="2" fill="black"/>
+  <circle cx="170" cy="345" r="2" fill="black"/>
+  <circle cx="170" cy="360" r="2" fill="black"/>
+  
+  <!-- Numbers in counter-clockwise order at each quadrant -->
+  <!-- Top -->
+  <text x="385" y="90" font-size="12" fill="black">254</text>
+  <text x="385" y="105" font-size="12" fill="green">255</text>
+  <text x="385" y="120" font-size="12" fill="red">0</text>
+  <text x="385" y="135" font-size="12" fill="black">1</text>
+  
+  <!-- Right -->
+  <text x="610" y="285" font-size="12" fill="black">62</text>
+  <text x="610" y="300" font-size="12" fill="green">63</text>
+  <text x="610" y="315" font-size="12" fill="red">64</text>
+  <text x="610" y="330" font-size="12" fill="black">65</text>
+  
+  <!-- Bottom -->
+  <text x="385" y="485" font-size="12" fill="black">126</text>
+  <text x="385" y="500" font-size="12" fill="green">127</text>
+  <text x="385" y="515" font-size="12" fill="red">128</text>
+  <text x="385" y="530" font-size="12" fill="black">129</text>
+  
+  <!-- Left -->
+  <text x="180" y="285" font-size="12" fill="black">193</text>
+  <text x="180" y="300" font-size="12" fill="red">192</text>
+  <text x="180" y="315" font-size="12" fill="green">191</text>
+  <text x="180" y="330" font-size="12" fill="black">190</text>
+  
+  <!-- Legend -->
+  <rect x="600" y="100" width="150" height="80" fill="white" stroke="black"/>
+  <text x="610" y="120" font-size="10" fill="red">— Subnet address /26</text>
+  <text x="610" y="140" font-size="10" fill="green">— Last subnet address /26</text>
+  <text x="610" y="160" font-size="10">— Subnet node addresses /26</text>
+  
+  <!-- Table -->
+  <rect x="150" y="570" width="500" height="100" fill="none" stroke="black"/>
+  
+  <!-- Table headers with black background -->
+  <rect x="150" y="570" width="150" height="25" fill="black"/>
+  <rect x="300" y="570" width="200" height="25" fill="black"/>
+  <rect x="500" y="570" width="150" height="25" fill="black"/>
+  
+  <text x="160" y="587" font-size="10" fill="white">Network Address</text>
+  <text x="310" y="587" font-size="10" fill="white">Host Addresses</text>
+  <text x="510" y="587" font-size="10" fill="white">Broadcast Address</text>
+  
+  <!-- Table content with alternating backgrounds -->
+  <rect x="150" y="595" width="500" height="19" fill="#f0f0f0"/>
+  <rect x="150" y="614" width="500" height="19" fill="white"/>
+  <rect x="150" y="633" width="500" height="19" fill="#f0f0f0"/>
+  <rect x="150" y="652" width="500" height="18" fill="white"/>
+  
+  <text x="160" y="608" font-size="10">192.168.0.0/26</text>
+  <text x="310" y="608" font-size="10">192.168.0.1-192.168.0.62</text>
+  <text x="510" y="608" font-size="10">192.168.0.63</text>
+  
+  <text x="160" y="627" font-size="10">192.168.0.64/26</text>
+  <text x="310" y="627" font-size="10">192.168.0.65-192.168.0.126</text>
+  <text x="510" y="627" font-size="10">192.168.0.127</text>
+  
+  <text x="160" y="646" font-size="10">192.168.0.128/26</text>
+  <text x="310" y="646" font-size="10">192.168.0.129-192.168.0.190</text>
+  <text x="510" y="646" font-size="10">192.168.0.191</text>
+  
+  <text x="160" y="665" font-size="10">192.168.0.192/26</text>
+  <text x="310" y="665" font-size="10">192.168.0.193-192.168.0.254</text>
+  <text x="510" y="665" font-size="10">192.168.0.255</text>
+  
+  <!-- Table grid lines -->
+  <line x1="300" y1="570" x2="300" y2="670" stroke="black"/>
+  <line x1="500" y1="570" x2="500" y2="670" stroke="black"/>
+</svg>
