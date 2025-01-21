@@ -1,4 +1,4 @@
-**Teema 8: TCP/IP protokolli ülevaade. Kuidas ARP töötab.
+# Teema 8: TCP/IP protokolli ülevaade. Kuidas ARP töötab.
 
 ## Sissejuhatus
 TCP/IP protokollide kogum on võrgusuhtluse selgroog, mida kasutatakse laialdaselt interneti ja kohalike võrkude toimimiseks. Selle loengu käigus tutvume TCP/IP stäki põhielementidega, sealhulgas andmepakettide struktuuri, nende edastamise ja juhtimise protsessidega.
@@ -430,7 +430,7 @@ graph TB
     end
 ```
 
-![Default Gateway Diagram](https://www.researchgate.net/profile/Abdul-Hadi-Alaidi/publication/346108941/figure/fig49/AS:989391661064197@1612900762956/Default-Gateway-Computer-17610161-needs-to-send-a-data-transmission-to-the-computer.png)
+![Default Gateway Diagram](./media/Default-Gateway-Computer-needs-to-send-a-data-transmission.png) 
 
 ## 💡 Küsimus
 

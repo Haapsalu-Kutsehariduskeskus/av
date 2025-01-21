@@ -1,4 +1,4 @@
-**Teema 9: IP-aadressid: Klassid, CIDR, VLSM ja Privaat/Hallid IP-d
+# Teema 9: IP-aadressid: Klassid, CIDR, VLSM ja Privaat/Hallid IP-d
 
 ## IP-aadressid: Klassid, CIDR, VLSM ja Privaat/Hallid IP-d
 
@@ -165,7 +165,7 @@ Nii lihtne see ongi!
 
 Oletame, et oled IT-administraator ja pead leidma, millisesse võrku kuulub arvuti IP-aadressiga 192.168.10.5.
 
-```mermaid
+```mermaid version-8.8.0
 graph TD
     subgraph "1. Algandmed"
         A[IP: 192.168.10.5]
