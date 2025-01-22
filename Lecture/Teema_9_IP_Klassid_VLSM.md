@@ -347,6 +347,148 @@ Kuna gruppidel on **erinevad suurused**, on VLSM sobiv valik. See tagab IP-aadre
 ![Subnet cheatsheet](./media/cheat_sheet_VLSM.png)  
 **Subnettimise spikker:** See spikker on kiire juhend, mis aitab arvutada ja mõista subneti suurusi ning nendele vastavaid prefiksi pikkusi.
 
+### Võrgumaskide tabel ja kasutusvõimalused
+
+Võrgumaskide tabel on võrguinseneride jaoks oluline tööriist, mida kasutatakse võrgu segmentatsiooni ja aadresside haldamisel. See sarnaneb korrutustabeliga, mida insenerid peavad sageli käsitlema. Tavaliselt on sellised tabelid kergesti ligipääsetavad ja tihti nähtaval kohal, näiteks kinnitatuna kontori seinale.
+
+---
+
+## Võrgumaski tähistused
+Maski saab esitada kahes vormingus:
+- **Detsimaalne kujul:** `255.255.255.0`
+- **Prefiksina:** `/24`
+
+Mõlemad tähistused viitavad samale võrgule, kuid seadmetes võivad nõuded varieeruda. Näiteks:
+- **Cisco seadmed** nõuavad täielikku detsimaalset maski.
+- **Juniper või Huawei seadmed** toetavad lihtsustatud prefiksi kasutust (nt `/24`).
+
+---
+
+## Maskide kasutamine praktilistes ülesannetes
+1. **Väikeste võrkude loomiseks:** Kui vajate ühendamiseks ainult paari aadressi (nt kahe seadme vahel), saate kasutada maske nagu `/30` või `/31`.
+2. **Suurte võrkude haldamiseks:** Maskid nagu `/16` või `/22` sobivad suurte segmentide jaoks, kuid neid kasutatakse peamiselt aadressiruumi optimeerimiseks.
+3. **Universaalne mask `/0`:** Viitab kogu IP-aadressi ruumile, mida kasutatakse marsruutimise kontekstis.
+
+## Marsruutimistabel ja maskide laiendus
+Marsruutimistabelis võivad esineda erineva suurusega võrgud:
+- **Mask `/0`:** Kogu aadressiruum (kasutatakse vaikimarsruudina).
+- **Mask `/22`:** Füüsilise võrgu suurim segment (1024 aadressi).
+- **Mask `/16` ja suuremad:** Kasutatakse suuremate võrkude agregatsiooniks.
+
+## Soovitused
+- **Kalkulaatorid:** Soovitatav on kasutada võrgu- ja marsruutimaskide kalkulaatorit, mis aitab kiiremini arvutada vajalikke aadressiruume ja maske. Enamik insenere kasutab selliseid kalkulaatoreid mobiilirakendustena.
+- **Maskide meelespidamine:** Kuigi kalkulaator on mugav, on oluline osata maske lugeda ja arvutada ka käsitsi.
+- **Tööriistad erinevate seadmete jaoks:** Enne võrgu konfigureerimist uurige, millist maski esitamise vormingut teie seadmed toetavad.
+
+![Subnet Mask with hosts](https://1.bp.blogspot.com/-6ea6t9OKFGI/XUjosAdnRYI/AAAAAAAAMOw/LDGdYCcQZqIPKGeBddPMiLLMSplYLCz1gCLcBGAs/s1600/IP%2BSubnetting.png)
+
+---
+
+## Erinevad viisid alamvõrkude arvutamiseks
+
+1. **Binaarne Meetod:**
+   ```
+   192.168.1.50 = 11000000.10101000.00000001.00110010
+   /26 mask    = 11111111.11111111.11111111.11000000
+   ```
+   - Võrgu osa: Esimesed 26 bitti
+   - Hosti osa: Viimased 6 bitti (32-26bitti)
+   - Eelis: Täpne, näitab täpselt bittide jaotust
+   - Puudus: Aeganõudev
+
+2. **Kiirmeetod:**
+   ```
+   /26 puhul:
+   - 32-26 = 6 bitti hostidele
+   - 2^6 = 64 aadressi kokku
+   - 64 - 2 = 62 kasutatavat hosti
+   ```
+   - Eelis: Kiire arvutada
+   - Puudus: Ei näita võrgu struktuuri
+
+3. **Maski Meetod:**
+   ```
+   /26 mask: 255.255.255.192
+   Alamvõrgu suurus = 256 - 192 = 64
+   ```
+   - Võrgu aadressid: .0, .64, .128, .192
+   - Eelis: Hea suurte võrkude puhul
+   - Puudus: Vajab oktettide teadmist
+
+4. **Tabelimeetod:**
+   
+   | CIDR | Mask       | Alamvõrgu suurus |
+   |------|------------|------------------|
+   | /24  | 255.255.255.0   | 256 |
+   | /25  | 255.255.255.128 | 128 |
+   | /26  | 255.255.255.192 | 64  |
+   | /27  | 255.255.255.224 | 32  |
+
+Praktiline näide:
+1. IP: 192.168.1.50/26
+2. Kiirmeetodiga:
+   - 64 aadressi alamvõrgus
+   - Alamvõrgu piirid: 0-63, 64-127, 128-191, 192-255
+   - 50 kuulub esimesse alamvõrku (0-63)
+3. Võrgu ID: 192.168.1.0
+4. Broadcast: 192.168.1.63
+5. Kasutatavad IP-d: 192.168.1.1 - 192.168.1.62
+
+Soovitused:
+- Algajatele: Alusta kiirmeetodiga
+- Võrguadministraatoritele: Õpi kõik meetodid
+- Eksamiteks: Harjuta binaarset meetodit
+- Igapäevaseks kasutamiseks: Kasuta tabelimeetodit
+
+```mermaid
+graph TD
+    A[Algne Võrk /24] --> B[192.168.1.0-255]
+    B --> C[Alamvõrk 1 /26<br/>192.168.1.0-63]
+    B --> D[Alamvõrk 2 /26<br/>192.168.1.64-127]
+    B --> E[Alamvõrk 3 /26<br/>192.168.1.128-191]
+    B --> F[Alamvõrk 4 /26<br/>192.168.1.192-255]
+    
+    C --> G[Võrgu ID:<br/>192.168.1.0]
+    C --> H[Kasutatavad IP-d:<br/>192.168.1.1-62]
+    C --> I[Leviedastus:<br/>192.168.1.63]
+
+    style A fill:#f9f,stroke:#333
+    style B fill:#bbf,stroke:#333
+    style C fill:#dfd,stroke:#333
+    style D fill:#dfd,stroke:#333
+    style E fill:#dfd,stroke:#333
+    style F fill:#dfd,stroke:#333
+```
+
+
+1. Hostide arvu leidmine alamvõrgus:
+   Valem on: Hostide arv = 2^(32-prefiksi_pikkus) - 2
+
+/24 alamvõrgu puhul:
+- 2^(32-24) - 2 = 2^8 - 2 = 254 kasutatavat hosti
+- Kokku aadresse: 256 (koos võrgu ja leviedastuse aadressidega)
+
+/26 alamvõrgu puhul:
+- 2^(32-26) - 2 = 2^6 - 2 = 62 kasutatavat hosti
+- Kokku aadresse: 64 (koos võrgu ja leviedastuse aadressidega)
+
+Siin on selge ülevaatlik tabel:
+
+| Võrgumask | Kokku IP-sid | Kasutatavaid Hoste | Võrgu ID | Leviedastus |
+|-----------|--------------|-------------------|-----------|-------------|
+| /24       | 256         | 254               | .0        | .255        |
+| /26       | 64          | 62                | .0, .64, .128, .192 | .63, .127, .191, .255 |
+
+Ülalolev diagramm näitab, kuidas /24 võrk jagatakse neljaks /26 alamvõrguks. Iga /26 alamvõrk:
+- Sisaldab 64 aadressi kokku
+- Omab 62 kasutatavat hosti aadressi
+- Sisaldab 1 võrgu ID ja 1 leviedastuse aadressi
+
+Näiteks esimeses /26 alamvõrgus (192.168.1.0-63):
+- Võrgu ID: 192.168.1.0
+- Kasutatavad hostid: 192.168.1.1 kuni 192.168.1.62
+- Leviedastuse aadress: 192.168.1.63
+
 ---
 
 ### 🎯 **VLSM Ülesanne Klassis**  
@@ -378,6 +520,8 @@ Kuna gruppidel on **erinevad suurused**, on VLSM sobiv valik. See tagab IP-aadre
 1. Leia iga alamvõrgu jaoks vajalik aadressiruum vastavalt vajalike hostide arvule.
 2. Kasuta **VLSM-i** (Variable Length Subnet Mask), alustades suurimatest alamvõrkudest (Marketing) ja liikudes väiksemate poole.
 3. Täida tabel sammhaaval, et kindlustada kõik alamvõrgud mahuvad aadressiruumi.
+
+---
 
 ---
 
