@@ -36,14 +36,12 @@ IP-aadressid on fundamentaalsed võrgu suhtluses, võimaldades seadmetel teinete
 ![Bit and Byte](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.highspeedinternet.com%2Fapp%2Fuploads%2F2020%2F09%2Fhsi_bits-bytes_3-100.jpg&f=1&nofb=1&ipt=cda3585c2011c7bcee2705d7e842fb881e50559874b9555b70fa5a896061188d&ipo=images)
 
 
-### 📜 Ajaloolised IP-aadresside klassid ( NOT USED!!!!)
+### 📜 Ajaloolised IP-aadresside klassid
 
 ![Bit and Byte](https://assets.gcore.pro/blog/what-is-a-subnet-how-subnetting-works/what-is-a-subnet-how-subnetting-works-2.png)
 Alguses jagati IP-aadressid klassideks nende jaotamise määratlemiseks:
 
 Siin on selgitus "klassipõhise adresseerimise" (Classful Addressing) kohta, mis oli algne viis IP-aadresse jagada võrgu- ja hostiosaks:
-
----
 
 ### **Klassipõhine IP-aadresside jaotus**
 IP-aadressid (IPv4) jagatakse 5 klassi: A, B, C, D ja E. Need klassid määravad, kuidas aadress jagatakse võrgu- ja hostiosaks.
@@ -102,18 +100,14 @@ IPv4 kasutab **32-bitiseid aadresse**, andes ligikaudu **4,3 miljardit unikaalse
 
 ### **Reserveeritud aadressid** 🛑  
 
-Here’s a table summarizing **reserved IP ranges, CAN'T BE USED in LOCAL NETWORK:
-
-Based on the content from your image, here's a table summarizing the five IP address usage types mentioned in the text:
-
-| **#** | **IP Address/Concept**           | **Description**                                                                                 | **Example**           |
+Siin on tabel, mis võtab kokku **reserveeritud IP-vahemikud, MIDA EI SAA KASUTADA KOHALIKUS VÕRGUS**:
+| **#** | **IP-aadress/Kontseptsioon** | **Kirjeldus** | **Näide** |
 |-------|----------------------------------|-------------------------------------------------------------------------------------------------|-----------------------|
-| 1     | **Loopback Address**             | Reserved for loopback testing within the same device. Messages do not leave the device.        | `127.0.0.1`           |
-| 2     | **0.0.0.0 (Unspecified Address)** | Indicates an uninitialized or undefined address. Often used in DHCP and routing tables.        | `0.0.0.0`             |
-| 3     | **Network Address**              | Indicates the network portion of an IP address. The host bits are all set to `0`.              | `195.33.19.0`         |
-| 4     | **Broadcast Address**            | Used to send packets to all hosts on the network. The host bits are all set to `1`.            | `195.33.19.255`       |
-| 5     | **Limited Broadcast Address**    | Used to send packets to all devices on the local network but not beyond.                       | `255.255.255.255`     |
-
+| 1 | **Tagasiühenduse aadress (Loopback)** | Reserveeritud tagasiühenduse testimiseks sama seadme piires. Sõnumid ei välju seadmest. | `127.0.0.1` |
+| 2 | **0.0.0.0 (Määramata aadress)** | Näitab initsialiseerimata või määratlemata aadressi. Kasutatakse sageli DHCP-s ja marsruutimistabelites. | `0.0.0.0` |
+| 3 | **Võrgu aadress** | Tähistab IP-aadressi võrguosa. Hosti bitid on kõik seatud `0`-le. | `195.33.19.0` |
+| 4 | **Leviedastuse aadress (Broadcast)** | Kasutatakse pakettide saatmiseks kõigile hostidele võrgus. Hosti bitid on kõik seatud `1`-le. | `195.33.19.255` |
+| 5 | **Piiratud leviedastuse aadress** | Kasutatakse pakettide saatmiseks kõigile seadmetele kohalikus võrgus, kuid mitte kaugemale. | `255.255.255.255` |
 ---
 ## Võrgumask
 
@@ -131,26 +125,33 @@ Mõlemad tähendavad sama asja: võrguosa koosneb esimesest 24 bitist.
 - **/16** = 255.255.0.0 → 65,536 aadressi  
 - **/22** = 255.255.252.0 → 1024 aadressi  
 
-### **Miks kasutada prefiksit?** 🚀  
+#### **Miks kasutada prefiksit?** 🚀  
 See on **kompaktsem** ja lihtsam viis subnet mask'i kirjutamiseks
 
 ---
 
-### Milleks võrgumask?
+### Milleks võrgumask? 🔍
 
-Iga kord kui täidate IP-aadressi, lisate ka maski. Mask näitab kuidas jaguneb IP-aadress hosti ja võrgu osaks.
+**Võrgumaski põhiroll**
+- IP-aadressi juurde käib alati ka mask
+- Mask määrab ära, kuidas IP-aadress jaguneb:
+  - Võrguosa (Network portion)
+  - Hostiosa (Host portion)
 
-**Milleks seda arvutamist vaja?**
-Iga kord kui seade saadab paketti, peab ta tuvastama:
-- Kas see on minu sisemise või välimise võrgu jaoks?
-- Kui ta võtab aadressi ja enda maskiga arvutab:
-  - Saab enda võrgu = järelikult sisevõrk
-  - Ei saa enda võrku = järelikult välisvõrk, peab pöörduma ruuteri/gateway poole
+**Praktiline kasutus seadmetes** 💻
+Kui seade peab saatma andmepaketti, toimub järgmine kontroll:
 
-Kui saadetakse enda võrku  - kasutatakse ARPi protokoli
-Kui saadetakse välja - appi läheb Default Gateway
+1. **Sihtkoha tuvastamine:**
+   - Kas pakett läheb sisevõrku või välisvõrku?
+   - Seade võtab sihtaadressi ja arvutab oma maskiga
 
-Nii lihtne see ongi!
+2. **Otsuste tegemine:**
+   - Kui tulemus = enda võrk → käsitleb sisevõrgu paketina
+   - Kui tulemus ≠ enda võrk → käsitleb välisvõrgu paketina
+
+3. **Edasine tegutsemine:**
+   - Sisevõrgu puhul: kasutatakse ARP protokolli
+   - Välisvõrgu puhul: suunatakse Default Gateway'le (ruuterile)
 
 1. **Võrgumaski ülesehitus:**
    - Koosneb neljast okteti (8-bitisest numbrist)
@@ -248,83 +249,93 @@ CIDR loob paindliku aadressijaotuse, kasutades subnet mask'i (või prefiksimärg
 
 CIDR-i kasutuselevõtt oli revolutsiooniline samm Interneti-skaalautuvuse ja aadressiruumi parema haldamise suunas. 🚦
 
-#### 🧮 Näide **CIDR-iga** ja **ilma CIDR-ita**
+### 🧮 CIDR Võrdlus: Tavaline vs. Optimeeritud Marsruutimine
 
-#### **Ilma CIDR-ita**:
-Oletame, et sul on järgmised alamvõrgud, mida on vaja ruuteris hallata:
-- **192.168.0.0/24**
-- **192.168.1.0/24**
-- **192.168.2.0/24**
-- **192.168.3.0/24**
-
-Igaüks neist on eraldi võrk ja ruuter peab need kõik eraldi kirjetena marsruutimistabelis hoidma:
-Ruuteril on nüüd neli kirjet, mis tähendab suuremat tabelit ja rohkem töötlemist.
-**Marsruutimistabel**:
-- 192.168.0.0/24
-- 192.168.1.0/24
-- 192.168.2.0/24
-- 192.168.3.0/24
-
-#### **CIDR-iga**:
-Kõik need alamvõrgud saab summariseerida üheks suuremaks võrguks: **192.168.0.0/22**.
-CIDR-iga saab ruuter need neli alamvõrku esitada ühe kirjena. See vähendab marsruutimistabeli suurust ja optimeerib ruuteri tööd.
+#### 1️⃣ Klassikaline Lähenemine (Ilma CIDR-ita)
+Kujuta ette, et pead hallata järgmisi alamvõrke ruuteris:
 
 **Marsruutimistabel**:
-- 192.168.0.0/22
+```
+192.168.0.0/24
+192.168.1.0/24
+192.168.2.0/24
+192.168.3.0/24
+```
+
+**Mida see tähendab?** 🤔
+- Iga alamvõrk vajab eraldi kirjet
+- Ruuter peab haldama 4 eraldi võrgukirjet
+- Suurem ressursikasutus ja aeglasem töötlemine
+- Rohkem mälukasutust marsruutimistabelis
+
+#### 2️⃣ Optimeeritud Lähenemine (CIDR-iga)
+Sama võrgustiku saab esitada palju efektiivsemalt:
+
+**Marsruutimistabel**:
+```
+192.168.0.0/22
+```
+
+**Eelised** ✨
+- Üks kirje katab kõik neli alamvõrku
+- Väiksem marsruutimistabel
+- Kiirem pakettide töötlemine
+- Efektiivsem mälukasutus
+
+> 💡 **Võti:** CIDR võimaldab mitme järjestikuse võrgu koondamist üheks suuremaks üksuseks, muutes võrguhalduse märkimisväärselt efektiivsemaks.
 
 ---
 
-## ✂️ Subnetting (Fixed Subnet Mask)
+## ✂️ Võrgu Segmenteerimine ehk Fikseeritud Võrgumask ( Subnetting).
 
-- **All subnets are the same size.**
-- **Single Subnet Mask** is applied across all subnets.
-- **Wastes IPs if the subnets don’t need equal addresses.**
+- **Kõik alamvõrgud on sama suurusega.**
+- **Ühtne võrgumask** rakendub kõigile alamvõrkudele.
+- **Raiskab IP-aadresse kui alamvõrgud ei vaja võrdset hulka aadresse.**
 
-#### Example:
-We have the network **192.168.45.0/24** and need to divide it into 4 subnets.
+#### Näide:
+Meil on võrk **192.168.45.0/24** ja peame selle jagama 4 alamvõrguks.
+- Võrgumask kõigile alamvõrkudele: `/26` (64 aadressi igaühes).
+- Alamvõrgud:
+  - Alamvõrk 1: 192.168.45.0 - 192.168.45.63 (/26)
+  - Alamvõrk 2: 192.168.45.64 - 192.168.45.127 (/26)
+  - Alamvõrk 3: 192.168.45.128 - 192.168.45.191 (/26)
+  - Alamvõrk 4: 192.168.45.192 - 192.168.45.255 (/26)
 
-- Subnet mask for all subnets: `/26` (64 addresses each).
-- Subnets:
-  - Subnet 1: 192.168.45.0 - 192.168.45.63 (/26)
-  - Subnet 2: 192.168.45.64 - 192.168.45.127 (/26)
-  - Subnet 3: 192.168.45.128 - 192.168.45.191 (/26)
-  - Subnet 4: 192.168.45.192 - 192.168.45.255 (/26)
-
-**Problem**: If one subnet only needs 5 addresses and another needs 120, you're forced to waste IPs.
-
+**Probleem**: Kui üks alamvõrk vajab ainult 5 aadressi ja teine 120, olete sunnitud IP-aadresse raiskama.
 
 ![Circle Subnetting](./media/VLSM.svg)  
 
-## ✂️ VLSM (Variable Length Subnet Masking)
+## ✂️ VLSM - Variable Length Subnet Masking (Muutuva Pikkusega Alamvõrgu Maskeerimine)
 
-- **Each subnet has a different size**, based on need.
-- Allows you to assign only as many addresses as required, using **different subnet masks** for each group.
-- **Saves IP addresses.**
+- **Iga alamvõrk on erineva suurusega**, vastavalt vajadusele.
+- Võimaldab määrata täpselt vajaliku arvu aadresse, kasutades **erinevaid võrgumaske** igale grupile.
+- **Säästab IP-aadresse.**
 
-#### Example:
-We have the network **192.168.45.0/24** and the following needs:
-- Group 1: 120 people
-- Group 2: 62 people
-- Group 3: 25 people
-- Others: Small groups (10, 5, etc.)
+#### Näide:
+Meil on võrk **192.168.45.0/24** ja järgmised vajadused:
+- Grupp 1: 120 inimest
+- Grupp 2: 62 inimest
+- Grupp 3: 25 inimest
+- Teised: Väikesed grupid (10, 5, jne.)
 
-Using VLSM:
-- Group 1: `/25` (128 addresses, 192.168.45.0 - 192.168.45.127)
-- Group 2: `/26` (64 addresses, 192.168.45.128 - 192.168.45.191)
-- Group 3: `/27` (32 addresses, 192.168.45.192 - 192.168.45.223)
-- Smaller groups: `/28`, `/29`, `/30`, etc.
+VLSM kasutamine:
+- Grupp 1: `/25` (128 aadressi, 192.168.45.0 - 192.168.45.127)
+- Grupp 2: `/26` (64 aadressi, 192.168.45.128 - 192.168.45.191)
+- Grupp 3: `/27` (32 aadressi, 192.168.45.192 - 192.168.45.223)
+- Väiksemad grupid: `/28`, `/29`, `/30`, jne.
 
 ---
 
-### Key Differences
-| Aspect                | Subnetting                  | VLSM                          |
-|-----------------------|-----------------------------|--------------------------------|
-| **Subnet Size**       | All subnets are equal.      | Subnets have variable sizes.  |
-| **Address Efficiency**| Wastes IPs for smaller groups. | Conserves IPs by fitting exact needs. |
-| **Subnet Mask**       | Same for all subnets.       | Different subnet masks used.  |
+### Peamised Erinevused
 
-### Why VLSM is Better:
-For your task, since the groups have **different sizes**, VLSM is the appropriate choice. It ensures efficient use of IP addresses while meeting each group's requirements.
+| Aspekt | Tavaline Segmenteerimine | VLSM |
+|-----------------------|-----------------------------|--------------------------------|
+| **Alamvõrgu Suurus** | Kõik alamvõrgud on võrdsed | Alamvõrgud on muutuva suurusega |
+| **Aadresside Efektiivsus** | Raiskab IP-sid väiksemate gruppide jaoks | Säästab IP-sid täpsete vajaduste järgi |
+| **Võrgumask** | Sama kõigile alamvõrkudele | Kasutatakse erinevaid võrgumaske |
+
+### Miks VLSM on Parem:
+Kuna gruppidel on **erinevad suurused**, on VLSM sobiv valik. See tagab IP-aadresside tõhusa kasutamise, rahuldades samal ajal iga grupi vajadused.
 
 ---
 
@@ -369,6 +380,7 @@ For your task, since the groups have **different sizes**, VLSM is the appropriat
 3. Täida tabel sammhaaval, et kindlustada kõik alamvõrgud mahuvad aadressiruumi.
 
 ---
+
 ### 🛡 NAT (Network Address Translation)
 NAT võimaldab privaatsetel IP-del suhelda internetis, teisendades need ruuteri kaudu avalikuks IP-ks. See säästab IP-aadressiruumi ja parandab turvalisust.
 

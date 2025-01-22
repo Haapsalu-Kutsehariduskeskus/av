@@ -241,26 +241,27 @@ Teen IP paketi väljade selgituse tabelina ja lisan ka visuaalse struktuuri:
 | 1 | DF (Don't Fragment) | 1 = Ära fragmenteeri |
 | 2 | MF (More Fragments) | 1 = Järgnevad veel fragmendid |
 
-### Example: Test with "Don't Fragment" Bit in Windows
+### Näide: "Don't Fragment" Biti Testimine Windowsis
+
 ```bash
 ping -f -l 2000 hkhk.edu.ee
 ```
 
-#### Explanation:
-- `-f`: Sets the "Don't Fragment" bit.
-- `-l 2000`: Packet size in bytes (2000 in this case).
+#### Selgitus:
+- `-f`: Määrab "Don't Fragment" (Ära Fragmenteeri) biti
+- `-l 2000`: Paketi suurus baitides (antud juhul 2000)
 
-#### Output:
-- **Success:** 
-  ```
-  Reply from [IP]: bytes=2000 time=XXms TTL=XX
-  ```
-- **Failure:** 
-  ```
-  Packet needs to be fragmented but DF set.
-  ```
+#### Väljund:
+- **Edukas:**
+```
+Reply from [IP]: bytes=2000 time=XXms TTL=XX
+```
+- **Ebaõnnestunud:**
+```
+Packet needs to be fragmented but DF set.
+```
 
-Here’s your updated table with the source included:
+> 💡 **Nõuanne:** See test aitab tuvastada MTU probleeme võrgus. Kui test ebaõnnestub, on paketi suurus suurem kui võrgu MTU.
 
 ## Levinumad Protokollikoodid
 
@@ -491,8 +492,6 @@ RFC-1700 (1994) standardist mõned määratud pordid:
 
 *Praktiline näide:* DNS kasutab porti 53, sest kiire päring-vastus mudel on tõhusam kui täieliku TCP ühenduse loomine iga päringuga.
 
-Here's the translation with important terms in bold:
-
 ## **Transpordikiht** (**L4**). **Usaldusväärse andmeedastuse protokoll** (**TCP**)
 
 Usaldusväärse andmeedastuse tagamiseks transpordikihis kasutatakse **TCP** protokolli (**Transmission Control Protocol**) – **usaldusväärne vooprotokoll**, mis nõuab **loogiliste ühenduste** loomist.
@@ -504,8 +503,6 @@ Andmeid edastatakse **baidivoogudena** (**Flow**) ja neid saab edastada mõlemas
 TCP suhtlevate moodulite andmevahetuse põhiüksuseks on **segment** (**Segment**).
 
 Iga segment sisaldab **järjekorranumbrit** voos ja **kontrollsummat**, mille abil saaja kontrollib andmete terviklikkust.
-
-I'll translate the slide about TCP connection endpoints and connection establishment from Russian to Estonian.
 
 ## **TCP-ühenduse lõpp-punktid ja ühenduse loomine**
 
@@ -617,7 +614,6 @@ TCP protokoll nõuab loogilise ühenduse loomist, mis tähendab eelnevat "kokkul
 ### Aktiivne ühenduse loomine (Connect)
 - Teine rakendus, mis töötab virtuaalse kanali teises otsas, pöördub operatsioonisüsteemi poole aktiivse ühenduse avamise taotlusega (Connect)
 
-I'll translate and format the TCP segment header structure and its explanations.
 
 # TCP Segmendi Päis (TCP Segment Header)
 
@@ -629,8 +625,6 @@ I'll translate and format the TCP segment header structure and its explanations.
 
 
 ## Väljad:
-
-Ah yes, you're right. Let me create a simplified table with just the main TCP header fields from your image:
 
 ## TCP Segmendi Põhiväljad (TCP Segment Main Fields)
 
@@ -649,7 +643,7 @@ Ah yes, you're right. Let me create a simplified table with just the main TCP he
 [ ... | IP | TCP | ... ]
 ```
 
-## TCP Segmendi Kontrollbittide ja Väljade Selgitus
+## TCP Segmendi Kontrollbittide ja Väljad
 
 ### Reserveeritud väli (Reserved)
 - Reserveeritud tulevikus kasutamiseks
@@ -803,8 +797,6 @@ ICMP sõnum koosneb:
 
 ### Fun Fakt: Kust tuli „Ping” nimi? 🎧
 See sai inspiratsiooni allveelaevade sonarist („ping” heli!), mida kuuleb tihti filmides. Idee oli, et sõnum läheb „välja” ja tuleb tagasi, nagu sonarilaine. 🚢
-
-Here’s the improved version with emojis and better formatting to make it more fun:
 
 ---
 
