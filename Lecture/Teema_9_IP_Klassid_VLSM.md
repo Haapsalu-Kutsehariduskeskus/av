@@ -382,8 +382,95 @@ Marsruutimistabelis võivad esineda erineva suurusega võrgud:
 
 ![Subnet Mask with hosts](https://1.bp.blogspot.com/-6ea6t9OKFGI/XUjosAdnRYI/AAAAAAAAMOw/LDGdYCcQZqIPKGeBddPMiLLMSplYLCz1gCLcBGAs/s1600/IP%2BSubnetting.png)
 
+Mõned huvitavad aadressid tabelis, mida tasub lähemalt analüüsida. Vaatleme neid eraldi:
+
 ---
 
+### 1. **Maskid: `255.255.255.255` ja `255.255.255.254`**
+   - **`255.255.255.255` (CIDR: `/32`)**:
+     - See on spetsiifiline mask, mis tähistab ühte IP-aadressi. Seda kasutatakse peamiselt punkt-ühendusena seadmetel (nt loopback-aadressid) või väga kitsaste filtrite rakendamiseks tulemüürides.
+     - Võrk sisaldab ainult ühte IP-aadressi, st pole võimalik lisada rohkem seadmeid.
+     - Kasutatakse tavaliselt spetsiaalsetel juhtudel, kus on vaja konkreetset ainsat aadressi esile tõsta.
+
+   - **`255.255.255.254` (CIDR: `/31`)**:
+     - Võrk koosneb kahest aadressist, kuid tegelikult on need spetsiaalsed. Seda maski kasutatakse sageli punkt-punkt-ühendustes, kus traditsioonilisi võrguaadresse pole vaja raisata.
+     - Ühe aadressiga märgitakse ühte liidest ja teine jääb vastaspoolele. Pole vajadust võrgu- ega ringlussaadetiste (broadcast) aadressi järele.
+     - Näide: kasutusel kaabeltelevisiooni või ISP-de liideste puhul, mis ühendavad seadmeid otse.
+
+### 2. **Aadress `0.0.0.0` (CIDR: `/0`)**
+   - **`0.0.0.0/0`** viitab **kõigile võimalikele aadressidele** IPv4 ruumis.
+   - Seda kasutatakse tavaliselt vaikesuunamiste (default route) määramiseks marsruutimistabelites.
+   - Kui määratakse `0.0.0.0/0` marsruut, ütleb see seadmele: "Kui konkreetset marsruuti pole leitud, saata andmed sellele liinile."
+   - Näide kasutusest:
+     - Interneti värav (gateway) ruuterites. Kui liiklus ei sobi ühelegi teisele marsruudile, saadetakse see määratud vaikimarsruudile.
+---
+### **🌐 Autonoomsed (eravõrgud): RFC 3330 🏠**
+![Local Networks](https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/images/blog/managed-images/image_2_10.png)
+
+
+RFC 3330 määratleb spetsiaalsed IP-aadressiruumid, mis on **privaatvõrkudele** reserveeritud. Need aadressid on nagu 🎫 tasuta piletid võrgu loomisel – neid saab kasutada kodus, ettevõtetes või muudes eravõrkudes, **ilma registreerimiseta**. 🌟 Aga tähelepanu: **internetis neid aadresse ei kasutata** 🚫, kuna pakkujad blokeerivad need.
+
+---
+![Private IPv4 IP Ranges](https://i.ytimg.com/vi/d1DgkgqtMDM/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGHIgUChBMA8=&rs=AOn4CLCE-VXODoD42_qiUNiNXhLBuZYfmg)
+
+### **📋 Privaatvõrgu aadressivahemikud**
+1. **10.0.0.0/8** (mask: 255.0.0.0) 🏢
+   - **Suur privaatvõrk** – ideaalne ettevõtete jaoks.
+   - Võid luua tohutuid sisevõrke, sest selles vahemikus on **16,777,216 aadressi**! 🤯
+
+2. **172.16.0.0 – 172.31.0.0/12** (mask: 255.240.0.0) 🏬
+   - Keskmise suurusega võrgud, **1,048,576 aadressi**. 💻
+   - Sobib serveritele ja väiksematele organisatsioonidele. 🎯
+
+3. **192.168.0.0 – 192.168.255.0/16** (mask: 255.255.0.0) 🏠
+   - Kõige **populaarsem koduvõrkude vahemik**! 🛋️
+   - Kui su ruuter ütleb: "Minu aadress on `192.168.1.1`," oled õiges kohas! 🚀
+
+---
+
+### **🛠️ Teised erivõrgud**
+1. **⚡ Automaathäälestuse aadressivahemik: 169.254.0.0/16**
+   - Kui seade ei saa DHCP kaudu aadressi, määratakse automaatselt aadress **sellest vahemikust**.  
+     👉 Näiteks: "Hei, ma ei saanud aadressi! Siin on minu varuaadress!" 🆘  
+   - Ei suunata internetti. 🛑 Kohalikuks kasutuseks ainult!
+
+2. **💼 Provider NAT (RFC 6598): 100.64.0.0/10**
+   - Teenusepakkujate **salajane võrguruum**! 🤐
+   - Suurtele ettevõtetele ja ISP-dele (Interneti-teenuse pakkujatele) mõeldud.
+
+---
+
+### **🔧 Kasutus ja piirangud**
+- 📜 **Privaatvõrgud on tasuta!** Kuid **avalikus internetis need ei tööta**. Kui proovid privaatvõrgu aadressiga internetti minna, ütleb su pakkuja: "Ei-ei, mitte täna!" 🙅‍♂️
+- Privaatvõrkude õigesti seadistamine väldib segadust ja IP-aadresside konflikte. 🔄
+
+![IP-aadresside jaotuskaart](https://global.discourse-cdn.com/spiceworks/original/4X/e/6/3/e638dcc9dae9e2016aa6521af175a183e5002ca5.jpeg)
+
+**Küsimus:**  
+Kas kaardil on näha, kus asuvad privaatvõrgu IP-d (nt 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)? Kui jah, millises piirkonnas need asuvad?  
+
+---
+
+### **🎮 Praktilised näited**
+- Koduruuter määrab aadressi: **`192.168.0.1`** – "Tere tulemast minu võrku!" 🎉
+- **`10.0.0.1`**: Suur ettevõte? Pole probleemi, kõik jääb su võrku. 🏢
+- **NAT (Network Address Translation)**: See on nagu võluvõti 🔑, mis võimaldab privaatvõrkudel avaliku IP kaudu internetti pääseda. 💫
+
+---
+
+### **🔍 Huvitavad tähelepanekud**
+- **Automaathäälestuse aadressid** (`169.254.x.x`) on nagu signaal võrguühenduse probleemidest: "Houston, meil on probleem!" 🚀
+- **Provider NAT**-i vahemik (`100.64.0.0/10`) sobib suurtel ISP-del, aga *pssst* – ka sina võid seda oma võrgus kasutada. 🤫
+- Internetis ringlevad ainult ametlikult registreeritud aadressid 📡, kuid privaatvõrgud jäävad just sinu salajaseks mänguväljakuks. 🤹‍♀️
+
+![Võrgu summerimine](./media/network-sum-topology.svg) 
+
+Diagramm näitab:
+- All: üksikud /24 võrgud
+- Keskel: ruuterid 1 ja 2 summeerivad oma võrgud /23-ks
+- Üleval: Core ruuter näeb ainult summeeritud marsruute
+- Tulemus: väiksem marsruutimistabel, efektiivsem võrk
+---
 ## Erinevad viisid alamvõrkude arvutamiseks
 
 1. **Binaarne Meetod:**
@@ -521,25 +608,61 @@ Näiteks esimeses /26 alamvõrgus (192.168.1.0-63):
 2. Kasuta **VLSM-i** (Variable Length Subnet Mask), alustades suurimatest alamvõrkudest (Marketing) ja liikudes väiksemate poole.
 3. Täida tabel sammhaaval, et kindlustada kõik alamvõrgud mahuvad aadressiruumi.
 
----
+## IP-aadresside haldamise soovitused võrguhaldajatele
 
----
+## 1. Planeeri summeeritavad võrgublokid
+- **Miks?** Lihtsustab marsruutimist, vähendab marsruutimistabeli suurust
+- **Näide:**  
+  ```
+  HEA: 
+  Filiaal A: 10.10.0.0/24
+  Filiaal B: 10.20.0.0/24 
+  Summeerub: 10.0.0.0/22
 
-### 🛡 NAT (Network Address Translation)
-NAT võimaldab privaatsetel IP-del suhelda internetis, teisendades need ruuteri kaudu avalikuks IP-ks. See säästab IP-aadressiruumi ja parandab turvalisust.
+  HALB:
+  Filiaal A: 10.1.0.0/24, 10.5.0.0/24
+  Filiaal B: 10.2.0.0/24, 10.6.0.0/24
+  Ei summeeru lihtsalt
+  ```
 
-| **NAT Tüüp**            | **Kirjeldus**                                |
-|-------------------------|----------------------------------------------|
-| **Staatiline NAT**      | Üks-ühele kaardistamine.                    |
-| **Dünaamiline NAT**     | Avalike IP-de vahemik.                      |
-| **PAT**                 | Mitme-ühele kaardistamine (Port Address Translation). |
+## 2. Jäta laienemisvaru
+- **Põhimõte:** 4 blokki tööks + 4 blokki reservi
+- **Näide:**
+  ```
+  Filiaal saab: 10.20.0.0/22
+  Kasutusel: 10.20.0.0/24 kuni 10.20.3.0/24
+  Reservis: 10.20.4.0/24 kuni 10.20.7.0/24
+  ```
 
-### 🎯 Kokkuvõte
-- **🗂 Klassid**: Ajalooline ja ebatõhus kaasaegsete võrkude jaoks.
-- **🖩 CIDR ja VLSM**: Tagavad paindliku ja tõhusa IP jaotuse.
-- **🏠 Privaatne IP-d**: Kasutatakse sisevõrkudes.
-- **📡 Erilised aadressid**: Sisaldavad loopback'i, APIPA-d, multicast'i ja broadcast'i.
-- **🔄 NAT**: Sillad privaatsete ja avalike võrkude vahel.
+## 3. Kasuta loogilist struktuuri
+- **Põhimõte:** Oktetid näitavad asukohta/otstarvet
+- **Näide:**
+  ```
+  10.FILIAAL.TEENUS.0/24
+  10.20.1.0/24 = Filiaal 20, kasutajad
+  10.20.2.0/24 = Filiaal 20, serverid
+  ```
 
-Nende kontseptsioonide mõistmine tagab tõhusa ja skaleeritava võrgukujunduse kaasaegseteks rakendusteks. 🚀
+## 4. Dokumenteeri professionaalselt
+- Kasuta keskset andmebaasi/süsteemi
+- **Mitte Excel**, vaid spetsiaalsed IP-halduse tööriistad
+- Taga meeskonnale reaalajas ligipääs
 
+## 5. Väldi levinud vigu
+```
+HALB praktika:
+10.1.1.0/24 (Tallinn, kasutajad)
+10.5.7.0/24 (Tallinn, serverid)
+10.2.3.0/24 (Tartu, kasutajad)
+- Pole summeeritav
+- Raske aru saada
+- Keeruline hallata
+
+HEA praktika:
+10.10.0.0/24 (Tallinn, kasutajad)
+10.10.1.0/24 (Tallinn, serverid)
+10.20.0.0/24 (Tartu, kasutajad)
+- Loogiline struktuur
+- Lihtne summeerida
+- Selge ülevaade
+```
