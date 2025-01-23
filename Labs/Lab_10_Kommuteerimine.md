@@ -52,7 +52,6 @@
 2. Mis toimub, kui MAC-aadress on juba tabelis olemas?  
 3. Mida näitab MAC-aadresside tabeli käsk `show mac address-table`?  
 4. Miks on oluline, et kommutaatorid õpivad MAC-aadresse?
-5. 
 
 ---
 
