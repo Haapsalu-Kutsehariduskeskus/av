@@ -125,38 +125,47 @@ write memory
 ## Part 2: ARP Analysis (30 minutes)
 
 ### Task 1: Basic ARP Operation
-1. Enter Simulation mode in Packet Tracer.
-2. On PC1:
-   - Open Command Prompt.
-   - Clear ARP cache: `arp -d *`.
-   - Open Packet Sniffer.
-   - Start capture.
-   - Ping PC4: `ping 192.168.1.40`.
+1. **Simulation Mode**
+This is your primary tool for watching ARP in action:
+- Look at the bottom right corner of Packet Tracer
+- You'll see two tabs: "Realtime" and "Simulation"
+- Click on "Simulation"
+- The window will show a time panel with different types of packets
+- Make sure "ARP" is checked in the "Event List Filters"
 
-3. Analyze in Simulation mode:
-   - Click "Capture/Forward" to see each step.
-   - Document ARP request broadcast.
-   - Note source and destination MAC addresses.
-   - Record complete ARP resolution process.
+2. **Event List**
+When in Simulation mode, you'll see packets listed in the event list window:
+- Each packet shows source, destination, and type
+- You can click on a packet to see its details
+- ARP packets will be clearly labeled
+
+Here's how to watch ARP in action:
+
+1. First, clear the ARP cache:
+```
+arp -d
+```
+
+2. Switch to Simulation mode
+
+3. On PC1, open Command Prompt and type:
+```
+ping 192.168.1.40
+```
+
+4. In the Simulation panel, use:
+- The "Play" button to watch all steps automatically
+- The "Next" button to step through one packet at a time
+- Click on each packet to examine its contents
+
+You can also check the ARP tables on devices at any time:
+```
+arp -a
+```
 
 **Explanation**: ARP broadcasts are used to resolve the MAC address of the destination. The router responds with its MAC address for devices on other subnets.
 
 **Expected Result**: The ARP table on PC1 should update with the MAC address of PC4 or the router.
-
-### Task 2: Manual ARP Entry
-1. On PC1, add static ARP entry:
-```bash
-arp -s 192.168.1.40 [PC4's MAC address]
-```
-2. Test connectivity:
-   - Ping PC4.
-   - Document results.
-   - Check ARP cache: `arp -a`.
-
-3. Introduce problems:
-   - Change PC4's MAC address.
-   - Test connectivity.
-   - Document what happens.
 
 **Explanation**: Static ARP entries override dynamic ARP resolution. If the MAC address changes, communication fails until the entry is corrected.
 
