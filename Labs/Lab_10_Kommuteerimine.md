@@ -2,7 +2,12 @@
 
 ## **1. Loo topoloogia:**
 - Ava Packet Tracer ja loo järgmine topoloogia:
-  - **PC0 → SW1 → SW2 → PC2**
+
+
+**PC0 → SW1 → SW2 → PC2**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**PC1**
+
   - Lisa seadmetele oma nimi. 
   - Kasuta **otsekaableid (straight-through cables)** nii arvutite ja kommutaatorite vahel kui ka kommutaatorite omavahelisteks ühendusteks.
 
