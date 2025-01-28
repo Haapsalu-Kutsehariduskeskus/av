@@ -483,6 +483,17 @@ Diagramm näitab:
    - Eelis: Täpne, näitab täpselt bittide jaotust
    - Puudus: Aeganõudev
 
+I'll help you create a nicely formatted table in Markdown for your README.
+
+| Description | Value |
+|------------|-------|
+| IP Address (Decimal) | 192.168.1.50 |
+| IP Address (Binary) | 11000000.10101000.00000001.00110010 |
+| Subnet Mask (Decimal) | 255.255.255.192 (/26) |
+| Subnet Mask (Binary) | 11111111.11111111.11111111.11000000 |
+| Network Part (First 26 bits) | 11000000.10101000.00000001.00 |
+| Host Part (Last 6 bits) | 110010 (last 6 bits) |
+
 2. **Kiirmeetod:**
    ```
    /26 puhul:
