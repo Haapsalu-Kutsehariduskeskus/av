@@ -65,8 +65,6 @@ b. Use Help to discover the steps required to set the current time.
 
 c. Use the show clock command to verify that the clock is now set to the current time. Packet Tracer may not correctly simulate the time you entered.
 
-Packet Tracer does not grade this command.
-
 ### Step 4: Configure passwords
 a. Use the encrypted form of the privileged EXEC mode password and set the password to class.
 
