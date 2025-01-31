@@ -39,7 +39,7 @@ All device names should include your name in the following format:
 |--------|-----------|------------|-------------|
 | Customer Switch | VLAN1 | 192.168.1.5 | 255.255.255.0 |
 | Customer Router | Ethernet | 192.168.1.1 | 255.255.255.0 |
-| ISP Server | Ethernet | 209.165.201.10 | 255.255.255.0 |
+| PC | Ethernet | 192.168.1.3 | 255.255.255.0 |
 
 ## Configuration Steps
 
@@ -114,9 +114,9 @@ a. Exit to privileged EXEC mode:
 CustomerSwitch(config)#end
 ```
 
-b. Test connectivity by pinging the ISP Server:
+b. Test connectivity by pinging the PC:
 ```
-CustomerSwitch#ping 209.165.201.10
+CustomerSwitch#ping 192.168.1.3
 ```
 
 Note: The first one or two pings may fail while ARP converges.
