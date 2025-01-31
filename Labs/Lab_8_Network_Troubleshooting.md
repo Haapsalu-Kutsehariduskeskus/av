@@ -4,7 +4,6 @@
 ![Topology_Lab7](/Lecture/media/switched-network-topology.svg)
 
 ### Topology Diagram
-[Topology diagram shows network layout]
 
 ### Objectives
 * Establish console connection to the switch
