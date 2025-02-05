@@ -1,4 +1,4 @@
-# Kommutaatorite Arhitektuur ja Toimimine
+# Teema 11: Kommutaatorite Arhitektuur ja Toimimine
 
 Kommutaatorid on võrguseadmed, mis funktsioneerivad kui võrguliikluse reguleerijad, suunates andmepakette nende sihtpunktidesse. Need on kriitilise tähtsusega komponendid kaasaegses võrguarhitektuuris.
 
