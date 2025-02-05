@@ -1,4 +1,4 @@
-# # Lab6: Initial Switch Configuration
+# Lab6: Initial Switch Configuration
 
 ## Objectives
 * Perform an initial configuration of a Cisco Catalyst 2960 switch

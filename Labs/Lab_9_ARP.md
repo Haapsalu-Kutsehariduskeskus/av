@@ -1,5 +1,4 @@
 # Lab9: ARP Fundamentals and Troubleshooting
-**Duration**: 90 minutes
 
 ## Lab Objectives
 - Master ARP operations in a switched network
