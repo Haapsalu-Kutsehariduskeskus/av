@@ -1,7 +1,3 @@
-Siin on tekst koos emojidega ja natuke huvitavamalt vormindatud! 🚀  
-
----
-
 # 🎯 **Teema 11.1: SFP, SFP+, XFP, DAC moodulite näited**  
 
 🤔 **Miks ei saa lihtsalt kasutada Etherneti kaablit? Miks on vaja SFP, SFP+, XFP ja optilisi mooduleid?**  
