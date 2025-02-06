@@ -1,7 +1,5 @@
 # Lab12: Network Traffic Investigation
 
-# Network Traffic Investigation Lab
-
 ## Overview
 This lab provides hands-on experience in analyzing network traffic using virtualized environments. You will set up a simulated network using Multipass, capture traffic using **tcpdump**, and analyze key networking behaviors.
 
