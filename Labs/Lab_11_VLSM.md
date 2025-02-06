@@ -1,4 +1,4 @@
-# **📌 Lab 11: VLSM and Network Implementation **  
+# 📌 Lab 11: VLSM and Network Implementation
 
 ---
 
