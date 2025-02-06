@@ -1,4 +1,4 @@
-# **📌 Lab 10: VLSM and Network Implementation – Student Manual**  
+# **📌 Lab 11: VLSM and Network Implementation **  
 
 ---
 
