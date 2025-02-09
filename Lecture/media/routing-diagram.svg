@@ -1,0 +1,40 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="400" fill="#ffffff"/>
+  
+  <!-- Network devices -->
+  <g id="pc1">
+    <rect x="50" y="50" width="60" height="50" fill="#87CEEB"/>
+    <text x="80" y="85" text-anchor="middle" fill="black">PC1</text>
+  </g>
+  
+  <!-- Router Core -->
+  <g id="router1">
+    <circle cx="250" cy="200" r="40" fill="#4682B4"/>
+    <path d="M230,180 L270,220 M230,220 L270,180" stroke="white" stroke-width="3"/>
+    <text x="250" y="250" text-anchor="middle" fill="black">Core</text>
+  </g>
+  
+  <!-- Router B1 -->
+  <g id="router2">
+    <circle cx="450" cy="200" r="40" fill="#4682B4"/>
+    <path d="M430,180 L470,220 M430,220 L470,180" stroke="white" stroke-width="3"/>
+    <text x="450" y="250" text-anchor="middle" fill="black">B1</text>
+  </g>
+  
+  <!-- PC2 -->
+  <g id="pc2">
+    <rect x="650" y="50" width="60" height="50" fill="#87CEEB"/>
+    <text x="680" y="85" text-anchor="middle" fill="black">PC2</text>
+  </g>
+  
+  <!-- Connections -->
+  <line x1="110" y1="75" x2="250" y2="200" stroke="#000" stroke-width="2"/>
+  <line x1="290" y1="200" x2="410" y2="200" stroke="#000" stroke-width="2"/>
+  <line x1="490" y1="200" x2="650" y2="75" stroke="#000" stroke-width="2"/>
+  
+  <!-- IP Addresses -->
+  <text x="150" y="100" fill="black">150.9.1.10/24</text>
+  <text x="350" y="180" fill="black">150.9.2.253/30</text>
+  <text x="550" y="100" fill="black">150.9.4.33/27</text>
+</svg>

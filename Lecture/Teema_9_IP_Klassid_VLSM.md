@@ -619,7 +619,86 @@ Näiteks esimeses /26 alamvõrgus (192.168.1.0-63):
 2. Kasuta **VLSM-i** (Variable Length Subnet Mask), alustades suurimatest alamvõrkudest (Marketing) ja liikudes väiksemate poole.
 3. Täida tabel sammhaaval, et kindlustada kõik alamvõrgud mahuvad aadressiruumi.
 
-## IP-aadresside haldamise soovitused võrguhaldajatele
+Here’s the updated, more **engaging** version with **examples** for host calculations (10000, 1000, 500) in **Class A, B, and C** networks! It includes **tables**, **questions**, **calculation steps**, and **fun emojis**.
+
+---
+
+## 🌍 Subnetting ja VLSM – Klassid A, B ja C 🚀  
+
+🧑‍💻 Õpime, kuidas subnettimine töötab **klassi A, B ja C** IP-aadressidel.
+
+### ❓ Saab subnettida teises ja kolmandas oktetis? 🤔  
+- **Klass A ja B:** ✅ Jah, saab subnettida teises ja kolmandas oktetis!  
+- **Klass C:** ❌ Kahjuks mitte – subnettimine toimub ainult **neljandas oktetis**.  
+
+---
+
+## 🧮 Arvutused ja näited  
+
+### 📌 Kui vajad 10 000 hosti subnetis
+#### **Arvutame vajaliku subnet maski:**  
+\[
+2^h - 2 \geq 10 000
+\]
+- \( h = 14 \) (sest \( 2^{14} = 16 384 \))  
+- Vajaliku subnet mask: **/18 (255.255.192.0)**  
+
+#### Näide (Klass B):
+| **Võrk**         | **Subnet Mask**    | **Maksimaalne hostide arv** | **Samm kolmandas oktetis** |
+|------------------|--------------------|-----------------------------|----------------------------|
+| 172.16.0.0/18    | 255.255.192.0      | 16 382                      | 64 kolmandas oktetis       |
+| 172.16.64.0/18   | 255.255.192.0      | 16 382                      |                            |
+| 172.16.128.0/18  | 255.255.192.0      | 16 382                      |                            |
+
+---
+
+### 📌 Kui vajad 1000 hosti subnetis
+#### **Arvutame vajaliku subnet maski:**  
+\[
+2^h - 2 \geq 1000
+\]
+- \( h = 10 \) (sest \( 2^{10} = 1024 \))  
+- Vajaliku subnet mask: **/22 (255.255.252.0)**  
+
+#### Näide (Klass B):
+| **Võrk**         | **Subnet Mask**    | **Maksimaalne hostide arv** | **Samm neljandas oktetis** |
+|------------------|--------------------|-----------------------------|----------------------------|
+| 172.16.0.0/22    | 255.255.252.0      | 1022                        | 4                          |
+| 172.16.0.4/22    | 255.255.252.0      | 1022                        |                            |
+| 172.16.0.8/22    | 255.255.252.0      | 1022                        |                            |
+
+---
+
+### 📌 Kui vajad 500 hosti subnetis
+#### **Arvutame vajaliku subnet maski:**  
+\[
+2^h - 2 \geq 500
+\]
+- \( h = 9 \) (sest \( 2^9 = 512 \))  
+- Vajaliku subnet mask: **/23 (255.255.254.0)**  
+
+#### Näide (Klass C):
+| **Võrk**         | **Subnet Mask**    | **Maksimaalne hostide arv** | **Samm neljandas oktetis** |
+|------------------|--------------------|-----------------------------|----------------------------|
+| 192.168.1.0/23   | 255.255.254.0      | 510                         | 2                          |
+| 192.168.1.2/23   | 255.255.254.0      | 510                         |                            |
+
+---
+
+### 🚀 Kiired reeglid ja valemid:
+1. **Subnettimiseks vajaliku hostide arvu valem:**  
+   \[
+   2^h - 2 \geq Hostide arv
+   \]
+2. **Alamvõrkude arv valem:**  
+   \[
+   2^n \text{ (kus } n = \text{ laenatud bitid)}
+   \]
+3. **Alamvõrgu samm:** \( 256 - Subnet Maski väärtus \)
+
+---
+
+# IP-aadresside haldamise soovitused
 
 ## 1. Planeeri summeeritavad võrgublokid
 - **Miks?** Lihtsustab marsruutimist, vähendab marsruutimistabeli suurust
