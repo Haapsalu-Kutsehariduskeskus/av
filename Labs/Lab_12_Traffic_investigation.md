@@ -59,6 +59,7 @@ Inside each VM, verify the network interface name using:
 ip link show
 ```
 Some systems may not use `enp0s3`, so adjust commands accordingly.
+If you are doing manually, it will get already IP, you have to give it again!!!!
 
 #### **Detective HQ (Monitoring Station)** 🕵️
 ```bash
