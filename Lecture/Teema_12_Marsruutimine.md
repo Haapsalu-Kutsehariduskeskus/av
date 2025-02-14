@@ -259,10 +259,7 @@ Marsruutimistabel sisaldab:
      192.168.1.0/24    on-link    192.168.1.100
      ```
    - Linux süsteemides näidatakse kui "scope link"
-
-Yes, I'll continue with the second part of the document:
-
-```markdown
+   - 
 6. **Staatilised marsruudid** (S) 🔒
    - Tähistatakse 'S' tähega marsruutimistabelis
    - Näide Cisco tabelis:
