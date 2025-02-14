@@ -346,3 +346,81 @@ Vaatame lähemalt, kuidas toimub tegelik andmevahetus meie võrgus. Kui PC1 soov
 4. Router 2 edastab paketi lõpuks PC2-le läbi kommutaatori
 
 See protsess toimub iga paketi puhul, tagades andmete korrektse liikumise erinevate võrkude vahel. 🎯
+
+Kui räägime korporatiivsest massruutimisest ja massruuteritest, siis on mitmeid tegureid, mida tuleks enne ostuotsust kaaluda, kuna see erineb oluliselt koduseks kasutuseks mõeldud seadmetest. Siin on laiendatud ja struktureeritud selgitus:
+
+---
+
+### **Korporatiivsed massruuterid: mida arvestada enne ostmist**
+
+1. **Võimsus ja jõudlus:**
+   - Ruuter peab suutma töödelda suurt andmeliikluse mahtu ilma viivitusteta.
+   - Jõudlusnäitajad, nagu **pakettide edastamise kiirus (PPS)** ja **ruuteri läbilaskevõime (Mbps või Gbps)**, on olulised.
+
+2. **Tarkvarafunktsioonid ja ruutimisprotokollid:**
+   - **Ruutimisprotokollid:** OSPF, BGP, EIGRP – vajalikud suures võrgus.
+   - **QoS (Quality of Service):** Tähtis, et prioriseerida kriitilisi teenuseid (nt VoIP või videokonverentsid).
+   - **VPN ja tulemüürid:** Andmeturve ja privaatvõrkude ühendamine.
+
+3. **Laiendatavus ja liidesed:**
+   - **Uplink-portide tugi:** 1G, 10G või isegi 40G SFP+ liidesed.
+   - **Moodulid:** Kas ruuterit saab laiendada rohkemate liideste või lisafunktsioonidega?
+   - **Cluster-tugi:** Võimalus töötada paralleelselt teiste seadmetega suuremas võrgus.
+
+4. **Varjatud kulud:**
+   - Lisalitsentsid funktsioonidele (nt turvalisus, ruutimine, haldus).
+   - Riistvaramoodulid (uplink-moodulid, kiudoptilised SFP transiiverid).
+   - Tarkvarauuendused ja hooldustasud.
+
+---
+
+### **Hinnad korporatiivsete massruuterite puhul**
+
+- **Algklassi massruuterid (väiksemad ettevõtted):**
+  - **Cisco ISR 1000 seeria:** Hind alates 500–1500 €.
+  - **MikroTik CCR (Cloud Core Router):** Hind 300–1000 € (toetab kuni 10G uplinke, kuid vähem jõuline).
+  - **Ubiquiti EdgeRouter Infinity:** Hind 800–2000 € (võimas ja mitmeportiline).
+
+- **Keskmised ja suured ettevõtted:**
+  - **Cisco ISR 4000 seeria:** Hind 3000–6000 €, sõltuvalt konfiguratsioonist.
+  - **Juniper MX-seeria:** Hind 5000–20 000 € (olenevalt konfiguratsioonist ja moodulitest).
+  - **HPE Aruba ruuterid:** Hind 2000–10 000 €, sõltuvalt mudelist ja laiendustest.
+
+- **Tippklassi lahendused:**
+  - **Cisco ASR 9000 seeria (Carrier-grade ruuter):** Hind 20 000–50 000 € või rohkem.
+  - **Juniper PTX-seeria:** Hind üle 50 000 € suurettevõtetele ja teenusepakkujatele.
+
+---
+
+### **Litsentside ja moodulite hinnad**
+- **Litsentsid:**
+  - L3 ruutimine (OSPF, BGP, MPLS): 500–3000 € litsents.
+  - VPN ja turvalisuse lisalitsentsid: 200–2000 €.
+  - Pilvehaldustarkvara (nt Cisco DNA Center): 500–5000 € aastas.
+
+- **Moodulid ja varustus:**
+  - **10G SFP+ moodul:** 200–500 € tükk.
+  - **40G/100G moodulid:** 1000–5000 € tükk.
+  - **Optilised transiiverid (SFP, QSFP):** 50–300 € tükk, sõltuvalt kiirusest ja tüübist.
+
+---
+
+### **Varjatud kulud:**
+1. **Tarkvarauuendused ja tehniline tugi:**
+   - Tehnilise toe lepingud (nt Cisco SmartNet): 500–5000 € aastas.
+2. **Koolitus ja paigaldus:**
+   - Suuremate seadmete seadistamine ja võrgu optimeerimine nõuab IT-spetsialisti, mis võib lisada 1000–3000 € kulusid.
+3. **Energiatarve:**
+   - Kõrgjõudlusega ruuterid võivad tarbida märkimisväärselt elektrit, eriti kui need töötavad 24/7.
+
+---
+
+### **Näide: korporatiivse massruutimise lahendus**
+**Oletame, et sul on ettevõte, kus vajatakse ruuterit 500 töötaja võrgu haldamiseks, ühendades ka mitut kontorit:**
+- Ruuter: Cisco ISR 4331 (hind 3000 €).
+- L3 litsents (OSPF, BGP): 1000 €.
+- 10G uplink-moodulid: 2 × 400 € = 800 €.
+- Optilised transiiverid: 2 × 150 € = 300 €.
+- Tehnilise toe leping (Cisco SmartNet): 1000 € aastas.
+
+**Kogukulu esimesel aastal:** 6100 € + paigaldus.
