@@ -34,6 +34,8 @@ This will list all available network interfaces. Ensure that an active interface
 ### 🖥️ Step 3: Create Virtual Machines
 Each student should personalize their VM names using their own name to ensure authenticity.
 
+OR YOU CAN DO THIS PART MANUALLY IN GUI
+
 Open **PowerShell as Administrator** and execute the following commands to set up the virtual environment (replace `<student_name>` with your own name):
 
 ```powershell
