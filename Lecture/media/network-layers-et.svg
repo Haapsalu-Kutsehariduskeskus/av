@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+    <!-- Pealkiri -->
+    <text x="150" y="40" font-size="24" fill="#C84A31" font-weight="bold">Kontseptsioon</text>
+    
+    <!-- Core Layer -->
+    <rect x="50" y="60" width="300" height="100" fill="#B8E2DE" stroke="#000" stroke-width="1"/>
+    <text x="145" y="85" font-size="18" font-weight="bold">Võrgu tuum</text>
+    <text x="140" y="105" font-size="14">(Core Layer)</text>
+    <text x="70" y="130" font-size="14">- kõrge jõudlus</text>
+    <text x="70" y="150" font-size="14">- varundamine</text>
+    
+    <!-- Distribution Layer -->
+    <rect x="50" y="160" width="300" height="100" fill="#FFFFFF" stroke="#000" stroke-width="1"/>
+    <text x="120" y="185" font-size="18" font-weight="bold">Jaotuskiht</text>
+    <text x="130" y="205" font-size="14">(Distribution Layer)</text>
+    <text x="70" y="230" font-size="14">- marsruutimine</text>
+    <text x="70" y="250" font-size="14">- filtreerimine</text>
+    <text x="70" y="270" font-size="14">- QoS</text>
+    
+    <!-- Access Layer -->
+    <rect x="50" y="260" width="300" height="100" fill="#FFF9D6" stroke="#000" stroke-width="1"/>
+    <text x="140" y="285" font-size="18" font-weight="bold">Juurdepääsukiht</text>
+    <text x="145" y="305" font-size="14">(Access Layer)</text>
+    <text x="70" y="330" font-size="14">- tööjaamade ja serverite ühendamine</text>
+    <text x="70" y="350" font-size="14">  ettevõtte võrku</text>
+</svg>
