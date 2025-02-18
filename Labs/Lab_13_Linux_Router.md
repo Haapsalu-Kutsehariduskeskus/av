@@ -43,19 +43,26 @@ When creating your VMs, always use your name in them! For example:
 ```mermaid
 graph LR
     subgraph Private Network
-    C1[Client1: 192.168.100.50] --> R
-    C2[Client2: 192.168.100.51] --> R
-    C3[Client3: 192.168.100.52] --> R
+        direction TB
+        C1[Client1: 192.168.100.50] --> R
+        C2[Client2: 192.168.100.51] --> R
+        C3[Client3: 192.168.100.52] --> R
+        R[NAT Router\n192.168.100.1]
     end
     
     subgraph Router
-    R[NAT Router\n192.168.100.1] --> P[Public IP\ne.g. 203.0.113.1]
+        R --> P[Public IP\n203.0.113.1]
     end
     
     P --> I[Internet]
     
-    style Private Network fill:#e6f3ff
-    style Router fill:#ffece6
+    classDef private fill:#f0f7ff,stroke:#333,stroke-width:2px;
+    classDef router fill:#fff5f5,stroke:#333,stroke-width:2px;
+    classDef public fill:#f0fff4,stroke:#333,stroke-width:2px;
+    
+    class C1,C2,C3 private;
+    class R,P router;
+    class I public;
 ```
 
 ### NAT Translation Example 📝
