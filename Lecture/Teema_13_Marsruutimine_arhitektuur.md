@@ -357,9 +357,9 @@ Nad näevad erinevad välja. Näiteks Juniper - need on ka ruuterid ja on olemas
 
 Kummaline tooteseeria, aga sellegipoolest on tal kasvuvõimalused nii kiiruse kui turvalisuse osas.
 
-![Cisco ISR 4000 Series](https://blog.router-switch.com/wp-content/uploads/2018/04/Cisco-ISR-4000-Series-768x338.png)
+![Cisco ISR 4000 Series](https://storage.googleapis.com/blogs-images-new/ciscoblogs/1/56.png)
 
-[Source: Router Modules Example](https://blog.router-switch.com/)
+[Source: Cisco Blog](https://blogs.cisco.com/networking/the-isr-4000-series-one-platform-to-rule-them-all)
 
 
 Ruuterite eripära on nende modulaarne konstruktsioon. See tähendab, et harva näete ruuteris suurt hulka porte. Neil on neid tavaliselt vähe, kui see just pole mingi 6-šassiiga ruuter, kus neid on palju. Antud juhul siin on näha... Las ma näitan teile, need on moodulid. Nii nad välja näevadki, nad võivad olla 1U või 2U kõrgused. Siin on populaarsed QWIC moodulid.
