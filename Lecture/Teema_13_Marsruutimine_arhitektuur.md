@@ -419,6 +419,8 @@ Moodul nelja Ethernet-pordiga ja kommutaatoriga. Millised moodulid võivad veel 
 
 Nägin ise huvitavat lahendust - Cisco 4U modulaarne ruuter, kus oli 48-pordiga kommutaatorimoodul ja sinna oli paigaldatud 2U server. Selline terve server koos kõvakettaga lihtsalt sisestati moodulina.
 
+**![Cisco 4U modulaarne ruuter](https://i.ebayimg.com/images/g/KfkAAOSwxK9lGoYT/s-l1600.webp)**
+
 Sellise šassiiga on vahel mugav, sest sinna saab panna, mida vaja. Kommutaatoritel on ka moodulid, aga mitte nii mitmekesised kui ruuteritel.
 
 Kui paigaldate ruuterisse kommutaatorimooduli, siis kes ta nüüd on? Õige on öelda, et see on siiski ruuter, millesse on sisseehitatud kommutaator. Vaatamata sellele, et panite sinna mooduli, ei tähenda see, et seda kommutaatorit saaks enamasti käsitleda eraldi seadmena.
