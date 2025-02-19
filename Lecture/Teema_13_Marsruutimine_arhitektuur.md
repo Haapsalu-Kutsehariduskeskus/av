@@ -406,7 +406,7 @@ Kui rääkida hooldusest, siis need lähevad samuti ummistuse ja neid tuleb puha
 | **Moodulid PDH (E1, G.703, G703.1)**          | Plesiochronous Digital Hierarchy (PDH) modules supporting E1 and G.703 interfaces for digital voice and data transmission. |
 | **Moodulid häälportidega FXS/FXO/E1**         | Modules with voice ports for analog (FXS/FXO) and digital (E1) voice communication. |
 
-[![Video Preview](https://www.youtube.com/shorts/UZHwlNoWwPA)
+[![Video Preview](https://youtu.be/UZHwlNoWwPA?si=6gpVlQUwuzF204pA)
 
 Moodul nelja Ethernet-pordiga ja kommutaatoriga. Millised moodulid võivad veel olla:
 - Kommutaatorimoodulid
