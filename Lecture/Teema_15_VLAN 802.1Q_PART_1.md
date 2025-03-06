@@ -1,4 +1,4 @@
-# Teema 15: Mis on VLAN 802.1Q ?
+# Teema 15: Mis on VLAN 802.1Q ? Part 1
 
 ## Sissejuhatus VLAN-idesse
 
@@ -78,9 +78,12 @@ On kaks põhilist alternatiivset lahendust:
 
 ## VLAN-ide roll
 
+[Presentation Slide Deck on Native VLAN](https://slideplayer.com/slide/13554705/)
+
+
 Kuigi see näide pole ideaalne, illustreerib see ideed, kuidas üht füüsilist seadet (kommutaatorit) saab jagada mitmeks loogiliseks üksuseks, mis töötavad täiesti eraldi, justkui oleks tegemist mitme eraldi kommutaatoriga.
 
-## Pordipõhiste VLAN-ide jätk
+## Pordipõhiste VLAN-ide jätkame
 
 ## Loogika ja toimimine
 
@@ -96,26 +99,36 @@ Having that in mind, if we connect two default setting switches, as shown in fig
 
 Source: [Network Academy](https://www.networkacademy.io)
 
+Siin on struktureeritud ja teksti lisatud versioon, mis selgitab arvutusi ja VLAN-i kasutamise eeliseid:
 
-Vaatame, kuidas saame seda arvutada leviedastuste abil:
+---
 
-Kujutame ette, et meil on üks 24-pordiga kommutaator. Kui kaks arvutit saadavad igaüks 10 leviedastust, siis kokku on see 20 leviedastust. 24 porti korda 20 leviedastust – see teeb 480 kaadrit, mis genereeritakse, sest kommutaator saadab need kõikidesse portidesse.
+### Leviedastuste arvutamise näide
 
-Nüüd kujutame ette sama olukorda, kuid kui me jagame need kaks võrku kaheks osaks. Oluline on mõista, et kui me jagame need füüsiliselt seadmed loogiliselt kaheks osaks, siis ka adresseerimine peab olema erinev. Sel juhul jääb meil alles:
+Vaatleme olukorda, kus meil on 24-pordiga kommutaator ja kaks arvutit, mis saadavad kumbki 10 leviedastust. Ühes võrgus tähendab see, et igas pordis liigub kokku 20 leviedastust, mis annab 24 porti korral 480 kaadrit. Kui aga jagame võrgu kaheks loogiliseks osaks (näiteks VLAN-ide abil), jaguneb 24 porti kaheks 12-pordi segmentiks. Iga segment on iseseisev ja ühes segmentis saadab üks arvuti 10 leviedastust, mis annab 12 porti korral 120 kaadrit. Kogu võrgu liiklus jagatud segmentides on seega 120 + 120 = 240 kaadrit – kaks korda vähem kui algses ühes võrgus.
 
-- 12 porti ühes grupis
-- 12 porti teises grupis
+| Kirjeldus                                | Pordide arv | Leviedastused (arvuti kohta) | Arvutatud kaadrite arv         |
+|------------------------------------------|-------------|------------------------------|--------------------------------|
+| **Ühes võrgus (24 porti)**               | 24          | 2 × 10 = 20                  | 24 × 20 = **480 kaadrit**       |
+| **Jagatud võrk (2 segmenti, 12 porti igaüks)** | 12 (iga segment) | 1 arvuti × 10 = 10          | 12 × 10 = **120 kaadrit** (iga segment) |
+| **Kokku jagatud võrgus**                 | 24          | –                            | 120 + 120 = **240 kaadrit**     |
 
-Esimeses grupis üks arvuti genereerib 10 leviedastust. See teeb 12 porti korda 10 ehk 120 kaadrit selles pooles. Teises grupis genereeritakse samuti 120 kaadrit.
+---
 
-120 + 120 = 240, mis on kaks korda vähem kui 480.
+### VLAN-i kasutamise eelised
 
-See näide võib tunduda liiga lihtne või otsekohene, kuid see näitab, et mida väiksemateks segmentideks te võrgu jagate, seda vähem leviedastusliiklust tekib. Mida väiksemad on need segmendid, seda parem - see näitab otseselt, et te vähendate nende pakettide arvu.
+VLAN-i kasutamine võimaldab võrke loogiliselt jaotada, mis toob kaasa mitmeid eeliseid:
 
-Seega saame VLAN-ide kasutamisest kolm peamist eelist:
-1. Mugav võrkude jaotamine
-2. Segmentide vähendamine (ja sellega kaasnev leviedastusliikluse vähenemine)
-3. Suurem turvalisus
+| Eelis                         | Selgitus                                                                 |
+|-------------------------------|--------------------------------------------------------------------------|
+| **1. Mugav võrkude jaotamine** | Võimaldab lihtsasti jagada füüsilised seadmed loogilisteks segmentideks.  |
+| **2. Leviedastusliikluse vähendamine** | Väiksemad segmentid vähendavad leviedastuste arvu, mis parandab võrgu jõudlust. |
+| **3. Suurem turvalisus**      | Loogiline eraldamine tagab parema turvakontrolli ja piirab volitamata juurdepääsu. |
+
+---
+
+Kokkuvõttes näitab see näide, kuidas väiksemateks segmentideks jagades saab märkimisväärselt vähendada leviedastusliiklust ning pakkuda samal ajal paremat võrgu struktuuri ja turvalisust. VLAN-id võimaldavad seega võrguressursside paremat juhtimist ja optimeerimist, mis võib oluliselt kaasa aidata üldise võrgutõhususe parandamisele.
+
 
 # Kuidas ühendada kommutaatoreid? Trunk-kontseptsioon
 
@@ -426,8 +439,33 @@ Kommutaator töötleb kõiki kaadreid alati märgistustega. Isegi kui võtate t�
 
 Lihtsalt kui kommutaator on karbist välja võetud, on VLAN 1 seal alati olemas ja hiljem hakkate lisama oma VLAN-e.
 
-## Native VLAN kontseptsioon
-
+### Native VLAN kontseptsioon
+```mermaid
+graph LR
+    subgraph "Kommutaator A"
+        A_VLAN1[VLAN 1 - Native]
+        A_VLAN10[VLAN 10]
+        A_VLAN20[VLAN 20]
+        A_VLAN30[VLAN 30]
+        A_PORT[Trunk Port]
+    end
+    
+    subgraph "Kommutaator B"
+        B_PORT[Trunk Port]
+        B_VLAN1[VLAN 1 - Native]
+        B_VLAN10[VLAN 10]
+        B_VLAN20[VLAN 20]
+        B_VLAN30[VLAN 30]
+    end
+    
+    A_PORT -- "VLAN 10 (tagged)" --> B_PORT
+    A_PORT -- "VLAN 20 (tagged)" --> B_PORT
+    A_PORT -- "VLAN 30 (tagged)" --> B_PORT
+    A_PORT -- "VLAN 1 (untagged)" --> B_PORT
+    
+    style A_VLAN1 fill:#f9f,stroke:#333,stroke-width:2px
+    style B_VLAN1 fill:#f9f,stroke:#333,stroke-width:2px
+```
 Näitel on kujutatud VLAN-id 30, 20, 10 ja 1, ning siin tahetakse arutada sellist mõistet nagu "Native VLAN" (põhi-VLAN).
 
 VLAN-ide kaadrid saabuvad ilma märgistuseta access-portidesse ja edastatakse trunk-ühenduses märgistustega. Kuid on võimalik määrata selline VLAN, mida edastatakse trunk-ühenduses ilma märgistuseta. Sellele VLAN-ile ei lisata märgistust ja selline VLAN saab olla ainult üks.
@@ -436,7 +474,7 @@ Me ütleme, et "seda VLAN-i võib edastada ilma märgistuseta". Vaikimisi seadis
 
 Mõnikord püütakse asendada VLAN-i numbrit, mis pole alati hea idee, eriti kui jutt käib spanning-tree protokollidest, mis lahendavad silmuste probleeme. Kuid mõnikord seda tehakse.
 
-## Näide
+### Näide
 
 Näiteks siin väljub see kui VLAN 1, aga siin seadistame kommutaatoril ja ütleme, et põhi-VLAN on näiteks VLAN 204. Vastavalt sellele:
 - Siit väljub kaader ilma märgistuseta
@@ -456,7 +494,48 @@ Veel üks asi, mida võib märkida - on kommutaatoreid, millel on piiratud VLAN-
 
 
 ## Marsruutimine VLAN-ide vahel. ROAS.
-
+```mermaid
+graph TD
+    subgraph "L3 Tase"
+        R[Ruuter]
+        R_IF1[Sub-IF 1 - VLAN 10]
+        R_IF2[Sub-IF 2 - VLAN 20]
+        R_IF3[Sub-IF 3 - VLAN 30]
+        
+        R --- R_IF1
+        R --- R_IF2
+        R --- R_IF3
+    end
+    
+    subgraph "L2 Tase"
+        SW[Kommutaator]
+        VLAN10[VLAN 10]
+        VLAN20[VLAN 20]
+        VLAN30[VLAN 30]
+        TRUNK[Trunk Port]
+        
+        SW --- VLAN10
+        SW --- VLAN20
+        SW --- VLAN30
+        SW --- TRUNK
+    end
+    
+    PC1[Arvuti 1] --- VLAN10
+    PC2[Arvuti 2] --- VLAN20
+    PC3[Arvuti 3] --- VLAN30
+    
+    TRUNK -- "Üks füüsiline kaabel" --- R
+    
+    R_IF1 -.- VLAN10
+    R_IF2 -.- VLAN20
+    R_IF3 -.- VLAN30
+    
+    style R fill:#f96,stroke:#333,stroke-width:2px
+    style SW fill:#69f,stroke:#333,stroke-width:2px
+    style VLAN10 fill:#9f9,stroke:#333,stroke-width:1px
+    style VLAN20 fill:#ff9,stroke:#333,stroke-width:1px
+    style VLAN30 fill:#f9f,stroke:#333,stroke-width:1px
+```
 Võib öelda, et need on eraldi võrgud; võiksin isegi öelda, et need on kolm eraldi kommutaatorit, kuhu on ühendatud meie eraldi kasutajad.
 
 Need kasutajad saavad omavahel töötada ühe võrgu piires, kuid nad ei saa suhelda üksteisega, sest ilmselgelt on nad ühendatud võrgu erinevatesse segmentidesse laialt leviedastuse mõttes.
@@ -464,6 +543,12 @@ Need kasutajad saavad omavahel töötada ühe võrgu piires, kuid nad ei saa suh
 Tehniliselt on see üks seade, kuid loogiliselt näeb see välja nagu erinevad võrgud, mis ei saa kunagi üksteisega ühendust.
 
 Ühenduse loomise küsimus on alati marsruutimine. Pidage meeles, et ühest võrgust väljumiseks ja teise sisenemiseks on vaja marsruutimist.
+
+### Router on a Stick (ROAS)
+
+![HSRP](https://media.geeksforgeeks.org/wp-content/uploads/hsrp1.png)
+
+Image Source: [GeeksforGeeks](https://www.geeksforgeeks.org/)
 
 Selleks on vaja kas ruuterit või L3 kommutaatorit. Meil on siin ruuter, ma ei räägi L3 kommutaatoritest, räägime neist hiljem. Siin on kujutatud skeem, mida sageli nimetatakse "ruuter kepil" või "router on a stick".
 
@@ -479,54 +564,228 @@ Seega saab toimuda marsruutimine. Seetõttu suunatakse ühest VLAN-ist pärit pa
 
 Märgin veel kord, et skeemi nimetatakse "router on a stick", kus ruuter ühendub mitme VLAN-iga ja teostab nende vahel marsruutimist.
 
-See pole alati mugav, sest vaadake - teie link hakkab koormatud olema voogudega ühes ja teises suunas. Hakkate koormama lihtsalt üht linki voogudega edasi-tagasi. Lahkute kommutaatorist ja marsruudite, see pole alati hea, kui teil on läbilaskevõime piirangud. Tavaliselt püütakse vältida selliseid kõrge koormusega linke.
+### Alternatiivid ja kaalutlused
 
-Räägime sellest, kui näitan, kuidas marsruutida VLAN-e kolmel kommutaatoril, kuid tavaliselt tehakse seda kuidagi nii, miski ei takista meid käitumast teistmoodi.
+See pole alati mugav, sest vaadake - teie link hakkab koormatud olema voogudega ühes ja teises suunas. Hakkate koormama lihtsalt üht linki voogudega edasi-tagasi. Lahkute kommutaatorist ja marsruudite, see pole alati hea, kui teil on läbilaskevõime piirangud. Tavaliselt püütakse vältida selliseid kõrge koormusega linke.
 
 Miski ei takista meil võtmast ruutereid ja neid ühendamast lihtsalt kolme füüsiliselt erineva lingiga, igaühes oma VLAN. See on selge, et võtame ruuteri ja teeme sellised eraldi ühendused - access pordid, ilma trunk-ita - määrame neile kolmele IP-aadressile igaühele eraldi pordile.
 
 Aga me teame kulusid, mäletate, kui näitasin, et ruuteritel pole nii palju liideseid ja neid on üsna vähe, seega püütakse alati kokku hoida. Hea viis on koguda kõik trunk-i ja anda see üle.
 
+## Alamliidesed (Subinterfaces)
+```mermaid
+flowchart LR
+    PC1[Arvuti VLAN 10] --> SW1
+    PC2[Arvuti VLAN 20] --> SW1
+    
+    subgraph SW1[Kommutaator]
+        V10[VLAN 10]
+        V20[VLAN 20]
+        TP[Trunk Port]
+    end
+    
+    TP -- "Trunk-ühendus" --> RT
+    
+    subgraph RT[Ruuter]
+        SIF1[Sub-IF VLAN 10\n192.168.10.1/24]
+        SIF2[Sub-IF VLAN 20\n192.168.20.1/24]
+        RSW[Marsruutimise\nProtsess]
+        
+        SIF1 --> RSW
+        SIF2 --> RSW
+    end
+    
+    RSW -- "Paketi marsruutimine" --> SIF2
+    SIF2 -- "Liiklus VLAN 20-sse" --> TP
+    TP -- "VLAN 20 liiklus" --> V20
+    V20 --> PC2
+    
+    style V10 fill:#9f9,stroke:#333,stroke-width:1px
+    style V20 fill:#ff9,stroke:#333,stroke-width:1px
+    style SIF1 fill:#9f9,stroke:#333,stroke-width:1px
+    style SIF2 fill:#ff9,stroke:#333,stroke-width:1px
+    style RSW fill:#f96,stroke:#333,stroke-width:2px
+```
 Te loote niinimetatud subinterface'i ja sellel on mitu liidest ühes füüsilises - ütlete, et sellises VLAN-is on selline liides, sellises VLAN-is on selline liides ja sellises on selline. Seda nimetatakse subinterface'iks.
 
 On võimalik lisada märgiseid erinevatele liidestele - teil on üks füüsiline liides, kuid sellel on mitu alamliidest, mida nimetatakse subinterface'iks. See sõltub jälle tootjast - Cisco puhul on see subinterface ja kui see on Juniper, siis on see unit-interface, mida nimetatakse unit-interface'iks. VLAN-i konfigureerimine on erinev.
 
-# VLAN-idega töötamiseks kasutatavad Cisco CLI käsud
+# VLAN-ide Konfigureerimine
 
-## VLAN-i loomine ja haldamine
-- **VLAN-i loomine andmebaasis**: konfigureerimisrežiimis loome andmebaasis VLAN-i tagiga number 2
-- **VLAN-i nimetamine**: käsk `name test` võimaldab anda VLAN-ile nime
-  - Laboratoorsetes töödes pole nimetamine kohustuslik
-  - Suurtes võrkudes on nimetamine soovitatav, et hiljem mäletada VLAN-i otstarvet
+## VLAN-ide Loomine ja Haldamine
 
-## VLAN-ide vaatamine
-- Käsk `show vlan` või `show vlan brief` näitab olemasolevaid VLAN-e
-- Näete, millised pordid on igasse VLAN-i määratud
-- Isegi kui VLAN-i pole ühtegi porti määratud, on see ikkagi andmebaasis nähtav
+![Crear VLAN Cisco](https://netcloudengineering.com/wp-content/uploads/2018/07/crear-vlan-cisco.jpg.webp)
 
-## Portide konfigureerimine
-- **Access režiim**: `switchport mode access` määrab pordi access režiimi
-  - Selles režiimis eemaldatakse vastuvõetud kaadritest VLAN-i tag
-  - Saatmisel lisatakse kaadritele VLAN-i tag
-  - Käsk `switchport access vlan 2` määrab pordi VLAN-i number 2
-  - Üldjuhul saab üks port töötada ainult ühes VLAN-is
+### VLAN-i Loomine
+VLAN-i loomiseks sisesta järgmised käsud konfiguratsiooni režiimis:
+```
+vlan 2
+name test
+```
 
-## Trunk režiimi konfigureerimine
-- **Trunk režiimi määramine**:
-  - `encapsulation dot1q` - pordirežiimi määramine (Cisco 3750 seadmetel vajalik, 29xx seadmetel pole)
-  - `switchport mode trunk` - pordi lülitamine trunk režiimi
-  
-- **Lubatud VLAN-id trunk pordil**:
-  - `switchport trunk allowed vlan 1,2` - lubab trunk pordil ainult VLAN-id 1 ja 2
-  - Kui tahate lisada uue VLAN-i olemasolevasse trunk porti:
-    - `switchport trunk allowed vlan add 100` - lisab VLAN 100
-  - Kui kasutate `switchport trunk allowed vlan 100` ilma `add` käsuta, kustutab see kõik eelmised VLAN-id
+**Selgitus:**
+- Esimene rida loob VLAN-i numbriga 2
+- Teine rida annab sellele nime "test"
+- VLAN-ile nime andmine pole kohustuslik, kuid see aitab võrgu halduril hiljem paremini mõista, milleks konkreetne VLAN loodi (näiteks "külalisvõrk", "õpilaste võrk" või "administratiivne võrk")
 
-- **Märgistamata liiklus trunk pordil**:
-  - `switchport trunk native vlan 5` - määrab VLAN 5 kohalikuks VLAN-iks, mis edastatakse ilma tagita
-  - VLAN peab olema eelnevalt lubatud trunk pordil
+### VLAN-ide Kuvamine
 
-## Olulised märkused
-- Alati kontrollige, et VLAN oleks andmebaasis loodud enne portide määramist
-- Olge ettevaatlik trunk portide konfigureerimisel - võite kaotada juurdepääsu seadmele
-- Laboratoorsetes töödes kasutatakse halduseks VLAN-e 609, 709, 809, 909
+![Word Image 24](https://www.flackbox.com/wp-content/uploads/2017/09/word-image-24.png)
+
+VLAN-ide ja nendesse kuuluvate portide vaatamiseks kasuta järgmisi käske:
+```
+show vlan
+show vlan brief
+```
+
+**Selgitus:**
+- `show vlan` näitab detailset informatsiooni kõigi VLAN-ide kohta
+- `show vlan brief` annab kokkuvõtlikuma ülevaate
+- Need käsud näitavad, milliseid VLAN-e on loodud ja millised pordid neisse kuuluvad
+- VLAN võib andmebaasis eksisteerida ka siis, kui sellesse pole veel ühtegi porti määratud
+
+### VLAN-i Kustutamine
+VLAN-i kustutamiseks andmebaasist:
+```
+no vlan X
+```
+
+**Selgitus:**
+- X on VLAN-i number, mida soovid kustutada
+- Enne kustutamist veendu, et ükski aktiivne port pole selle VLAN-iga seotud
+
+## Portide Konfigureerimine
+
+![Word Image](https://www.flackbox.com/wp-content/uploads/2017/09/word-image-22.png)
+
+### Access-režiimi Port
+Access-režiimi port kuulub ainult ühte VLAN-i ja on tavaliselt mõeldud lõppseadmete (arvutid, printerid jne) ühendamiseks.
+
+```
+interface fastEthernet 0/1
+switchport mode access
+switchport access vlan 2
+```
+
+**Selgitus:**
+- Esimene rida valib pordi, mida soovid konfigureerida
+- Teine rida määrab pordi töörežiimiks "access"
+- Kolmas rida määrab, millisesse VLAN-i (antud juhul VLAN 2) see port kuulub
+- Access-režiimis port eemaldab saabuvalt raamilt VLAN-i sildi ja lisab selle väljuvale raamile
+- Oluline: tavaliselt saab üks port kuuluda ainult ühte VLAN-i
+
+![Word Image 25](https://www.flackbox.com/wp-content/uploads/2017/09/word-image-25.png)
+
+### Trunk-režiimi Port
+Trunk-režiimi port võimaldab edastada mitme VLAN-i liiklust ja on tavaliselt kasutusel kommutaatorite või ruuterite vaheliste ühenduste jaoks.
+
+```
+interface fastEthernet 0/22
+switchport mode trunk
+switchport trunk allowed vlan 1,2
+```
+
+**Selgitus:**
+- Esimene rida valib pordi, mida soovid konfigureerida
+- Teine rida määrab pordi töörežiimiks "trunk"
+- Kolmas rida määrab, milliste VLAN-ide (antud juhul VLAN 1 ja 2) liiklust see port lubab
+- Mõnedel vanematel Cisco 3750 seeria lülititel võib olla vaja lisada ka käsk `encapsulation dot1q`
+
+![Word Image 8](https://www.flackbox.com/wp-content/uploads/2017/10/word-image-8.png)
+
+### Lubatud VLAN-id Trunk-pordis
+```
+switchport trunk allowed vlan 1,2
+```
+
+**Selgitus:**
+- See käsk määrab, milliste VLAN-ide liiklus on trunk-pordil lubatud
+- Antud näites on lubatud VLAN 1 ja 2
+- TÄHTIS: See käsk asendab kõik eelnevad seadistused - kui soovid lisada uut VLAN-i olemasolevate kõrvale, kasuta järgmist käsku
+
+### VLAN-ide Lisamine Trunk-porti
+```
+switchport trunk allowed vlan add 5
+```
+
+**Selgitus:**
+- See käsk lisab VLAN 5 lubatud VLAN-ide nimekirja, säilitades samal ajal olemasolevad seadistused
+- See on turvalisem meetod, kuna ei kustuta eelnevaid seadistusi
+
+![Word Image 9](https://www.flackbox.com/wp-content/uploads/2017/10/word-image-9.png)
+
+![Word Image 10](https://www.flackbox.com/wp-content/uploads/2017/10/word-image-10.png)
+
+## Native VLAN
+
+![Native VLAN Image](https://slideplayer.com/slide/13554705/82/images/59/Native+VLAN+Native+VLAN+For+devices+that+do+not+support+tagging..jpg)
+
+Native VLAN on eriline VLAN, mille liiklus saadetakse trunk-pordis ilma VLAN-sildita (untagged).
+
+```
+switchport trunk native vlan 5
+```
+
+**Selgitus:**
+- See käsk määrab VLAN 5 native VLAN-iks antud trunk-pordil
+- TÄHTIS: Native VLAN peab olema eelnevalt trunk-pordil lubatud
+- Erinevate native VLAN-ide kasutamine trunk-ühenduse eri otstes võib põhjustada probleeme
+
+### Milleks Native VLAN?
+
+**1. Seadmete Haldamine:**
+- Native VLAN on kasulik seadmete puhul (nt DSL-modemid), mis ei töötle VLAN-silte
+- Need seadmed saavad vastu võtta ainult märgistamata liiklust
+- Kui määrad haldusvõrgu VLAN-i native VLAN-iks, saad hallata ka neid seadmeid, mis ei toeta VLAN-tehnoloogiat
+
+**2. Hädaolukorra Juurdepääs:**
+- Kui haldusvõrgu lüliti lakkab töötamast, saad ühendada haldusarvuti otse trunk-porti
+- Kui haldusvõrgu VLAN on määratud native VLAN-iks, saad juurdepääsu ilma täiendava konfiguratsioonita
+- See on nagu tagavaraväljapääs võrguadministraatoritele
+
+## Ohud ja Vältimissoovitused
+
+**VLAN-ide Numbrite Muutmine Ühenduste Vahel:**
+- Väldi erinevate VLAN-i numbrite kasutamist ühenduse eri otstes, näiteks:
+  ```
+  (Switch 1) access vlan 10 --- access vlan 100 (Switch 2)
+  ```
+- See võib põhjustada probleeme, kui sama seade hiljem teise porti ühendatakse
+- Lüliti võib näha sama MAC-aadressi tulemas erinevatest VLAN-idest, mis tekitab segadust
+
+**CDP ja Spanning-Tree Hoiatused:**
+- Erinevad native VLAN-id trunk-ühenduse otstes võivad põhjustada "CDP VLAN mismatch" hoiatusi
+- Need protokollid jagavad infot VLAN-ide kohta ja võivad tuvastada mittevastavusi
+- Jälgi alati süsteemi hoiatusi, kuna need võivad osutada konfiguratsioonivigadele
+
+## Kasulikud Käsud VLAN-ide Kontrollimiseks
+
+**Trunk-portide Kontrollimine:**
+```
+show interface trunk
+```
+
+See käsk näitab:
+- Millised pordid on konfigureeritud trunk-režiimis
+- Millised pordid on aktiivsed trunk-pordid
+- Mis on native VLAN iga trunk-pordi jaoks
+- Millised VLAN-id on lubatud üle trunk-pordi
+
+![Show Interfaces Trunk](https://geek-university.com/wp-content/uploads/2015/10/show_interfaces_trunk.jpg)
+
+Image Source: [Geek University](https://geek-university.com)
+
+
+**VLAN-ide Kontrollimine:**
+```
+show vlan
+```
+
+See käsk näitab:
+- Millised VLAN-id on loodud
+- Millised pordid kuuluvad millisesse VLAN-i
+- VLAN-ide olekut ja muid parameetreid
+
+![Show VLANs Command](https://geek-university.com/wp-content/uploads/2015/10/show_interfaces_trunk.jpg)
+
+Image Source: [Geek University](https://geek-university.com)
