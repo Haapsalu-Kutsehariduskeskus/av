@@ -357,9 +357,9 @@ Nad näevad erinevad välja. Näiteks Juniper - need on ka ruuterid ja on olemas
 
 Kummaline tooteseeria, aga sellegipoolest on tal kasvuvõimalused nii kiiruse kui turvalisuse osas.
 
-![Cisco ISR 4000 Series](https://blog.router-switch.com/wp-content/uploads/2018/04/Cisco-ISR-4000-Series-768x338.png)
+![Cisco ISR 4000 Series](https://storage.googleapis.com/blogs-images-new/ciscoblogs/1/56.png)
 
-[Source: Router Modules Example](https://blog.router-switch.com/)
+[Source: Cisco Blog](https://blogs.cisco.com/networking/the-isr-4000-series-one-platform-to-rule-them-all)
 
 
 Ruuterite eripära on nende modulaarne konstruktsioon. See tähendab, et harva näete ruuteris suurt hulka porte. Neil on neid tavaliselt vähe, kui see just pole mingi 6-šassiiga ruuter, kus neid on palju. Antud juhul siin on näha... Las ma näitan teile, need on moodulid. Nii nad välja näevadki, nad võivad olla 1U või 2U kõrgused. Siin on populaarsed QWIC moodulid.
@@ -406,6 +406,9 @@ Kui rääkida hooldusest, siis need lähevad samuti ummistuse ja neid tuleb puha
 | **Moodulid PDH (E1, G.703, G703.1)**          | Plesiochronous Digital Hierarchy (PDH) modules supporting E1 and G.703 interfaces for digital voice and data transmission. |
 | **Moodulid häälportidega FXS/FXO/E1**         | Modules with voice ports for analog (FXS/FXO) and digital (E1) voice communication. |
 
+<a href="https://www.youtube.com/watch?v=UZHwlNoWwPA" target="_blank">
+  <img src="https://img.youtube.com/vi/UZHwlNoWwPA/0.jpg" alt="Common Routers" width="600">
+</a>
 
 Moodul nelja Ethernet-pordiga ja kommutaatoriga. Millised moodulid võivad veel olla:
 - Kommutaatorimoodulid
@@ -418,6 +421,8 @@ Moodul nelja Ethernet-pordiga ja kommutaatoriga. Millised moodulid võivad veel 
 - Häälpordid (saab otse telefone ühendada ruuterisse, mis toimib siis ka telefonikeskjaamana)
 
 Nägin ise huvitavat lahendust - Cisco 4U modulaarne ruuter, kus oli 48-pordiga kommutaatorimoodul ja sinna oli paigaldatud 2U server. Selline terve server koos kõvakettaga lihtsalt sisestati moodulina.
+
+**![Cisco 4U modulaarne ruuter](https://i.ebayimg.com/images/g/KfkAAOSwxK9lGoYT/s-l1600.webp)**
 
 Sellise šassiiga on vahel mugav, sest sinna saab panna, mida vaja. Kommutaatoritel on ka moodulid, aga mitte nii mitmekesised kui ruuteritel.
 
