@@ -790,12 +790,6 @@ See käsk näitab:
 
 Image Source: [Geek University](https://geek-university.com)
 
-## Study Case
-
-Alljärgnevalt on põhjalikum ja struktureeritum ülevaade käsust "show interface trunk" ning DTP-st:
-
----
-
 ### "Show Interface Trunk" Käsu Ülevaade
 
 - **Eesmärk:**  
@@ -823,16 +817,6 @@ Alljärgnevalt on põhjalikum ja struktureeritum ülevaade käsust "show interfa
 
 - **Oluline Märkus:**  
   Kuigi DTP muudab konfiguratsiooni lihtsamaks, tuleks selle kasutamisel olla ettevaatlik. Vale seadistus võib viia olukordadeni, kus trunk-seaded on ekslikult määratud, mis omakorda võib põhjustada võrguühenduse probleeme või turvariske.
-
----
-
-### Kokkuvõte
-
-- **"Show Interface Trunk" käsk:**  
-  Näitab detailset infot trunk-portide kohta, sealhulgas Native VLAN-i ja lubatud VLAN-id. See on oluline tööriist võrguadministraatori jaoks, et kontrollida ja kinnitada trunk-konfiguratsiooni.
-
-- **DTP (Dynamic Trunking Protocol):**  
-  Tagab automaatse trunk-režiimi läbirääkimise ja konfiguratsiooni sünkroniseerimise, mis lihtsustab võrgu haldamist, kuid nõuab hoolikat seadistamist, et vältida võimalikke turvariske.
 
 ## Study Case
 
