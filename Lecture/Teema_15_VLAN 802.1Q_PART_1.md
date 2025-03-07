@@ -789,3 +789,88 @@ See käsk näitab:
 ![Show VLANs Command](https://geek-university.com/wp-content/uploads/2015/10/show_interfaces_trunk.jpg)
 
 Image Source: [Geek University](https://geek-university.com)
+
+## Study Case
+
+Alljärgnevalt on põhjalikum ja struktureeritum ülevaade käsust "show interface trunk" ning DTP-st:
+
+---
+
+### "Show Interface Trunk" Käsu Ülevaade
+
+- **Eesmärk:**  
+  Käsu "show interface trunk" abil kuvatakse kogu teave lüliti trunk-portide kohta. See sisaldab:
+  - Millised pordid on trunk-režiimis.
+  - Millist **Native VLAN-i** kasutatakse (see on vaikimisi VLAN, kuhu kuuluvad märgistamata raamid).
+  - Millised VLAN-id on trunk-portidel lubatud ja kuidas liiklus nende vahel liigub (märgistatud versus märgistamata).
+
+- **Praktiline Kasutus:**  
+  See käsk aitab administraatoritel:
+  - Kontrollida trunk-konfiguratsiooni õigsust.
+  - Veenduda, et kõik vajalikud VLAN-id on õigesti määratletud ja et Native VLAN on seatud õigesse VLAN-i.
+  - Diagnostida võrguühenduste ja VLAN-konfiguratsioonide probleeme.
+
+---
+
+### DTP (Dynamic Trunking Protocol)
+
+- **Mis see on?**  
+  DTP on protokoll, mis võimaldab võrgu seadmetel automaatselt läbirääkimisi pidada, et määrata, kas port peaks töötama trunk-režiimis või mitte. See aitab lihtsustada võrgu seadistamist ja vähendada käsitsi tehtavate konfiguratsioonide arvu.
+
+- **Põhifunktsioonid:**
+  - **Automaatne Läbirääkimine:** Seadmed saavad automaatselt määrata, kas port peaks olema trunk või access režiimis.
+  - **Konfiguratsiooni Sünkroniseerimine:** DTP aitab tagada, et kõigis trunk-portides on ühtsed seaded, nii et kogu liiklus liigub ootuspäraselt.
+
+- **Oluline Märkus:**  
+  Kuigi DTP muudab konfiguratsiooni lihtsamaks, tuleks selle kasutamisel olla ettevaatlik. Vale seadistus võib viia olukordadeni, kus trunk-seaded on ekslikult määratud, mis omakorda võib põhjustada võrguühenduse probleeme või turvariske.
+
+---
+
+### Kokkuvõte
+
+- **"Show Interface Trunk" käsk:**  
+  Näitab detailset infot trunk-portide kohta, sealhulgas Native VLAN-i ja lubatud VLAN-id. See on oluline tööriist võrguadministraatori jaoks, et kontrollida ja kinnitada trunk-konfiguratsiooni.
+
+- **DTP (Dynamic Trunking Protocol):**  
+  Tagab automaatse trunk-režiimi läbirääkimise ja konfiguratsiooni sünkroniseerimise, mis lihtsustab võrgu haldamist, kuid nõuab hoolikat seadistamist, et vältida võimalikke turvariske.
+
+## Study Case
+
+VLAN-i seadistamiseks ja nende ühendamiseks läbi ruuteri toimub protsess järgmiselt:
+
+### 1. **Lülitil (Switch):**
+   - Loome VLAN-id:
+     ```
+     vlan 10
+     vlan 20
+     ```
+   - Määrame pordid **access**-režiimi:
+     ```
+     interface fa0/1
+     switchport mode access
+     switchport access vlan 10
+     ```
+   - Seadistame ruuteriga ühendatava pordi **trunk**-režiimi:
+     ```
+     interface fa0/24
+     switchport mode trunk
+     ```
+
+---
+
+### 2. **Ruuteril (Router):**
+   - Loome iga VLAN-i jaoks alamliidesed (**subinterfaces**):
+     ```
+     interface GigabitEthernet0/0.10
+     encapsulation dot1Q 10
+     ip address 192.168.10.1 255.255.255.0
+
+     interface GigabitEthernet0/0.20
+     encapsulation dot1Q 20
+     ip address 192.168.20.1 255.255.255.0
+     ```
+
+---
+
+### 3. **Ühendame kaabli:**
+   - **Trunk**-port lülitil (fa0/24) ühendatakse ruuteri pordiga (GigabitEthernet0/0).
