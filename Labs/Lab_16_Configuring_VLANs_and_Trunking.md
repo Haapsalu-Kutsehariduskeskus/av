@@ -1,4 +1,4 @@
-# 🔍 Lab14: Configuring VLANs and Trunking
+# 🔍 Lab16: Configuring VLANs and Trunking
 
 ## Introduction
 
