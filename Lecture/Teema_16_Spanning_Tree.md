@@ -1,243 +1,421 @@
 
----
-
-# 🔍 Lab: Multi-Site Network with VLANs and STP
-
-## Lab Objective
-In this lab, you will:
-1. Configure **VLANs** to segment network traffic.
-2. Configure **STP** to prevent loops and ensure redundancy.
-3. Test **failover** by simulating a link failure.
-4. Verify connectivity within and across VLANs.
 
 ---
 
-## Lab Topology
+# Teema 16: Spanning Tree protokollide perekond. STP, RSTP, PVST/RPVST, MSTP.
+
+## 📜 **Mis on Spanning Tree ja miks see on oluline?**
+
+- **Ethernet-võrkudes võib tekkida SILMUS (LOOP)**, kui **kommutaatorid (switchid) on valesti ühendatud**.
+- **Spanning Tree Protocol (STP)** aitab **silmuseid vältida**, blokeerides üleliigsed ühendused.
+- Ilma STP-ta võib võrk **aeglustuda või täielikult lakata töötamast**.
+
+---
+
+## ⚠️ **Kuidas silmus (loop) tekib?**
+
+**1️⃣ Liiga palju ühendusi**
+- Kujuta ette, et meil on kaks kommutaatorit (A ja B).
+- Mõlemad on ühendatud omavahel **mitme kaabliga** (nt kaks Ethernet-kaablit).
+
+**2️⃣ Broadcast-kaadrid hakkavad korduma**
+- Kui arvuti saadab **broadcast-kaadri (teate, mis läheb kõigile)**, saadavad kommutaatorid selle edasi **kõikidele portidele**.
+- See tähendab, et sama kaader võib **tulla tagasi algsesse kommutaatorisse**, luues lõputu tsükli (silmuse).
+
+**3️⃣ Võrk jookseb kinni**
+- Kuna Etherneti protokollis **pole TTL-i (Time-To-Live)**, ei tea kommutaatorid, **millal lõpetada kaadri edastamine**.
+- **Kaadrid hakkavad võrgus lõputult liikuma**, ummistades kõik lingid ja aeglustades võrku.
+
+🔍 **Võtame lihtsa näide:**
 
 ```mermaid
-graph TD
-    subgraph Site 1
-        S1[S1<br>Switch 1] --- S2[S2<br>Switch 2]
-        S1 --- PC1[PC1<br>VLAN 10<br>192.168.10.10/24]
-        S2 --- PC2[PC2<br>VLAN 20<br>192.168.20.20/24]
-    end
-
-    subgraph Site 2
-        S3[S3<br>Switch 3] --- S4[S4<br>Switch 4]
-        S3 --- PC3[PC3<br>VLAN 10<br>192.168.10.30/24]
-        S4 --- PC4[PC4<br>VLAN 20<br>192.168.20.40/24]
-    end
-
-    S1 --- S3
-    S2 --- S4
+sequenceDiagram
+    participant A as Kommutaator A
+    participant B as Kommutaator B
+    participant C as Kommutaator C
+    
+    A->>B: 📡 Broadcast kaader
+    B->>C: 📡 Broadcast kaader
+    C->>A: 📡 Broadcast kaader (tagasi algusse!)
+    A->>B: 📡 Broadcast kaader (uuesti!)
 ```
 
-*Figure: Two sites with redundant links between switches. PCs are assigned to different VLANs.*
+**📌 Probleem:** Kaader ei peatu kunagi → **võrk on ummistunud!**
+
+✅ **STP lahendus:** **Blokeerib ühe lingi**, et vältida lõputut ringlust.
 
 ---
 
-## Addressing Table
+## 📌 **STP Olulised Mõisted**
 
-| Device | Interface | IP Address      | Subnet Mask     | VLAN  |
-|--------|-----------|-----------------|-----------------|-------|
-| PC1    | NIC       | 192.168.10.10   | 255.255.255.0   | 10    |
-| PC2    | NIC       | 192.168.20.20   | 255.255.255.0   | 20    |
-| PC3    | NIC       | 192.168.10.30   | 255.255.255.0   | 10    |
-| PC4    | NIC       | 192.168.20.40   | 255.255.255.0   | 20    |
+| 🔍 **Mõiste** | 📝 **Lihtne Selgitus** |
+|--------------|------------------|
+| **🛠️ Root Bridge** | **Võrgu keskne kommutaator** (valitakse automaatselt). |
+| **🔗 Root Port** | **Parim port Root Bridge’ini jõudmiseks**. |
+| **🚦 Blocking Port** | **Blokeeritud port, et vältida silmuseid**. |
 
----
+👨‍💻 **Näide:** Kui kolm switchi on ühendatud ringina, valitakse üks neist **Root Bridge’iks** ja üleliigsed ühendused **blokeeritakse**.
 
-## Lab Steps (40-50 Minutes)
+![Root Bridge Election Process](https://www.networkacademy.io/sites/default/files/inline-images/root-bridge-election-process-step-1.svg)
 
-### Step 1: Build the Network
-1. Add **4 switches (2960)** and **4 PCs** to the workspace in Packet Tracer.
-2. Connect the switches:
-   - **Site 1:**
-     - **S1 F0/1** to **S2 F0/1**
-   - **Site 2:**
-     - **S3 F0/1** to **S4 F0/1**
-   - **Inter-Site Links:**
-     - **S1 F0/2** to **S3 F0/2**
-     - **S2 F0/2** to **S4 F0/2**
-3. Connect each PC to a switch:
-   - **PC1** to **S1 F0/3**
-   - **PC2** to **S2 F0/3**
-   - **PC3** to **S3 F0/3**
-   - **PC4** to **S4 F0/3**
+*Image Source: [Network Academy](https://www.networkacademy.io/) - [Root Bridge Election Process](https://www.networkacademy.io/sites/default/files/inline-images/root-bridge-election-process-step-1.svg)*
 
 ---
 
-### Step 2: Configure VLANs (10 Minutes)
-1. **Create VLANs on all switches:**
-   - On **S1**, **S2**, **S3**, and **S4**, create **VLAN 10** and **VLAN 20**:
-     ```bash
-     S1(config)# vlan 10
-     S1(config-vlan)# name SALES
-     S1(config-vlan)# exit
-     S1(config)# vlan 20
-     S1(config-vlan)# name ENGINEERING
-     S1(config-vlan)# exit
-     ```
+## ⏳ **STP Pordiseisundid**
 
-2. **Assign VLANs to switch ports:**
-   - On **S1**:
-     ```bash
-     S1(config)# interface f0/3
-     S1(config-if)# switchport mode access
-     S1(config-if)# switchport access vlan 10
-     S1(config-if)# exit
-     ```
-   - On **S2**:
-     ```bash
-     S2(config)# interface f0/3
-     S2(config-if)# switchport mode access
-     S2(config-if)# switchport access vlan 20
-     S2(config-if)# exit
-     ```
-   - On **S3**:
-     ```bash
-     S3(config)# interface f0/3
-     S3(config-if)# switchport mode access
-     S3(config-if)# switchport access vlan 10
-     S3(config-if)# exit
-     ```
-   - On **S4**:
-     ```bash
-     S4(config)# interface f0/3
-     S4(config-if)# switchport mode access
-     S4(config-if)# switchport access vlan 20
-     S4(config-if)# exit
-     ```
+| 🎯 **Seisund** | 📝 **Mida see tähendab?** |
+|---------------|------------------|
+| **Blocking** | ❌ Ei edasta liiklust, kuulab BPDU-sid. |
+| **Listening** | 🔄 Valmistub edastamiseks, ei õpi MAC-aadresse. |
+| **Learning** | 🏗️ Õpib MAC-aadresse, ei edasta veel andmeid. |
+| **Forwarding** | ✅ Pordil **täielik töövõime**. |
 
-3. **Verify VLAN assignments:**
-   ```bash
-   S1# show vlan brief
-   ```
+![Spanning Tree Port States](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYNNj7TtBV5SKCX6E7eclsvl43QTMCe-tCkC_9Wxvf3zbAMpgiij_yrEWoY9VLpN03ho83VOIp3-oDViTG_wNB3Q7vVZsV58W-k6Xvzi5qefzB8T3CcSMFP9boA2EnR6R2b8QECezVe7c9/s1600/www.ccnaccnplinux.com+Spanning+Tree+Port+States00005.jpg)
+
+*Image Source: [www.ccnaccnplinux.com](https://www.ccnaccnplinux.com/)*
 
 ---
 
-### Step 3: Configure Trunking (5 Minutes)
-1. **Configure trunk ports between switches:**
-   - On **S1**:
-     ```bash
-     S1(config)# interface range f0/1-2
-     S1(config-if-range)# switchport mode trunk
-     S1(config-if-range)# switchport trunk allowed vlan 10,20
-     S1(config-if-range)# exit
-     ```
-   - Repeat for **S2**, **S3**, and **S4**.
+## 🚀 **RSTP (Rapid STP - IEEE 802.1w)**
 
-2. **Verify trunk configuration:**
-   ```bash
-   S1# show interfaces trunk
-   ```
+| 🚀 **Mida see parandab?** | 📝 **Lihtne selgitus** |
+|--------------------------|------------------|
+| **Kiirem koondumisaeg** ⏳ | ✅ Üleminek võtab **1-2 sekundit** (vs STP 30-50s). |
+| **Uued porditüübid** 🔄 | ✅ **Alternate Port** – Varutee juurkommutaatorile. |
+| **Backup Port** 🔁 | ✅ **Varutee sama segmendi sees**. |
 
----
+👨‍💻 **Ehk:**
+Kui mõni **ühendus katkeb**, siis **STP arvutab kõik uuesti (~50 sek)**, aga **RSTP suudab kiiremini reageerida (1-2 sek)**.
 
-### Step 4: Configure STP (10 Minutes)
-1. **Set S1 as the root bridge for VLAN 10:**
-   ```bash
-   S1(config)# spanning-tree vlan 10 root primary
-   ```
+![Image](https://miro.medium.com/v2/resize:fit:476/0*8yJ7aCSufO-wlnEk.jpg)
 
-2. **Set S3 as the root bridge for VLAN 20:**
-   ```bash
-   S3(config)# spanning-tree vlan 20 root primary
-   ```
-
-3. **Verify STP configuration:**
-   ```bash
-   S1# show spanning-tree vlan 10
-   S3# show spanning-tree vlan 20
-   ```
+*Image Source: [Medium](https://medium.com/)*
 
 ---
 
-### Step 5: Test Connectivity (5 Minutes)
-1. **Test intra-VLAN connectivity:**
-   - Ping from **PC1** (VLAN 10) to **PC3** (VLAN 10).
-   - Ping from **PC2** (VLAN 20) to **PC4** (VLAN 20).
+## 🔀 **PVST+ & RPVST+ (Cisco)**
 
-2. **Test inter-VLAN connectivity:**
-   - Ping from **PC1** (VLAN 10) to **PC2** (VLAN 20).
-   - Note: Inter-VLAN communication will fail without a Layer 3 device (router).
+**📌 Cisco PVST+ ja RPVST+ eelised:**
 
----
+| 🔍 **Funktsioon** | 📝 **Mida see teeb?** |
+|------------------|------------------|
+| **Eraldi STP puu iga VLAN-i jaoks** | ✅ VLAN A võib kasutada ühte teed, VLAN B teist! |
+| **Parem võrgu koormuse jagamine** ⚖️ | ✅ Võrk töötab **efektiivsemalt**, kui erinevad VLAN-id kasutavad erinevaid linke. |
 
-### Step 6: Simulate Failover (10 Minutes)
-1. **Disconnect the primary inter-site link:**
-   - Shut down the link between **S1** and **S3**:
-     ```bash
-     S1(config)# interface f0/2
-     S1(config-if)# shutdown
-     ```
+🔴 **Puudused:**
+- ❌ Ainult **Cisco seadmetele**.
+- ❌ Rohkem protsessoriressursse vaja.
 
-2. **Verify STP recalculates the topology:**
-   ```bash
-   S1# show spanning-tree vlan 10
-   S3# show spanning-tree vlan 20
-   ```
+![Cisco Community Image](https://community.cisco.com/t5/image/serverpage/image-id/160582i8DC8A3943B08DE0F/image-size/large?v=v2&px=999)
 
-3. **Test connectivity after failover:**
-   - Ping from **PC1** to **PC3**.
-   - Ping from **PC2** to **PC4**.
-   - Ensure connectivity is maintained through the redundant link (**S2-S4**).
+*Image Source: [Cisco Community](https://community.cisco.com/)*
 
 ---
 
-### Step 7: Restore the Primary Link and Verify (5 Minutes)
-1. **Re-enable the primary inter-site link:**
-   ```bash
-   S1(config)# interface f0/2
-   S1(config-if)# no shutdown
-   ```
+## 🏆 **MSTP (Multiple Spanning Tree Protocol - IEEE 802.1s)**
 
-2. **Verify STP recalculates the topology:**
-   ```bash
-   S1# show spanning-tree vlan 10
-   S3# show spanning-tree vlan 20
-   ```
+📌 **Mis see on?**
+- **MSTP on standardiseeritud protokoll** (erinevalt PVST-st, mis on Cisco oma).
+- **Koondab VLAN-id gruppidesse** ja teeb **neile eraldi spanning tree puu**.
 
-3. **Test connectivity again:**
-   - Ping from **PC1** to **PC3**.
-   - Ping from **PC2** to **PC4**.
-   - Ensure connectivity is restored through the primary link (**S1-S3**).
+| ✅ **Eelised** |
+|-----------------|
+| **Töötab erinevate tootjate seadmetega** 🌍 |
+| **Ressursside kokkuhoid** 🖥️ (mitte iga VLAN ei vaja oma STP-d) |
+| **Tasakaalustab võrgu koormust** ⚖️ |
+
+👨‍💻 **Lihtne näide:**
+Kui meil on **50 VLAN-i**, siis **PVST+ teeks 50 STP arvutust**, aga **MSTP teeb ainult 3-4 arvutust** (gruppide järgi).
 
 ---
 
-## Key Commands for Verification
-- `show vlan brief` – Verify VLAN assignments.
-- `show interfaces trunk` – Verify trunk configuration.
-- `show spanning-tree vlan <vlan-id>` – Verify STP configuration for a specific VLAN.
+## 🔐 **STP Kaitsemehhanismid**
+
+| 🛡️ **Kaitse** | 📝 **Mida see teeb?** |
+|----------|----------------|
+| **BPDU Guard** 🚫 | ❌ **Keelab BPDU-de vastuvõtmise**, kui pordil pole lubatud kommutaatoreid. |
+| **Root Guard** 🔒 | ❌ **Takistab Root Bridge'i muutmist** (hoiab võrgu stabiilsena). |
+| **PortFast** ⚡ | ✅ **Kiire üleminek Forwarding-seisundisse** (kasutatakse PC-de portidel). |
+
+**Näide:** Kui keegi ühendab uue switchi ilma teadmiseta, **Root Guard ja BPDU Guard aitavad vältida võrgu rikkeid**.
 
 ---
 
-## Expected Results
-1. **VLAN Configuration:**
-   - PCs in the same VLAN can communicate (e.g., **PC1** and **PC3**).
-   - PCs in different VLANs cannot communicate without a router.
+## 🏁 **Spanning Tree Protokollide Võrdlus**
 
-2. **STP Configuration:**
-   - One inter-site link is blocked to prevent loops.
-   - Failover ensures connectivity when the primary link fails.
+| 🏷️ **Protokoll** | 🔎 **Standard** | ⏳ **Koondumisaeg** | 🔄 **Eraldi puu VLAN-ile?** |
+|-----------|--------------|------------------|----------------------|
+| **STP** | IEEE 802.1D | 🕒 **30-50 sek** | ❌ Ei |
+| **RSTP** | IEEE 802.1w | ⚡ **1-2 sek** | ❌ Ei |
+| **PVST+** | Cisco | 🕒 **30-50 sek** | ✅ Jah |
+| **RPVST+** | Cisco | � **1-2 sek** | ✅ Jah |
+| **MSTP** | IEEE 802.1s | ⚡ **1-2 sek** | 🏷️ **VLAN-i gruppide kaupa** |
 
----
+👨‍💻 **Selgitus:**
+- Kui tahad **väga lihtsat võrku**, kasuta **STP**.
+- Kui tahad **kiiret reageerimist**, kasuta **RSTP**.
+- Kui sul on **palju VLAN-e**, kasuta **MSTP või PVST+**.
 
-## Troubleshooting Tips
-1. **No Connectivity Within VLAN:**
-   - Verify VLAN assignments using `show vlan brief`.
-   - Ensure trunk ports allow the necessary VLANs.
-
-2. **STP Not Blocking Ports:**
-   - Verify STP configuration using `show spanning-tree`.
-   - Ensure the correct root bridge is elected.
+[**Understand STP Loop Guard and UDLD Features**](https://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol-stp-8021d/218321-configure-stp-with-loop-guard-and-bpdu-s.html)  
+*Source: [Cisco Official Documentation](https://www.cisco.com/)*
 
 ---
 
-## Key Takeaways
-- VLANs segment network traffic logically.
-- STP ensures redundancy and prevents loops.
-- Trunking allows multiple VLANs to traverse a single link.
-- Failover testing demonstrates STP’s ability to maintain connectivity during link failures.
+## STP kokkuvõte
+
+```mermaid
+flowchart TD
+    subgraph "The Problem: Network Loop"
+        A1[Switch 1 gets a message] -->|"Forwards to"| B1[Switch 2]
+        B1 -->|"Forwards to"| C1[Switch 3]
+        C1 -->|"Forwards back to"| A1
+        A1 -->|"OMG not again!"| B1
+    end
+
+    subgraph "The Fix: Spanning Tree Protocol"
+        A2[Switch 1 becomes Root Bridge] -->|"I'm the boss!"| B2[Switch 2]
+        A2 -->|"I'm the boss!"| C2[Switch 3]
+        B2 -->|"Link between us? BLOCKED!"| C2
+        C2 -->|"Can't send this way"| B2
+    end
+
+    subgraph "When Links Break"
+        A3[Switch 1: Root Bridge] -->|"Link breaks!"| C3[Switch 3: Oh no!]
+        C3 -->|"Emergency! Unblock my port!"| B3[Switch 2]
+        B3 -->|"You can use me to reach the Root now"| C3
+    end
+
+    style A1 fill:#ff9999
+    style B1 fill:#ff9999
+    style C1 fill:#ff9999
+    
+    style A2 fill:#99ff99
+    style B2 fill:#99ff99
+    style C2 fill:#99ff99
+    
+    style A3 fill:#9999ff
+    style B3 fill:#9999ff
+    style C3 fill:#9999ff
+```
+
+## Probleem
+- Lülitid saadavad sõnumeid ringiratast 🔄
+- Tekib silmus, mis koormab võrku ⚠️
+- Võrk muutub kasutuskõlbmatuks 💥
+
+## Lahendus: STP
+1. **Vali Root Bridge** - üks lüliti saab juurlülitiks 👑
+2. **Blokeeri mõned teed** - silmuste vältimiseks 🚫
+3. **Kiire taastamine** - kui ühendus katkeb, ava alternatiivne tee 🔄
+
+STP on nagu liikluspolitseinik, kes blokeerib mõned teed, et keegi ei saaks lõputult ringi sõita! 🚦
 
 ---
+
+## STP kaitsemehhanismid 🛡️
+- **BPDU Guard** - kaitseb serverite porte, blokeerides need kui BPDU ilmub 🚫
+- **Root Guard** - takistab võõraste lülitite juurlülitiks saamist 👮
+- **Loop Guard** - tuvastab ühepoolseid ühendusi, mis võivad silmuseid tekitada 🔍
+- **PortFast** - lubab lõppseadmetel kohe andmeid saata, jätmata STP ootamist ⚡
+
+---
+
+## Teised silmuste kaitse protokollid 🌐
+- **RSTP** - Rapid STP, kiirem taastumine (~2-3 sekundit) 🏎️
+- **MSTP** - võimaldab mitut STP instantsi erinevatele VLAN-idele 🧩
+- **PVST+** - Cisco versioon, töötab iga VLAN-iga eraldi 🔌
+- **Etherchannel/LACP** - mitu linki töötavad kui üks, suurendades kiirust ja pakkudes varundust 🔗
+
+STP on elutähtis võrgusilmuste vastu, muidu võrk "uputaks ennast" broadcast-tormidega! 🌊💻
+
+---
+
+## 🛠️ **Konfiguratsioon**
+
+### **1. STP sisselülitamine**
+```bash
+Switch(config)# spanning-tree mode rapid-pvst  # Aktiveerib RSTP
+```
+
+### **2. Root Bridge määramine**
+```bash
+Switch(config)# spanning-tree vlan 10 root primary  # Teeb selle switchi VLAN 10 Root Bridge'iks
+```
+
+### **3. PortFast sisselülitamine**
+```bash
+Switch(config)# interface GigabitEthernet0/1
+Switch(config-if)# spanning-tree portfast  # Kiire üleminek Forwarding-seisundisse
+```
+
+### **4. BPDU Guard sisselülitamine**
+```bash
+Switch(config-if)# spanning-tree bpduguard enable  # Blokeerib BPDU-sid
+```
+
+---
+
+## 🤔 **Miks on nii palju STP protokolle?**
+
+1. **STP (IEEE 802.1D):**
+   - Vanim versioon, aeglane (~50 sekundit taastumiseks).
+   - Üks puu kogu võrgule.
+
+2. **RSTP (IEEE 802.1w):**
+   - Kiirem (~1-2 sekundit taastumiseks).
+   - Lisab uusi porditüüpe (Alternate ja Backup).
+
+3. **PVST+ (Cisco):**
+   - Eraldi puu iga VLAN-i jaoks.
+   - Parem koormuse jaotus.
+
+4. **MSTP (IEEE 802.1s):**
+   - Gruppide kaupa VLAN-id.
+   - Töötab erinevate tootjate seadmetega.
+
+---
+
+## 📝 **Näide: Study Case STP seadistamine Cisco switchis:**
+
+Vaatleme näidet kolme switchiga võrgu seadistamisest (SW1, SW2, SW3).
+
+Samm 1: STP sisselülitamine
+Vaikimisi on STP tavaliselt sisse lülitatud, kuid on parem kontrollida ja aktiveerida see, kui see nii ei ole.
+
+```bash
+SW1(config)# spanning-tree mode rapid-pvst  # Lülitame sisse RSTP (Rapid PVST+)
+SW2(config)# spanning-tree mode rapid-pvst
+SW3(config)# spanning-tree mode rapid-pvst
+```
+
+Samm 2: Root Bridge määramine
+Oletame, et tahame, et SW1 oleks Root Bridge VLAN 10 ja VLAN 20 jaoks.
+
+```bash
+SW1(config)# spanning-tree vlan 10 root primary  # Teeme SW1 Root Bridgiks VLAN 10 jaoks
+SW1(config)# spanning-tree vlan 20 root primary  # Teeme SW1 Rood Bridgiks VLAN 20 jaoks
+```
+
+Kui on vaja määrata prioriteet käsitsi:
+
+```bash
+SW1(config)# spanning-tree vlan 10 priority 4096  # Prioriteet 4096 (väiksem = kõrgem prioriteet)
+```
+
+Samm 3: Portide seadistamine
+Igal switchil valib STP automaatselt Root- ja Designated portid, kuid sellele protsessile saab kaasa mõjutada.
+
+Portide oleku kontrollimine:
+
+```bash
+SW1# show spanning-tree vlan 10  # Näitab STP olekut VLAN 10 jaoks
+```
+
+Näidisväljund:
+
+- **Root Port**: Port, mis viib Rood Switchini.
+- **Designated Port**: Aktiivsed portid.
+- **Blocked Port**: Blokeeritud portid.
+
+Samm 4: Portide maksumuse seadistamine
+Kui on vaja muuta teed, saab seada portide maksumuse. Mida väiksem on maksumus, seda eelistatum on port.
+
+```bash
+SW2(config)# interface GigabitEthernet0/1
+SW2(config-if)# spanning-tree vlan 10 cost 10  # Määrame VLAN 10 maksumuseks 10
+```
+
+Samm 5: STP kiirendamine (PortFast)
+Portide jaoks, mis on ühendatud arvutitega (mitte teiste swithitega), saab sisse lülitada PortFast. See kiirendab porti aktiivseks olekuks minekut.
+
+```bash
+SW1(config)# interface GigabitEthernet0/2
+SW1(config-if)# spanning-tree portfast  # Lülitame sisse PortFast
+```
+
+Näidisvõrgu seadistus:
+- **SW1 (Root Bridge)**:
+  - Seadistatud kui Root Bridge VLAN 10 ja VLAN 20 jaoks.
+  - PortFast on sisse lülitatud portidel, mis on ühendatud arvutitega.
+
+- **SW2 ja SW3**:
+  - STP on sisse lülitatud Rapid-PVST+ režiimis.
+  - Portid, mis on ühendatud SW1-ga, muutuvad Root portideks.
+  - Liigsed portid blokeeritakse STP poolt.
+
+### Töö kontrollimine:
+STP oleku näitamine:
+
+```bash
+SW1# show spanning-tree
+```
+
+Konkreetse VLAN-i oleku näitamine:
+
+```bash
+SW1# show spanning-tree vlan 10
+```
+
+Portide info näitamine:
+
+```bash
+SW1# show spanning-tree interface GigabitEthernet0/1
+```
+
+### Kokkuvõte:
+- **Root Bridge**: Määratakse käsitsi või automaatselt.
+- **Portid**: Root-, määratud ja blokeeritud portid valitakse STP poolt.
+- **Käsud**: Kasutatakse prioriteetide, portide maksumuse ja töö kiirendamise seadistamiseks.
+
+## Kordame
+
+### Kuidas toimib portide blokeerimine STP-s?
+Kui STP blokeerib porti, viib see selle olekusse Blocking. Selles olekus:
+
+- Port ei edasta andmeid: See ei saada ega vastu võta kasutajaandmeid (näiteks pakette arvutite vahel).
+- Port kuulab BPDU-sid (Bridge Protocol Data Units): Need on spetsiaalsed STP teenindussõnumid, mida lülitid kasutavad võrgu topoloogia teabe vahetamiseks.
+
+### Kas paketid saavad läbida blokeeritud porti?
+- Ei, kasutajate paketid ei läbi. Blokeeritud port ei edasta andmeid, et vältida võrgu tsükleid.
+- Jah, BPDU-d läbivad. Blokeeritud port jätkab BPDU-de vastuvõtmist, et jälgida võrgu olekut. Kui midagi muutub (näiteks katkeb kaabel aktiivsel portil), võib STP porti lahti blokeerida ja topoloogiat ümber ehitada.
+
+### Näide tööst:
+- Tavaline töö:
+  - VLAN 10 andmed liiguvad läbi aktiivsete portide (näiteks SW1 → SW2).
+  - Port SW2 ja SW3 vahel on blokeeritud, ja kasutajate paketid ei läbi seda.
+
+- Kaabli katkemine aktiivsel portil:
+  - STP tuvastab muutuse (läbi BPDU-de).
+  - Blokeeritud port SW2 ja SW3 vahel viiakse olekusse Forwarding.
+  - Nüüd liiguvad VLAN 10 andmed läbi SW1 → SW3 → SW2.
+
+### Portide olekud STP-s:
+- **Blocking**:
+  - Port on blokeeritud, kasutajate paketid ei edastata.
+  - Vastuvõetakse ainult BPDU-sid.
+
+- **Listening**:
+  - Port valmistub aktiivseks olekuks.
+  - Kuulatakse BPDU-sid, kuid kasutajate pakette ei edastata.
+
+- **Learning**:
+  - Port õpib MAC-aadresse, kuid kasutajate pakette veel ei edastata.
+
+- **Forwarding**:
+  - Port on aktiivne ja edastab kasutajate pakette.
+
+- **Disabled**:
+  - Port on administratiivselt välja lülitatud või vea tõttu.
+
+### Miks on blokeerimine virtuaalne?
+
+Blokeerimist nimetatakse "virtuaalseks", sest:
+
+- Füüsiliselt jääb port sisse lülitatuks.
+- See jätkab tööd juhtimistasandil (vastuvõtab BPDU-sid).
+- Kasutajaandmeid ei edastata, kuid port on valmis "ärkama" võrgu muutuste korral.
+
+### Kokkuvõte:
+- Blokeeritud port ei edasta kasutajate pakette. See on vajalik võrgu tsüklite vältimiseks.
+- BPDU-d edastatakse alati. See võimaldab STP-l jälgida võrgu olekut ja kiiresti reageerida muutustele.
