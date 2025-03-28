@@ -1,4 +1,4 @@
-# VLAN ja Trunk-ühenduste Seadistamine
+# Lab_21: VLAN ja Trunk-ühenduste Seadistamine Klass 310
 ## Kahe Kommutaatoriga Laboratoorne Töö
 
 Selles praktikumis vaatleme kus ja miks on VLAN-e (virtuaalne kohtvõrk) vaja ja kuidas neid rakendada. Samuti õpime seadistama trunk-ühendusi kommutaatorite vahel.
