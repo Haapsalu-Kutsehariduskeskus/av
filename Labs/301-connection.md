@@ -24,6 +24,10 @@ Võrgu kommutaatorid, mida kasutad laboratoorses töös.
 
 ![Vabad kommutaatorid](./media/switches.png)
 
+Toitekaablid on siin:
+
+![Toitekaablid](./media/sw_võrgu.png)
+
 *Vabad kommutaatorid õpetaja laua juures, kui serverirackis pole vabu seadmeid.*
 
 ### 4. Konsoolikaablid
