@@ -1,21 +1,23 @@
-# Lab_20: VLAN-i Seadistamise Klass 310
-## Üks Kommutaator Kahe Arvutiga
+# Lab 20: VLAN seadistamine ühe kommutaatori ja kahe arvutiga
 
-Selles praktikumis vaatleme, kuidas seadistada ja kasutada VLAN-e (virtuaalsed kohtvõrgud) lihtsustatud võrgukeskkonnas.
+## NB! TÄHTIS!
+**Enne alustamist täitke dokumentatsioonivorm, mis on saadaval siit:**
+https://github.com/Haapsalu-Kutsehariduskeskus/av/blob/main/Labs/Lab20_One_Switch_Documentation_Form.md
 
-### Võrgu Topoloogia
+**Täidetud vorm tuleb esitada praktikumi lõpus!**
 
-```mermaid
-graph LR
-    PCA[PC-A] --- |F0/6| S1[Switch S1]
-    S1 --- |F0/7| PCB[PC-B]
-    
-    style PCA fill:#f9f,stroke:#333,stroke-width:2px
-    style PCB fill:#f9f,stroke:#333,stroke-width:2px
-    style S1 fill:#bbf,stroke:#333,stroke-width:2px
+## <span style="color: red;">NB! PEA MEELES! SUL VÕIVAD OLLA ENDA LIIDESED VASTAVALT SWITCHILE!</span>
+
+## Ülevaade
+Selles praktikumis seadistate ja katsetate VLAN-e (virtuaalsed kohtvõrgud) lihtsustatud võrgukeskkonnas, mis koosneb ühest kommutaatorist ja kahest ühendatud arvutist.
+
+## Võrgu Topoloogia
+
+```
+PC-A --- [F0/6] Kommutaator S1 [F0/7] --- PC-B
 ```
 
-### IP-aadresside Konfiguratsiooni Tabel
+## IP-aadresside Konfiguratsiooni Tabel
 
 | Seade  | Liides    | IP-aadress    | Võrgumask       | Vaikelüüs      |
 |--------|-----------|---------------|-----------------|-----------------|
@@ -23,13 +25,13 @@ graph LR
 | PC-A   | NIC       | 192.168.10.3  | 255.255.255.0   | 192.168.10.1    |
 | PC-B   | NIC       | 192.168.20.3  | 255.255.255.0   | 192.168.20.1    |
 
-_* - Kasuta oma eesnime (ilma täpitähtedeta, nt "Tõnu" asemel "Tonu" või "T6nu", liitnimede korral jäta tühik vahelt ära)._
+*_Kasuta oma eesnime (ilma täpitähtedeta, nt "Tõnu" asemel "Tonu" või "T6nu", liitnimede korral jäta tühik vahelt ära)._
 
-## Töö Käik
+## Töö Ülesanded
 
-### 1. Kaablite Ühendamine ja Esialgne Juurdepääs
+### Osa 1: Kaablite Ühendamine ja Esialgne Juurdepääs
 
-1. Ühenda kaablid vastavalt topoloogiajoonisele.
+1. Ühenda kaablid vastavalt topoloogiajoonisele:
    - Ühenda PC-A kommutaatori S1 porti F0/6
    - Ühenda PC-B kommutaatori S1 porti F0/7
    - Ühenda konsoolikaabel oma arvutist kommutaatorisse
@@ -38,7 +40,7 @@ _* - Kasuta oma eesnime (ilma täpitähtedeta, nt "Tõnu" asemel "Tonu" või "T6
    - Ava PuTTY programm ja ühendu üle "Serial" ühendustüübi
    - Seadista parameetrid: Speed = 9600; Data bits = 8; Stop bits = 1; Parity = None; Flow control = None
 
-### 2. Kommutaatori Põhiseadistused
+### Osa 2: Kommutaatori Põhiseadistused
 
 1. Seadista kommutaatori nimi vastavalt oma nimele:
    ```
@@ -90,14 +92,14 @@ _* - Kasuta oma eesnime (ilma täpitähtedeta, nt "Tõnu" asemel "Tonu" või "T6
    S1_SinuNimi# clock set TT:MM:SS PÄEV KUU AASTA
    ```
 
-### 3. Põhilised Ühenduvuse Testid
+### Osa 3: Põhilised Ühenduvuse Testid
 
-1. Proovi pingida PC-A-lt PC-B-sse.
-2. Proovi pingida arvutitest kommutaatorisse.
+1. Proovi pingida PC-A-lt PC-B-sse
+2. Proovi pingida arvutitest kommutaatorisse
 
-_Küsimus: Kas pingid õnnestuvad? Miks või miks mitte?_
+*Küsimus: Kas pingid õnnestuvad? Miks või miks mitte?*
 
-### 4. Vaikimisi VLAN-i Seadistuste Uurimine
+### Osa 4: Vaikimisi VLAN-i Seadistuste Uurimine
 
 1. Vaata praegust VLAN-ide infot:
    ```
@@ -105,9 +107,9 @@ _Küsimus: Kas pingid õnnestuvad? Miks või miks mitte?_
    S1_SinuNimi# show vlan brief
    ```
 
-_Küsimus: Mis on vaikimisi VLAN? Millised pordid on määratud sellesse?_
+*Küsimus: Mis on vaikimisi VLAN? Millised pordid on määratud sellesse?*
 
-### 5. VLAN-ide Loomine
+### Osa 5: VLAN-ide Loomine
 
 1. Loo järgmised VLAN-id:
    ```
@@ -125,7 +127,7 @@ _Küsimus: Mis on vaikimisi VLAN? Millised pordid on määratud sellesse?_
    S1_SinuNimi# show vlan brief
    ```
 
-### 6. Kommutaatori Portide Määramine VLAN-idesse
+### Osa 6: Kommutaatori Portide Määramine VLAN-idesse
 
 1. Määra PC-A VLAN 10-sse (Operations):
    ```
@@ -146,7 +148,7 @@ _Küsimus: Mis on vaikimisi VLAN? Millised pordid on määratud sellesse?_
    S1_SinuNimi# show vlan brief
    ```
 
-### 7. Haldus-VLAN-i Seadistamine
+### Osa 7: Haldus-VLAN-i Seadistamine
 
 1. Eemalda IP-aadress VLAN 1-lt:
    ```
@@ -166,15 +168,15 @@ _Küsimus: Mis on vaikimisi VLAN? Millised pordid on määratud sellesse?_
    S1_SinuNimi# show ip interface brief
    ```
 
-_Küsimus: Mis on VLAN 99 staatus? Miks?_
+*Küsimus: Mis on VLAN 99 staatus? Miks?*
 
-### 8. VLAN-ide Vahelise Ühenduvuse Testimine
+### Osa 8: VLAN-ide Vahelise Ühenduvuse Testimine
 
-1. Proovi uuesti pingida PC-A-lt PC-B-sse.
+1. Proovi uuesti pingida PC-A-lt PC-B-sse
 
-_Küsimus: Kas ping õnnestub? Miks või miks mitte?_
+*Küsimus: Kas ping õnnestub? Miks või miks mitte?*
 
-### 9. VLAN-i Portide Määrangute Haldamine
+### Osa 9: VLAN-i Portide Määrangute Haldamine
 
 1. Määra kasutamata pordid "parkimisplatsi" VLAN-i turvalisuse eesmärgil:
    ```
@@ -206,18 +208,18 @@ _Küsimus: Kas ping õnnestub? Miks või miks mitte?_
    S1_SinuNimi(config-if)# switchport access vlan 30
    ```
 
-_Küsimus: Mis juhtub, kui proovid määrata porti VLAN-ile, mida ei eksisteeri?_
+*Küsimus: Mis juhtub, kui proovid määrata porti VLAN-ile, mida ei eksisteeri?*
 
 6. Kontrolli pordi detailset konfiguratsiooni:
    ```
    S1_SinuNimi# show interfaces f0/24 switchport
    ```
 
-### 10. VLAN-ide Vahelise Marsruutimise Arutelu
+### Osa 10: VLAN-ide Vahelise Marsruutimise Arutelu
 
-_Küsimus: Mida oleks vaja, et VLAN 10 ja VLAN 20 hostid saaksid omavahel suhelda?_
+*Küsimus: Mida oleks vaja, et VLAN 10 ja VLAN 20 hostid saaksid omavahel suhelda?*
 
-### 11. Laboratoorse Töö Lõpetamine
+### Osa 11: Laboratoorse Töö Lõpetamine
 
 1. Kontrolli, kas vlan.dat fail eksisteerib:
    ```
@@ -249,7 +251,7 @@ _Küsimus: Mida oleks vaja, et VLAN 10 ja VLAN 20 hostid saaksid omavahel suheld
    S1_SinuNimi# show startup-config
    ```
 
-### Aruteluküsimused
+## Aruteluküsimused
 
 1. Mis on peamised kasud, mida saadakse VLAN-ide rakendamisega organisatsiooni võrgus?
 2. Millistel juhtudel ei ole VLAN-ide kasutamine vajalik või kasulik?
