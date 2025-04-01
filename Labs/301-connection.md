@@ -185,9 +185,9 @@ Laboratoorne töö nõuab ka teise arvuti ühendamist:
 
 ## <span style="color: red;">MEELESPEA:</span>
 
-1. Ära eemalda teiste ühendatud kaableid ilma loata. Märgi ära enda omad, kui tahad. Küsi Raini käest.
-2. Pärast praktikumi lõpetamist taasta seadme algseadistus, et see oleks valmis järgmisele kasutajale.
+1. <span style="color: red;">Ära eemalda teiste ühendatud kaableid ilma loata. Märgi ära enda omad, kui tahad. Küsi Raini käest.</span>
 
-![Meenutus](https://raw.githubusercontent.com/Haapsalu-Kutsehariduskeskus/av/main/images/rack.jpg)
+2. <span style="color: red;">Pärast praktikumi lõpetamist taasta seadme algseadistus, et see oleks valmis järgmisele kasutajale.</span>
 
-*Käsitle seadmeid ettevaatlikult!*
+
+![Meenutus](./media/plan.svg)
