@@ -1,4 +1,13 @@
 # Lab_21: VLAN ja Trunk-ühenduste Seadistamine Klass 310
+
+## NB! TÄHTIS!
+**Enne alustamist täitke dokumentatsioonivorm, mis on saadaval siit:**
+https://github.com/Haapsalu-Kutsehariduskeskus/av/blob/main/Labs/Lab20_Two_Switch_Documentation_Form.md
+
+**Täidetud vorm tuleb esitada praktikumi lõpus!**
+
+## <span style="color: red;">NB! PEA MEELES! SUL VÕIVAD OLLA ENDA LIIDESED VASTAVALT SWITCHILE!</span>
+
 ## Kahe Kommutaatoriga Laboratoorne Töö
 
 Selles praktikumis vaatleme kus ja miks on VLAN-e (virtuaalne kohtvõrk) vaja ja kuidas neid rakendada. Samuti õpime seadistama trunk-ühendusi kommutaatorite vahel.
