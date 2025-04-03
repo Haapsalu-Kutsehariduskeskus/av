@@ -186,9 +186,9 @@ Laboratoorne töö nõuab ka teise arvuti ühendamist:
 ## <span style="color: red;">MEELESPEA:</span>
 
 1. <span style="color: red;">Ära eemalda teiste ühendatud kaableid ilma loata. Märgi ära enda omad, kui tahad. Küsi Raini käest.</span>
-Rain näeb nii välja:
-![ Serveriruumi Kunn](https://hkhk.edu.ee/sites/hkhk.edu.ee/files/styles/detail_one_image/public/2021-02/koor.jpg?itok=K8nzLyaK)
-2. <span style="color: red;">Pärast praktikumi lõpetamist taasta seadme algseadistus, et see oleks valmis järgmisele kasutajale.</span>
+Rain näeb nii välja: ![Serveriruumi Kunn](https://hkhk.edu.ee/sites/hkhk.edu.ee/files/styles/detail_one_image/public/2021-02/koor.jpg?itok=K8nzLyaK)
+
+3. <span style="color: red;">Pärast praktikumi lõpetamist taasta seadme algseadistus, et see oleks valmis järgmisele kasutajale.</span>
 
 
 ![Meenutus](./media/plan.svg)
