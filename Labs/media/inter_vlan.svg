@@ -1,0 +1,160 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Lo0 -->
+  <rect x="345" y="30" width="80" height="30" rx="5" ry="5" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <text x="385" y="50" font-family="Arial" font-size="14" text-anchor="middle">Lo0</text>
+  
+  <!-- R1 Router - More realistic router shape -->
+  <g transform="translate(325, 80)">
+    <!-- Router body -->
+    <ellipse cx="60" cy="40" rx="60" ry="40" fill="#3a9d9d" stroke="#000000" stroke-width="2"/>
+    
+    <!-- Router details -->
+    <ellipse cx="60" cy="40" rx="50" ry="32" fill="none" stroke="white" stroke-width="1" stroke-dasharray="3,2"/>
+    
+    <!-- Router ports -->
+    <rect x="50" y="75" width="20" height="10" fill="black" />
+    
+    <!-- Router LEDs -->
+    <circle cx="30" cy="25" r="3" fill="#00ff00" />
+    <circle cx="40" cy="25" r="3" fill="#ffff00" />
+    <circle cx="50" cy="25" r="3" fill="#00ff00" />
+    
+    <!-- Router Label -->
+    <text x="60" y="45" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">R1</text>
+  </g>
+  
+  <!-- Connection from Lo0 to R1 -->
+  <line x1="385" y1="60" x2="385" y2="80" stroke="#000000" stroke-width="3"/>
+  
+  <!-- G0/1 Label -->
+  <text x="355" y="200" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">G0/1</text>
+  
+  <!-- S1 Switch - More realistic switch shape -->
+  <g transform="translate(325, 250)">
+    <!-- Switch body -->
+    <rect x="0" y="0" width="120" height="80" rx="5" ry="5" fill="#3a9d9d" stroke="#000000" stroke-width="2"/>
+    
+    <!-- Switch front panel -->
+    <rect x="10" y="15" width="100" height="50" rx="2" ry="2" fill="#2a7d7d" stroke="#000000" stroke-width="1"/>
+    
+    <!-- Switch ports -->
+    <rect x="15" y="25" width="8" height="5" fill="black" />
+    <rect x="30" y="25" width="8" height="5" fill="black" />
+    <rect x="45" y="25" width="8" height="5" fill="black" />
+    <rect x="60" y="25" width="8" height="5" fill="black" />
+    <rect x="75" y="25" width="8" height="5" fill="black" />
+    <rect x="90" y="25" width="8" height="5" fill="black" />
+    
+    <rect x="15" y="38" width="8" height="5" fill="black" />
+    <rect x="30" y="38" width="8" height="5" fill="black" />
+    <rect x="45" y="38" width="8" height="5" fill="black" />
+    <rect x="60" y="38" width="8" height="5" fill="black" />
+    <rect x="75" y="38" width="8" height="5" fill="black" />
+    <rect x="90" y="38" width="8" height="5" fill="black" />
+    
+    <!-- Switch LEDs -->
+    <circle cx="15" cy="55" r="2" fill="#00ff00" />
+    <circle cx="25" cy="55" r="2" fill="#00ff00" />
+    <circle cx="35" cy="55" r="2" fill="#ffff00" />
+    
+    <!-- Switch Label -->
+    <text x="60" y="75" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">S1</text>
+  </g>
+  
+  <!-- Connection from R1 to S1 -->
+  <line x1="385" y1="165" x2="385" y2="250" stroke="#000000" stroke-width="3"/>
+  
+  <!-- F0/5 Label -->
+  <text x="350" y="240" font-family="Arial" font-size="16" text-anchor="middle">F0/5</text>
+  
+  <!-- 802.1Q VLAN Trunk Label -->
+  <rect x="410" y="380" width="200" height="40" rx="20" ry="20" fill="lightblue" fill-opacity="0.3" stroke="#000000" stroke-width="1"/>
+  <text x="510" y="405" font-family="Arial" font-size="16" text-anchor="middle">802.1Q VLAN Trunk</text>
+  
+  <!-- S2 Switch - More realistic switch shape -->
+  <g transform="translate(585, 250)">
+    <!-- Switch body -->
+    <rect x="0" y="0" width="120" height="80" rx="5" ry="5" fill="#3a9d9d" stroke="#000000" stroke-width="2"/>
+    
+    <!-- Switch front panel -->
+    <rect x="10" y="15" width="100" height="50" rx="2" ry="2" fill="#2a7d7d" stroke="#000000" stroke-width="1"/>
+    
+    <!-- Switch ports -->
+    <rect x="15" y="25" width="8" height="5" fill="black" />
+    <rect x="30" y="25" width="8" height="5" fill="black" />
+    <rect x="45" y="25" width="8" height="5" fill="black" />
+    <rect x="60" y="25" width="8" height="5" fill="black" />
+    <rect x="75" y="25" width="8" height="5" fill="black" />
+    <rect x="90" y="25" width="8" height="5" fill="black" />
+    
+    <rect x="15" y="38" width="8" height="5" fill="black" />
+    <rect x="30" y="38" width="8" height="5" fill="black" />
+    <rect x="45" y="38" width="8" height="5" fill="black" />
+    <rect x="60" y="38" width="8" height="5" fill="black" />
+    <rect x="75" y="38" width="8" height="5" fill="black" />
+    <rect x="90" y="38" width="8" height="5" fill="black" />
+    
+    <!-- Switch LEDs -->
+    <circle cx="15" cy="55" r="2" fill="#00ff00" />
+    <circle cx="25" cy="55" r="2" fill="#00ff00" />
+    <circle cx="35" cy="55" r="2" fill="#ffff00" />
+    
+    <!-- Switch Label -->
+    <text x="60" y="75" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">S2</text>
+  </g>
+  
+  <!-- Connection from S1 to S2 -->
+  <line x1="445" y1="290" x2="585" y2="290" stroke="#000000" stroke-width="3"/>
+  
+  <!-- PC-A - More realistic computer shape -->
+  <g transform="translate(325, 500)">
+    <!-- Monitor -->
+    <rect x="20" y="0" width="80" height="60" rx="5" ry="5" fill="#6699cc" stroke="#000000" stroke-width="2"/>
+    <rect x="25" y="5" width="70" height="45" rx="2" ry="2" fill="#000066" stroke="#000000" stroke-width="1"/>
+    
+    <!-- Monitor stand -->
+    <path d="M55,60 L65,60 L70,70 L50,70 Z" fill="#444444" stroke="#000000" stroke-width="1"/>
+    
+    <!-- Keyboard -->
+    <rect x="40" y="75" width="40" height="15" rx="2" ry="2" fill="#dddddd" stroke="#000000" stroke-width="1"/>
+    
+    <!-- PC Label -->
+    <text x="60" y="30" font-family="Arial" font-size="14" font-weight="bold" fill="white" text-anchor="middle">PC-A</text>
+  </g>
+  
+  <!-- PC-B - More realistic computer shape -->
+  <g transform="translate(585, 500)">
+    <!-- Monitor -->
+    <rect x="20" y="0" width="80" height="60" rx="5" ry="5" fill="#6699cc" stroke="#000000" stroke-width="2"/>
+    <rect x="25" y="5" width="70" height="45" rx="2" ry="2" fill="#000066" stroke="#000000" stroke-width="1"/>
+    
+    <!-- Monitor stand -->
+    <path d="M55,60 L65,60 L70,70 L50,70 Z" fill="#444444" stroke="#000000" stroke-width="1"/>
+    
+    <!-- Keyboard -->
+    <rect x="40" y="75" width="40" height="15" rx="2" ry="2" fill="#dddddd" stroke="#000000" stroke-width="1"/>
+    
+    <!-- PC Label -->
+    <text x="60" y="30" font-family="Arial" font-size="14" font-weight="bold" fill="white" text-anchor="middle">PC-B</text>
+  </g>
+  
+  <!-- Connection from S1 to PC-A -->
+  <line x1="385" y1="330" x2="385" y2="500" stroke="#000000" stroke-width="3"/>
+  
+  <!-- Connection from S2 to PC-B -->
+  <line x1="645" y1="330" x2="645" y2="500" stroke="#000000" stroke-width="3"/>
+  
+  <!-- F0/1 Labels -->
+  <text x="460" y="280" font-family="Arial" font-size="16" text-anchor="middle">F0/1</text>
+  <text x="570" y="280" font-family="Arial" font-size="16" text-anchor="middle">F0/1</text>
+  
+  <!-- F0/6 Label -->
+  <text x="350" y="400" font-family="Arial" font-size="16" text-anchor="middle">F0/6</text>
+  
+  <!-- F0/18 Label -->
+  <text x="610" y="400" font-family="Arial" font-size="16" text-anchor="middle">F0/18</text>
+  
+  <!-- VLAN Labels -->
+  <text x="385" y="595" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">VLAN 10</text>
+  <text x="645" y="595" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">VLAN 20</text>
+</svg>
