@@ -5,44 +5,44 @@ To configure Rapid Per-VLAN Spanning Tree Protocol (RPVST+) on the network, esta
 
 ## Topology Diagram
 Same as Part 3, with the following root bridge assignments:
-- SW_L3_1 is root for VLANs X1 and X2
-- SW_L3_2 is root for VLANs X3 and X9
+- SW_L3_1 is root for VLANs 201 (X1) and 202 (X2)
+- SW_L3_2 is root for VLANs 203 (X3) and 209 (X9)
 
 ```mermaid
 graph TD
 
     %% === PCs ===
-    MNG["🖥 PC-MNG<br/>10.X.0.10/24<br/>VLAN X9<br/>Fa0/1 (Access)"]:::pc
-    PC0["🖥 PC-0<br/>10.X.1.10/24<br/>VLAN X1<br/>Fa0/1 (Access)"]:::pc
-    PC2["🖥 PC-2<br/>10.X.2.10/24<br/>VLAN X2<br/>Fa0/2 (Access)"]:::pc
-    PC1["🖥 PC-1<br/>10.X.1.11/24<br/>VLAN X1<br/>Fa0/1 (Access)"]:::pc
-    PC3["🖥 PC-3<br/>10.X.2.11/24<br/>VLAN X2<br/>Fa0/2 (Access)"]:::pc
+    MNG["🖥 PC-MNG<br/>10.20.0.10/24<br/>VLAN 209<br/>Fa0/1 (Access)"]:::pc
+    PC0["🖥 PC-0<br/>10.20.1.10/24<br/>VLAN 201<br/>Fa0/1 (Access)"]:::pc
+    PC2["🖥 PC-2<br/>10.20.2.10/24<br/>VLAN 202<br/>Fa0/2 (Access)"]:::pc
+    PC1["🖥 PC-1<br/>10.20.1.11/24<br/>VLAN 201<br/>Fa0/1 (Access)"]:::pc
+    PC3["🖥 PC-3<br/>10.20.2.11/24<br/>VLAN 202<br/>Fa0/2 (Access)"]:::pc
 
     %% === Server ===
-    SERVER["🖥 Server-0<br/>10.X.3.100/24<br/>VLAN X3<br/>Fa0/1 (Access)"]:::server
+    SERVER["🖥 Server-0<br/>10.20.3.10/24<br/>VLAN 203<br/>Fa0/1 (Access)"]:::server
 
     %% === Access Switches ===
     SW3["🔀 SW_L2_1<br/>2960-24TT<br/>Access Switch<br/>Fa0/1: PC0<br/>Fa0/2: PC2<br/>Fa0/24: Trunk"]:::access
     SW4["🔀 SW_L2_2<br/>2960-24TT<br/>Access Switch<br/>Fa0/1: PC1<br/>Fa0/2: PC3<br/>Fa0/24: Trunk"]:::access
 
     %% === Distribution Switches ===
-    SW1["🟩 SW_L3_1<br/>3560-24PS<br/>Root Bridge for VLAN X1, X2<br/>Fa0/1: PC-MNG<br/>Fa0/23: Trunk<br/>Fa0/24: Trunk"]:::rootX1X2
-    SW2["🟨 SW_L3_2<br/>3560-24PS<br/>Root Bridge for VLAN X3, X9<br/>Fa0/1: Server<br/>Fa0/23: Trunk<br/>Fa0/24: Trunk"]:::rootX3X9
+    SW1["🟩 SW_L3_1<br/>3560-24PS<br/>Root Bridge for VLAN 201, 202<br/>Fa0/1: PC-MNG<br/>Fa0/23: Trunk<br/>Fa0/24: Trunk"]:::rootX1X2
+    SW2["🟨 SW_L3_2<br/>3560-24PS<br/>Root Bridge for VLAN 203, 209<br/>Fa0/1: Server<br/>Fa0/23: Trunk<br/>Fa0/24: Trunk"]:::rootX3X9
 
     %% === Connections ===
-    PC0 -->|Fa0/1<br/>Access VLAN X1| SW3
-    PC2 -->|Fa0/2<br/>Access VLAN X2| SW3
+    PC0 -->|Fa0/1<br/>Access VLAN 201| SW3
+    PC2 -->|Fa0/2<br/>Access VLAN 202| SW3
 
-    PC1 -->|Fa0/1<br/>Access VLAN X1| SW4
-    PC3 -->|Fa0/2<br/>Access VLAN X2| SW4
+    PC1 -->|Fa0/1<br/>Access VLAN 201| SW4
+    PC3 -->|Fa0/2<br/>Access VLAN 202| SW4
 
     SW3 -->|Fa0/24<br/>Trunk| SW1
     SW4 -->|Fa0/24<br/>Trunk| SW2
 
     SW1 -->|Fa0/23<br/>Trunk| SW2
 
-    MNG -->|Fa0/1<br/>Access VLAN X9| SW1
-    SERVER -->|Fa0/1<br/>Access VLAN X3| SW2
+    MNG -->|Fa0/1<br/>Access VLAN 209| SW1
+    SERVER -->|Fa0/1<br/>Access VLAN 203| SW2
 
     %% === Classes ===
     classDef pc fill:#d4f1f9,stroke:#333,stroke-width:1px;
@@ -64,24 +64,24 @@ graph TD
 
 | VLAN ID | VLAN Name      | Network        | Root Bridge     |
 |---------|----------------|----------------|-----------------|
-| X9 | Management     | 10.X.0.0/24    | SW_L3_1         |
-| X1      | USERS1         | 10.X.1.0/24    | SW_L3_1         |
-| X2      | USERS2         | 10.X.2.0/24    | SW_L3_1         |
-| X3      | Servers        | 10.X.3.0/24    | SW_L3_2         |
+| 209     | MNG            | 10.20.0.0/24   | SW_L3_2         |
+| 201     | USER1          | 10.20.1.0/24   | SW_L3_1         |
+| 202     | USER2          | 10.20.2.0/24   | SW_L3_1         |
+| 203     | SRV            | 10.20.3.0/24   | SW_L3_2         |
 
 
 ### Switch STP Priority Configuration
 
 | Switch   | VLAN          | Priority       | Root Bridge For |
 |----------|---------------|----------------|-----------------|
-| SW_L3_1  | X1, X2        | 4096           | VLAN X1, X2     |
-| SW_L3_2  | X3, X9        | 4096           | VLAN X3, X9     |
+| SW_L3_1  | 201, 202      | 4096           | VLAN 201, 202   |
+| SW_L3_2  | 203, 209      | 4096           | VLAN 203, 209   |
 | SW_L2_1  | All VLANs     | 32768 (default)| None            |
 | SW_L2_2  | All VLANs     | 32768 (default)| None            |
 
 ### Trunk Links Configuration
 
-| Switch   | Port   | Connected To | STP State for VLAN X1 | STP State for VLAN X3 |
+| Switch   | Port   | Connected To | STP State for VLAN 201 | STP State for VLAN 203 |
 |----------|--------|-------------|------------------------|------------------------|
 | SW_L3_1  | Fa0/23 | SW_L3_2     | Forwarding             | Blocking               |
 | SW_L3_1  | Fa0/24 | SW_L2_1     | Forwarding             | Forwarding             |
@@ -104,14 +104,14 @@ graph TD
 2. **Configure Root Bridge Priorities**:
    - On SW_L3_1 (3560-24PS Switch-1):
      ```
-     spanning-tree vlan X1 priority 4096
-     spanning-tree vlan X2 priority 4096
+     spanning-tree vlan 201 priority 4096
+     spanning-tree vlan 202 priority 4096
      ```
    
    - On SW_L3_2 (3560-24PS Switch-2):
      ```
-     spanning-tree vlan X3 priority 4096
-     spanning-tree vlan X9 priority 4096
+     spanning-tree vlan 203 priority 4096
+     spanning-tree vlan 209 priority 4096
      ```
 
 3. **Configure Trunk Links**:
@@ -121,13 +121,13 @@ graph TD
        interface fa0/23
        switchport trunk encapsulation dot1q
        switchport mode trunk
-       switchport trunk native vlan X9
+       switchport trunk native vlan 209
        no shutdown
        exit
        interface fa0/24
        switchport trunk encapsulation dot1q
        switchport mode trunk
-       switchport trunk native vlan X9
+       switchport trunk native vlan 209
        no shutdown
        exit
        ```
@@ -137,13 +137,13 @@ graph TD
        interface fa0/23
        switchport trunk encapsulation dot1q
        switchport mode trunk
-       switchport trunk native vlan X9
+       switchport trunk native vlan 209
        no shutdown
        exit
        interface fa0/24
        switchport trunk encapsulation dot1q
        switchport mode trunk
-       switchport trunk native vlan X9
+       switchport trunk native vlan 209
        no shutdown
        exit
        ```
@@ -152,7 +152,7 @@ graph TD
        ```
        interface fa0/24
        switchport mode trunk
-       switchport trunk native vlan X9
+       switchport trunk native vlan 209
        no shutdown
        exit
        ```
@@ -160,26 +160,24 @@ graph TD
 4. **Verify Spanning Tree Configuration**:
    - On each switch, verify the spanning tree configuration:
      ```
-     show spanning-tree
-     show spanning-tree interface fa0/23
-     show spanning-tree interface fa0/24
+     show spanning-tree interface
      ```
    
    - Specifically check for:
      ```
-     show spanning-tree vlan X1
-     show spanning-tree vlan X2
-     show spanning-tree vlan X3
-     show spanning-tree vlan X9
+     show spanning-tree vlan 201
+     show spanning-tree vlan 202
+     show spanning-tree vlan 203
+     show spanning-tree vlan 209
      ```
 
 ## Expected Results
 
-- SW_L3_1 should be the root bridge for VLANs X1 and X2
-- SW_L3_2 should be the root bridge for VLANs X3 and X9
+- SW_L3_1 should be the root bridge for VLANs 201 and 202
+- SW_L3_2 should be the root bridge for VLANs 203 and 209
 - The trunk link between SW_L3_1 and SW_L3_2 should:
-  - Be in forwarding state for VLAN X1 on SW_L3_1 and blocking state on SW_L3_2
-  - Be in blocking state for VLAN X3 on SW_L3_1 and forwarding state on SW_L3_2
+  - Be in forwarding state for VLAN 201 on SW_L3_1 and blocking state on SW_L3_2
+  - Be in blocking state for VLAN 203 on SW_L3_1 and forwarding state on SW_L3_2
 - All other links should be in forwarding state
 - No loops should exist in the network topology
 
@@ -204,8 +202,8 @@ This RPVST+ configuration demonstrates several important networking concepts:
 
 4. **Load Balancing**:
    - Having different root bridges for different VLANs creates natural load balancing
-   - Traffic for VLANs X1 and X2 will primarily use one path through the network
-   - Traffic for VLANs X3 and X9 will use a different path
+   - Traffic for VLANs 201 and 202 will primarily use one path through the network
+   - Traffic for VLANs 203 and 209 will use a different path
    - This maximizes available bandwidth by utilizing all links
 
 5. **Redundancy and Failover**:
@@ -214,7 +212,7 @@ This RPVST+ configuration demonstrates several important networking concepts:
    - This provides high availability with minimal downtime
 
 6. **Native VLAN Configuration**:
-   - Setting VLAN X9 as the native VLAN on trunk ports ensures untagged frames are properly handled
+   - Setting VLAN 209 as the native VLAN on trunk ports ensures untagged frames are properly handled
    - This is a security best practice to prevent VLAN hopping attacks
 
 This RPVST+ configuration ensures a loop-free topology while maintaining redundancy and optimizing traffic flow across the network.
