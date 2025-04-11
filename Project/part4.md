@@ -64,13 +64,11 @@ graph TD
 
 | VLAN ID | VLAN Name      | Network        | Root Bridge     |
 |---------|----------------|----------------|-----------------|
-| X0 (20) | Management     | 10.X.0.0/24    | SW_L3_1         |
+| X9 | Management     | 10.X.0.0/24    | SW_L3_1         |
 | X1      | USERS1         | 10.X.1.0/24    | SW_L3_1         |
 | X2      | USERS2         | 10.X.2.0/24    | SW_L3_1         |
 | X3      | Servers        | 10.X.3.0/24    | SW_L3_2         |
-| X9      | Native         | N/A            | SW_L3_2         |
 
-Note: X represents your variant number (20 in this case).
 
 ### Switch STP Priority Configuration
 
