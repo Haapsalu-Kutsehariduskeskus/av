@@ -65,10 +65,10 @@ graph TD
 
 | VLAN ID | VLAN Name      | Network        | Purpose        |
 |---------|----------------|----------------|----------------|
-| X0      | Management     | 10.X.0.0/24    | Network Management |
+| X9      | MNG   | 10.X.0.0/24    | Network Management |
 | X1      | USERS1         | 10.X.1.0/24    | User Group 1   |
 | X2      | USERS2         | 10.X.2.0/24    | User Group 2   |
-| X3      | Servers        | 10.X.3.0/24    | Server Access  |
+| X3      | SRV        | 10.X.3.0/24    | Server Access  |
 
 Note: X represents your variant number as specified in the assignment.
 
