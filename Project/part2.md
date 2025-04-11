@@ -21,7 +21,6 @@ graph TD
     classDef switch fill:#c5e8b7,stroke:#333,stroke-width:1px;
     class PC0,PC1 pc;
     class SW1,SW2 switch;
-
 ```
 
 ## Network Device Table
@@ -37,10 +36,10 @@ graph TD
 
 | Device   | Port  | Connection To | Port Type | VLAN |
 |----------|-------|--------------|-----------|------|
-| Switch-1 | Fa0/1  | PC-0         | Access    | 1    |
-| Switch-1 | Fa0/23 | Switch-2     | Access    | 1    |
-| Switch-2 | Fa0/1  | PC-1         | Access    | 1    |
-| Switch-2 | Fa0/23 | Switch-1     | Access    | 1    |
+| Switch-1 | Fa0/1  | PC-0         | Access    | 20   |
+| Switch-1 | Fa0/23 | Switch-2     | Trunk     | N/A  |
+| Switch-2 | Fa0/1  | PC-1         | Access    | 20   |
+| Switch-2 | Fa0/23 | Switch-1     | Trunk     | N/A  |
 
 ## Instructions
 
@@ -73,9 +72,41 @@ graph TD
      - Leave Default Gateway blank
 
 4. **Switch Configuration**:
-   - No specific configuration is needed for the switches in this basic setup
-   - Switches will operate in their default configuration
-   - All ports are in VLAN 1 by default
+   - For Switch-1:
+     - Enter privileged EXEC mode: `enable`
+     - Enter configuration mode: `configure terminal`
+     - Create VLAN 20: `vlan 20`
+     - Configure port Fa0/1 as access port in VLAN 20:
+       ```
+       interface fastEthernet 0/1
+       switchport mode access
+       switchport access vlan 20
+       exit
+       ```
+     - Configure port Fa0/23 as trunk port:
+       ```
+       interface fastEthernet 0/23
+       switchport mode trunk
+       exit
+       ```
+
+   - For Switch-2:
+     - Enter privileged EXEC mode: `enable`
+     - Enter configuration mode: `configure terminal`
+     - Create VLAN 20: `vlan 20`
+     - Configure port Fa0/1 as access port in VLAN 20:
+       ```
+       interface fastEthernet 0/1
+       switchport mode access
+       switchport access vlan 20
+       exit
+       ```
+     - Configure port Fa0/23 as trunk port:
+       ```
+       interface fastEthernet 0/23
+       switchport mode trunk
+       exit
+       ```
 
 5. **Testing Connectivity**:
    - On PC-0, open Command Prompt
@@ -98,13 +129,14 @@ This network setup demonstrates several important networking concepts:
    - Switches build a MAC address table by learning which devices are connected to which ports
    - When a frame arrives, the switch checks its MAC address table and forwards the frame only to the appropriate port
 
-2. **LAN Connectivity**:
-   - Multiple switches can be connected to extend a LAN
-   - PCs connected to different switches can communicate as if they were on the same segment
-   - No router is needed since all devices are in the same subnet (10.20.1.0/24)
+2. **VLAN Configuration**:
+   - VLANs (Virtual LANs) allow logical segmentation of a network
+   - In this setup, both PCs are placed in VLAN 20
+   - Traffic between switches must flow through a trunk link that can carry multiple VLANs
+   - Trunk links use 802.1Q tagging to identify which frames belong to which VLANs
 
 3. **Direct vs. Indirect Connectivity**:
-   - Unlike Part 1, the PCs are not directly connected to each other
+   - The PCs are not directly connected to each other
    - Traffic must flow through the switches, which demonstrates how most real networks operate
    - This provides scalability as more devices can be added to either switch
 
@@ -113,4 +145,4 @@ This network setup demonstrates several important networking concepts:
      - PCs (DTE) connect to switches (DCE)
      - Modern switches have auto-MDIX capability which can detect and adjust for cable type
 
-This setup lays the groundwork for understanding more complex networks with VLANs, inter-VLAN routing, and other advanced concepts covered in subsequent parts of the lab.
+This setup lays the groundwork for understanding more complex networks with multiple VLANs, inter-VLAN routing, and other advanced concepts covered in subsequent parts of the lab.
