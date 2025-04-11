@@ -64,17 +64,10 @@ graph TD
 
 | VLAN ID | VLAN Name      | Network        | Purpose        |
 |---------|----------------|----------------|----------------|
-<<<<<<< HEAD
-| X9      | MNG   | 10.X.0.0/24    | Network Management |
-| X1      | USERS1         | 10.X.1.0/24    | User Group 1   |
-| X2      | USERS2         | 10.X.2.0/24    | User Group 2   |
-| X3      | SRV        | 10.X.3.0/24    | Server Access  |
-=======
-| 209     | Management     | 10.20.0.0/24   | Network Management |
+| 209     | MNG            | 10.20.0.0/24   | Network Management |
 | 201     | USERS1         | 10.20.1.0/24   | User Group 1   |
 | 202     | USERS2         | 10.20.2.0/24   | User Group 2   |
-| 203     | Servers        | 10.20.3.0/24   | Server Access  |
->>>>>>> aa3580e (correction)
+| 203     | SRV            | 10.20.3.0/24   | Server Access  |
 
 Note: Variant number 20 is used for this assignment, where X = 20.
 
@@ -126,7 +119,7 @@ Note: Variant number 20 is used for this assignment, where X = 20.
    - Create VLANs:
      ```
      vlan 209
-     name Management
+     name MNG
      exit
      vlan 201
      name USERS1
@@ -135,7 +128,7 @@ Note: Variant number 20 is used for this assignment, where X = 20.
      name USERS2
      exit
      vlan 203
-     name Servers
+     name SRV
      exit
      ```
 
@@ -308,8 +301,6 @@ This VLAN configuration setup demonstrates several important networking concepts
    - Connection from access switches to different distribution switches creates a resilient network design
 
 This VLAN setup provides the foundation for more advanced network configurations including inter-VLAN routing, which would be necessary for communication between different VLANs in a production environment.
-<<<<<<< HEAD
-=======
 
 ## Troubleshooting Tips
 
@@ -334,4 +325,3 @@ If connectivity issues occur:
 5. **Examine MAC Address Tables**:
    - Use `show mac address-table` to verify switch learning
    - Check for MAC addresses of connected devices
->>>>>>> aa3580e (correction)
