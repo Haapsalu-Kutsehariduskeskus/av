@@ -62,7 +62,7 @@ graph TD
 
 | Interface        | IP Address/Mask   | VLAN       | Description          |
 |------------------|-------------------|------------|----------------------|
-| VLAN X9 (20)     | 10.X.0.1/24       | X9         | Management Interface |
+| VLAN X9     | 10.X.0.1/24       | X9         | Management Interface |
 | VLAN X1          | 10.X.1.1/24       | X1         | USERS1 Gateway       |
 | VLAN X2          | 10.X.2.1/24       | X2         | USERS2 Gateway       |
 | VLAN X3          | 10.X.3.1/24       | X3         | Servers Gateway      |
