@@ -9,7 +9,7 @@
 > ✅ **Maria_R2**  
 > ✅ **Maria_ISP**  
 >
-> See aitab õpetajal **üliõpilaste konfiguratsioone eristada**.  
+> See aitab õpetajal **õpilase konfiguratsioone eristada**.  
 > ❗ **VALE NIMETAMINE VÕIB KAASA TUUA FÜÜSILIST VÄGIVALDA!** (Jah, niivõrd lihtsate asjade eest võid päriselt. Elu on ebaõiglane.)
 
 ---
