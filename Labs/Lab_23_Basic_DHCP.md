@@ -1,9 +1,9 @@
 # 🧪 Lab 23: DHCP JA NAT PÕHIKONFIGURATSIOON
 ## ehk "Kuidas panna ruuterid tööle ja mitte hulluks minna"
 
-## ⚠️⚠️ **TÄHELEPANU – LOE HOOLIKALT!** ⚠️⚠️
+## ⚠️⚠️ TÄHELEPANU – LOE HOOLIKALT! ⚠️⚠️
 
-> 💥 **KÕIGILE SEADMETELE PEAB LISAMA SINU NIME!**  
+> 💥 KÕIGILE SEADMETELE PEAB LISAMA SINU NIME!  
 > 🔹 Näiteks kui sinu nimi on **Maria**, siis peavad seadmete nimed olema:  
 > ✅ **Maria_R1**  
 > ✅ **Maria_R2**  
@@ -21,7 +21,7 @@
 > 🔹 **Seadme nimi** (koos sinu nimega! Jah, me mainime seda kaks korda, sest muidu keegi ei tee seda ikka õigesti)  
 > 🔹 **Kõik selle labori jaoks tehtud konfiguratsioonid** (Isegi need, mis sa arvad, et pole tähtsad. Eriti need.)
 >
-> 🚫 **Osalised väljatrükid või kärbitud pildid EI OLE AKTSEPTEERITAVAD!** (Ära ürita vingerdada - me näeme kõike!)
+> 🚫 Osalised väljatrükid või kärbitud pildid EI OLE AKTSEPTEERITAVAD! (Ära ürita vingerdada - me näeme kõike!)
 
 ---
 
