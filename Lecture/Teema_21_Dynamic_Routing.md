@@ -84,7 +84,9 @@ Router(config-router)# no auto-summary
 
 ### OSPF (Open Shortest Path First)
 
-![OSPF](./media/ospf1.png)
+This article explains how the [OSPF Routing Protocol is implemented using Dijkstra's Algorithm](https://thespecguy.medium.com/how-is-ospf-routing-protocol-implemented-using-dijkstras-algorithm-94d8f50a9055).
+![OSPF Implementation](https://miro.medium.com/max/1200/1*67eq6zoeT0w-J4-cF4i0A.png)  
+
 
 OSPF on laialdaselt kasutatav link-state marsruutimisprotokoll, mis kasutab Dijkstra lühima tee algoritmi.
 
