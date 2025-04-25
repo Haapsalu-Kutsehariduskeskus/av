@@ -1,4 +1,4 @@
-#Teema 20: Staatiline Marsruutimine (Static Routing)
+# Teema 20: Staatiline Marsruutimine (Static Routing)
 
 ## Sissejuhatus
 
