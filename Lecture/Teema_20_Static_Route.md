@@ -207,6 +207,11 @@ See on staatilise marsruutimise põhiolemus - administraator ütleb käsitsi iga
 
 **Analoogia:** See on nagu anda postkastile juhised, kuidas kirjad edasi toimetada. "Kui näed kirja, mis on adresseeritud Kaugkontorisse, siis anna see edasi Ruuter B-le." Suuremates võrkudes (paljude postkastidega) oleks vaja palju selliseid juhiseid, mistõttu kasutatakse keerulisemates võrkudes dünaamilist marsruutimist, kus postkastid (ruuterid) jagavad omavahel infot automaatselt.
 
+[Show IP Route Command on Routers](https://www.computernetworkingnotes.com/ccna-study-guide/the-show-ip-route-command-on-routers.html)
+
+![Show IP Route Image](https://www.computernetworkingnotes.com/wp-content/uploads/ccna-study-guide/images/cgs18-01-show-ip-route.png)
+
+
 ## Õppejuhtum 2: Kolme kontori täisühendusega võrk
 
 ### Stsenaarium
