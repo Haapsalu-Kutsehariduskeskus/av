@@ -61,7 +61,8 @@ Võrgu segmenteerimine on IoT-lahenduste puhul hädavajalik, sest paljudel IoT-s
 ## Praktiline Õppeülesande Näide: Maria 2-Toaline Korter
 
 Joonistamise jaoks saad kaustada:
-[https://www.hamina.com/](https://www.hamina.com/)
+[Hamina - Fast and simple wireless network design](https://www.hamina.com/)
+[mymap.ai - Free Network Diagram Maker AI](https://www.mymap.ai/network-diagram-maker)
 
 Või käsitsi joonistada:
 ![Plaan](./plan.png)
