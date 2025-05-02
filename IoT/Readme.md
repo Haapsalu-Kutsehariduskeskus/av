@@ -1,16 +1,11 @@
 # IoT Projektid - README
 
-<span style="color:red">
-
-**Cisco laborites võib esineda viga, kus parool ei pruugi olla korrektne.**  
+🚨 **Cisco laborites võib esineda viga, kus parool ei pruugi olla korrektne.**
 Sellest hoolimata palun tee nii palju, kui võimalik, ning esita tehtud laborid sellisel kujul, nagu need sul õnnestus lõpetada.
 
-Kui sul on suur maja või korter, või midagi veel suuremat, siis **3. ülesande (võrgu plaan)** jaoks tee see plaan oma tulevase unistuste kodu põhjal – näiteks korter, kus sa tahaksid kunagi elada. Soovi korral võid kasutada ka mõne sugulase või tuttava kodu näidet – see pole oluline.
+🏠 Kui sul on suur maja või korter, või midagi veel suuremat, siis **3. ülesande (võrgu plaan)** jaoks tee see plaan oma tulevase unistuste kodu põhjal – näiteks korter, kus sa tahaksid kunagi elada. Soovi korral võid kasutada ka mõne sugulase või tuttava kodu näidet – see pole oluline.
 
-**Oluline on see, et mõtleksid läbi võrgu ülesehituse ja IoT seadmete kasutamise.**  
-Planeeri vastavalt sellele, mida sa enda arvates tulevikus vajaksid või tahaksid.
-
-</span>
+💡 **Oluline on see, et mõtleksid läbi võrgu ülesehituse ja IoT seadmete kasutamise.** Planeeri vastavalt sellele, mida sa enda arvates tulevikus vajaksid või tahaksid.
 
 ## Ülesande Kirjeldus
 See projekt sisaldab kahte **Packet Tracer** laboratooriumi, mis keskenduvad IoT seadmete installimisele ja konfigureerimisele. Need laborid aitavad sul mõista, kuidas IoT seadmed suhtlevad võrgu kaudu ja kuidas neid kodus rakendada.
