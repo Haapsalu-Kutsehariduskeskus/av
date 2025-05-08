@@ -157,7 +157,7 @@ Router(config-router)# network 10.0.0.0 mask 255.255.255.0
 - **Turvalisus**: Ilma täiendava turvalisuseta võib olla haavatavam rünnakutele
 - **Ennustamatus**: Paketid võivad järgida erinevaid teid olenevalt võrgu olukorrast
 
-## Õppejuhtum 1: OSPF kolme kontori võrgustikus
+## Study Case 1: OSPF kolme kontori võrgustikus
 
 ### Stsenaarium
 Ettevõttel on kolm kontorit - peakontor, harukontor ja andmekeskus - mis on kõik ühendatud. Soovime konfigureerida OSPF nii, et kõik võrgud oleksid ligipääsetavad.
@@ -291,188 +291,291 @@ OSPF konfiguratsiooni kontrollimiseks saab kasutada järgmisi käske:
    R1# show ip ospf interface
    ```
 
-## Õppejuhtum 2: EIGRP konfigureerimine
+## Study Case 2: EIGRP konfigureerimine
 
-### Stsenaarium
-Kasutame sama võrgu topoloogiat, mis eelmises näites, kuid nüüd konfigureerime EIGRP marsruutimisprotokolli.
+# Dünaamiline Marsruutimine
 
-### EIGRP konfiguratsioon
+## Mis asi see dünaamiline marsruutimine üldse on?
 
-#### R1 (Peakontor) konfiguratsioon:
+Dünaamiline marsruutimine on nagu nutikad teeviidad võrgus. Erinevalt staatilisest marsruutimisest, kus administraator peab iga tee käsitsi seadistama, suudavad dünaamilised marsruutimisprotokollid ise omavahel rääkida ja automaatselt leida parima tee.
 
+![Dynamic Routing 3](./media/Dynamic_routing3.png)
+
+**Miks see kasulik on?**
+- Kui võrgus midagi muutub (link läheb maha, lisandub uus võrk), kohanevad ruuterid automaatselt
+- Suurtes võrkudes pole vaja iga ruuterit käsitsi seadistada
+- Kui põhitee läheb maha, leitakse automaatselt varutee
+
+## Staatiline vs dünaamiline marsruutimine
+
+Staatiline marsruutimine on nagu jäik teeviit, mis näitab alati sama suunda, isegi kui tee on suletud. Dünaamiline marsruutimine on aga nagu GPS, mis ütleb: "Oi, see tee on kinni, lähme teist teed!"
+
+| Staatiline | Dünaamiline |
+|------------|-------------|
+| Käsitsi iga marsruut | Automaatne pärast protokolli seadistamist |
+| Sobib väikesele võrgule | Sobib suurele, keerukale võrgule |
+| Ei reageeri muutustele | Kohaneb automaatselt muutustega |
+| Lihtne seadistada | Natuke keerulisem, aga võimsam |
+| Vähe ressursse (CPU, mälu) | Rohkem ressursse |
+
+## Milliseid marsruutimisprotokolle on olemas?
+
+### Protokollid jagunevad kahte suurde gruppi:
+
+**1. Vektor-kaugus protokollid (Distance-Vector)**
+- Töötavad põhimõttel "Kuule naaber, tean sihtkohta X - see on minust 3 hüpet eemal!"
+- Iga ruuter teab ainult, mida naabrid talle ütlevad, mitte kogu võrgu topoloogiat
+- Näited: EIGRP (Cisco erikaup), vanasti RIP (tänapäeval aegunud)
+
+**2. Link-state protokollid (olekupõhised)**
+- Töötavad põhimõttel "Siin on info KÕIGI minu otseühenduste kohta. Levitage see kogu võrku!"
+- Iga ruuter teab kogu võrgu topoloogiat ja arvutab ise parima tee
+- Kiirem reaktsioon muutustele, aga vajab rohkem ressursse
+- Näited: OSPF (kõige levinum), IS-IS
+
+![Protokollid](https://www.techtutsonline.com/wp-content/uploads/2015/06/Routing-Protocols1.png)
+
+### Ruuteri jaoks prioiriteetsus (Administratiivne kaugus - AD)
+
+Ruuter valib teede vahel AD põhjal - mida väiksem number, seda usaldusväärsem:
+
+| Mis marsruut? | Administratiivne kaugus (AD) |
+|---------------|------------------------------|
+| Otseühendus | 0 |
+| Staatiline | 1 |
+| EIGRP (sisemine) | 90 |
+| OSPF | 110 |
+| EIGRP (väline) | 170 |
+| Tundmatu sihtkoht | 255 (ei marsruudita) |
+
+Kui sama sihtkoha jaoks on mitu marsruuti, siis võidab väiksema AD väärtusega!
+
+## Kuidas need protokollid tegelikult töötavad?
+
+### Vektor-kaugus protokollid
+
+Need on nagu kooliklatš:
+
+1. Ruuter A: "Mina tean võrku 192.168.1.0, see on minust otse!"
+2. Ruuter B kuuleb seda ja ütleb: "Mina tean võrku 192.168.1.0, see on minust 1 hüppe kaugusel (läbi A)!"
+3. Ruuter C kuuleb B-d ja ütleb: "Mina tean võrku 192.168.1.0, see on minust 2 hüpet kaugusel (läbi B)!"
+
+![Distants-vektor töö](https://vectorified.com/image/distance-vector-9.png)
+
+**Probleemid ja lahendused:**
+
+Kui link katkeb, võib tekkida "loenda lõpmatuseni" probleem ja marsruutimissilmused. Lahendamiseks on:
+
+- **Split horizon** - Ära räägi tagasi seda, mida kuulsid! (Ära saada infot tagasi sinna, kust see tuli)
+  ![Split Horizon näide](https://www.slideserve.com/kford/routing-algorithms-powerpoint-ppt-presentation)
+
+- **Route poisoning** - Kui tee katkeb, märgi see "mürgiseks" (kaugus = lõpmatu)
+  ![Route Poisoning näide](https://image3.slideserve.com/6114138/route-poisoning-l.jpg)
+
+- **Triggered updates** - Ära oota järgmist uuendust, saada kohe teade kui midagi muutub!
+  ![Triggered Updates näide](https://slideplayer.com/slide/8126137/25/images/37/Triggered+Updates+Routers+do+not+have+to+wait+for+the+periodic+update+to+hear+about+changes+in+the+network+topology..jpg)
+
+### Link-state protokollid
+
+See on nagu ühine kaardi koostamine:
+
+1. Iga ruuter koostab "kaardilehe" AINULT oma otseühenduste kohta
+2. Kõik "kaardilehed" saadetakse KÕIGILE ruuteritele võrgus
+3. Igal ruuteril on lõpuks identne kaart kogu võrgust
+4. Iga ruuter arvutab oma kaardi põhjal iseseisvalt parima tee
+
+![Link-state protokoll](https://present5.com/presentacii-2/20171207/730-exploration_routing_chapter_10.ppt/730-exploration_routing_chapter_10_14.jpg)
+
+## 3 peamist protokolli, mida tegelikult kasutatakse
+
+### 1. OSPF
+
+**Mis see on?** Kõige levinum protokoll - avatud standard, sobib iga tootja seadmetele
+
+**Põhiomadused:**
+- Link-state protokoll (iga ruuter teab kogu kaarti)
+- Jagab võrgu "aladeks" (väiksemateks tükkideks), et suured võrgud saaksid skaleeruda
+- Kiire reageerimine muutustele
+- Meetrika: "kulu" - tavaliselt põhineb liidese ribalaiusel
+
+![OSPF võrk](https://www.flackbox.com/wp-content/uploads/word-image-17835-7.jpg)
+
+**OSPF alad (areas):**
+- Area 0 on selgroog (backbone), millega teised alad ühenduvad
+- Alad piiravad uuenduste levikut - ühe ala muutused ei mõjuta teisi
+
+![OSPF hierarhia](https://image5.slideserve.com/9476834/hierarchical-ospf-l.jpg)
+
+### 2. EIGRP (Enhanced Interior Gateway Routing Protocol)
+
+**Mis see on?** Cisco enda protokoll, töötab AINULT Cisco seadmetel
+
+**Põhiomadused:**
+- Hübriidprotokoll - kombineerib vektor-kaugus ja link-state parimaid omadusi
+- Väga kiire reageerimine muutustele
+- Keerukam meetrika: arvestab ribalaiust, viivitust ja teisi faktoreid
+- Väljakutse: töötab ainult Cisco seadmetel!
+
+![EIGRP metrika](https://image1.slideserve.com/3294847/eigrp-metrics-calculation-example-l.jpg)
+
+![EIGRP metrika 2](https://images.surferseo.art/f1560240-3be1-4fb4-9ebf-a490cac2e7f9.png)
+
+EIGRP puhul on olulised kaks mõistet:
+- Successor (parim tee)
+- Feasible Successor (varutee, mida kohe kasutatakse, kui parim tee läheb maha)
+
+EIGRP reageerib nii: kui parim tee läheb maha, kasutatakse KOHE varuteed ilma mingite arvutusteta!
+
+### 3. BGP (Border Gateway Protocol)
+
+**Mis see on?** Internetiselgroo protokoll, ühendab erinevaid autonoomseid süsteeme (AS)
+
+**Põhiomadused:**
+- Kasutavad ISP-d ja suured ettevõtted
+- Väga skaleeruv (kogu internet sõltub sellest!)
+- Valikud põhinevad poliitikatel ja reeglitel, mitte ainult kiirusel
+- Töötab aeglasemalt, aga stabiilsemalt kui teised protokollid
+
+## Autonoomsed süsteemid (AS)
+
+Autonoomne süsteem on võrkude kogum ühe administratiivse kontrolli all, millel on oma unikaalne number (ASN).
+
+![IGP ja EGP](https://forum.huawei.com/enterprise/en/data/attachment/forum/202009/10/094337c7yoz13ciycw498h.jpg?igp.JPG)
+
+- **IGP** protokollid (OSPF, EIGRP) töötavad ühe AS-i SEES
+- **EGP** protokollid (BGP) töötavad AS-ide VAHEL
+
+## Loopback liidesed - mis need on ja miks neid vaja on?
+
+Loopback liides on virtuaalne liides, mis on ALATI üleval, kui ruuter töötab - see ei lähe kunagi "maha" nagu füüsilised liidesed.
+
+![Loopback liides](https://slideplayer.com/slide/13022104/79/images/9/Loopback+Address+The+loopback+address+is.jpg)
+
+**Mis asi see üldse on?**
+- See on virtuaalne, mitte füüsiline - teda pole "päriselt" olemas
+- Seda ei pea ühendama ühegi kaabliga
+- Ta on alati "up/up" olekus, kuni ruuter töötab
+- Ta on nagu virtuaalne "maja" ruuteri sees, millel on oma IP-aadress
+
+**Loopback liidest saab seadistada nii:**
 ```
-R1> enable
-R1# configure terminal
-
-! Käivitame EIGRP protsessi AS-numbriga 100
-R1(config)# router eigrp 100
-
-! Lisame võrgud EIGRP protsessi
-! NB! EIGRP puhul kasutatakse klassipõhiseid võrke, kui ei kasutata võrgumaski
-R1(config-router)# network 192.168.1.0
-R1(config-router)# network 10.0.0.0
-
-! Keelame automaatse võrkude kokkuvõtte tegemise
-R1(config-router)# no auto-summary
-
-R1(config-router)# exit
-R1(config)# exit
-R1# write memory
+Router(config)# interface loopback 0
+Router(config-if)# ip address 10.0.0.1 255.255.255.255
 ```
 
-#### R2 (Harukontor) konfiguratsioon:
+**Milleks loopback liidest kasutatakse?**
 
-```
-R2> enable
-R2# configure terminal
-
-! Käivitame EIGRP protsessi AS-numbriga 100 (peab olema sama kõigil ruuteritel)
-R2(config)# router eigrp 100
-
-! Lisame võrgud EIGRP protsessi
-R2(config-router)# network 192.168.2.0
-R2(config-router)# network 10.0.0.0
-
-! Keelame automaatse võrkude kokkuvõtte tegemise
-R2(config-router)# no auto-summary
-
-R2(config-router)# exit
-R2(config)# exit
-R2# write memory
-```
-
-#### R3 (Andmekeskus) konfiguratsioon:
-
-```
-R3> enable
-R3# configure terminal
-
-! Käivitame EIGRP protsessi AS-numbriga 100
-R3(config)# router eigrp 100
-
-! Lisame võrgud EIGRP protsessi
-R3(config-router)# network 192.168.3.0
-R3(config-router)# network 10.0.0.0
-
-! Keelame automaatse võrkude kokkuvõtte tegemise
-R3(config-router)# no auto-summary
-
-R3(config-router)# exit
-R3(config)# exit
-R3# write memory
-```
-
-### Selgitus
-
-EIGRP konfiguratsioon on tavaliselt lihtsam kui OSPF:
-- **AS number**: Kõik samas EIGRP süsteemis olevad ruuterid peavad kasutama sama autonoomse süsteemi (AS) numbrit
-- **Auto-summary**: Uuemates versioonides on automaatne kokkuvõte vaikimisi väljas, vanemas versioonides on see soovitatav keelata käsuga `no auto-summary`
-- **Võrgud**: EIGRP puhul saab määrata klassipõhiseid võrke või täpsustada alamvõrku maski abil
-
-### Kontrollimine
-
-EIGRP konfiguratsiooni kontrollimiseks saab kasutada järgmisi käske:
-
-1. **EIGRP naabrite kuvamine:**
+1. **Router ID määramiseks**
+   - Paljud protokollid (eriti OSPF) vajavad ruuteri ID-d 
+   - Kui ruuteri ID pole käsitsi määratud, kasutatakse automaatselt kõrgeimat IP-aadressi
+   - Loopback on parim valik - see POLE kunagi "down" olekus!
+   - Näide OSPF puhul:
    ```
-   R1# show ip eigrp neighbors
+   Router(config)# router ospf 1
+   Router(config-router)# router-id 1.1.1.1
    ```
 
-2. **EIGRP marsruutimistabeli kuvamine:**
+2. **Stabiilseks haldusligipääsuks**
+   - Kui tahad alati oma ruuteritele ligi pääseda (SSH, Telnet), siis loopback on parim
+   - Kui üks füüsiline liides läheb maha, saad endiselt loopback aadressile ühenduda
+
+3. **BGP naabrite sidumiseks**
+   - BGP naabrussuhted tehakse tihti loopback aadresside vahel
+   - See tähendab, et BGP sessioon jääb püsima isegi kui otsene füüsiline ühendus läheb maha
+   - Näide BGP puhul:
    ```
-   R1# show ip route eigrp
-   ```
-
-3. **EIGRP topoloogia kuvamine:**
-   ```
-   R1# show ip eigrp topology
-   ```
-
-## Dünaamilise ja staatilise marsruutimise võrdlus
-
-| Omadus | Staatiline marsruutimine | Dünaamiline marsruutimine |
-|--------|---------------------------|---------------------------|
-| **Konfigureerimine** | Käsitsi iga marsruudi jaoks | Automaatne pärast protokolli seadistamist |
-| **Skaleeritavus** | Sobiv väikestele võrkudele | Sobiv suurtele ja keerukatele võrkudele |
-| **Ressursikasutus** | Madal | Kõrgem (protsessori, mälu ja ribalaiuse kasutus) |
-| **Kohanemisvõime** | Ei kohane automaatselt muutustega | Kohaneb automaatselt võrgu muutustega |
-| **Rikketaluvus** | Puudub automaatne tõrkesiirdus | Võimaldab automaatset alternatiivse tee leidmist |
-| **Lihtsus** | Lihtne mõista ja konfigureerida | Keerulisem mõista ja konfigureerida |
-| **Turvalisus** | Turvalisem (info ei liigu võrgus) | Haavatavam ilma täiendava turvalisuseta |
-| **Marsruudi valimine** | Fikseeritud, administraatori määratud | Dünaamiline, protokolli meetrika põhine |
-
-## Millal kasutada dünaamilist marsruutimist?
-
-- Keskmistes ja suurtes võrkudes (üle 10 ruuteri)
-- Kui võrgu topoloogia muutub sageli
-- Kui on vaja automaatset tõrkesiirdust
-- Kui on mitu võimalikku teed sihtkohtadesse
-- Kui soovitakse vähendada administratiivset koormust
-
-## Hübriidlahendused: staatilise ja dünaamilise marsruutimise kombineerimine
-
-Sageli on praktikas optimaalne kombineerida mõlemat marsruutimismeetodit:
-
-1. **Staatilised vaikemarsruudid**: Määrata vaikimisi marsruut (default route) internetiühenduse jaoks
-   ```
-   R1(config)# ip route 0.0.0.0 0.0.0.0 203.0.113.1
+   Router(config)# router bgp 65000
+   Router(config-router)# neighbor 192.168.200.1 remote-as 65000
+   Router(config-router)# neighbor 192.168.200.1 update-source loopback 0
    ```
 
-2. **Marsruutide ümberjaotamine**: Staatiliste marsruutide importimine dünaamilisse protokolli
-   ```
-   R1(config)# router ospf 1
-   R1(config-router)# redistribute static subnets
-   ```
+4. **Teste ja diagnostika tegemiseks**
+   - Loopback-i saab alati "pingida", mis aitab võrgu probleeme lahendada
+   - Saab simuleerida "päris" võrke, ilma et peaksid füüsilisi seadmeid lisama
 
-3. **Turvalised staatilised marsruudid**: Kriitiliste ühenduste jaoks staatiliste marsruutide kasutamine
-   ```
-   R1(config)# ip route 192.168.100.0 255.255.255.0 10.0.0.2
-   ```
+**Tegelik näide:**
+Kujuta ette, et sul on 3 füüsilist liidest ruuteril, ning kõik kolm saavad olla "maha" olekus. Kui määrad OSPF ruuteri ID kasutades füüsilise liidese IP-d ja see liides läheb maha, siis tekivad probleemid! Loopback aga on ALATI üleval - see on nagu "virtuaalne" liides, mis ei sõltu füüsilistest asjadest.
 
-## Dünaamiliste marsruutimisprotokollide turvamine
+**Nõuanne:**
+Alati tee oma võrgu ruuteritele loopback liidesed. See teeb haldamise lihtsamaks ja võrgu stabiilsemaks!
 
-### Autentimine
+## Kuidas marsruutimisprotokolli valida?
 
-#### OSPF MD5 autentimine:
+| Võrgu suurus | Parim valik | Põhjus |
+|--------------|-------------|--------|
+| 1-3 ruuterit | Staatiline | Lihtne, ei vaja lisaseadistusi |
+| 4-10 ruuterit | EIGRP (Cisco) või OSPF | Lihtne seadistada, kohaneb muutustega |
+| 10-50 ruuterit | OSPF aladega | Hästi struktureeritud, efektiivne |
+| 50+ ruuterit | OSPF mitme alaga | Väga hea skaleeruvus, stabiilsus |
+| Ühendus ISP-ga | BGP | Loodud just selleks! |
+
+## Põhikäsud igapäevaseks kasutamiseks
+
+**Protokolli seadistamine (OSPF näitel):**
 ```
-R1(config)# interface FastEthernet0/0
-R1(config-if)# ip ospf authentication message-digest
-R1(config-if)# ip ospf message-digest-key 1 md5 secretpassword
+Router(config)# router ospf 1
+Router(config-router)# network 192.168.1.0 0.0.0.255 area 0
 ```
 
-#### EIGRP MD5 autentimine:
+**Kontrollkäsud:**
 ```
-R1(config)# key chain EIGRP-KEY
-R1(config-keychain)# key 1
-R1(config-keychain-key)# key-string secretpassword
-R1(config-keychain-key)# exit
-R1(config)# interface FastEthernet0/0
-R1(config-if)# ip authentication mode eigrp 100 md5
-R1(config-if)# ip authentication key-chain eigrp 100 EIGRP-KEY
-```
+# Marsruutimistabeli vaatamine
+Router# show ip route
 
-### Passiivsed liidesed
+# Naabrite vaatamine
+Router# show ip ospf neighbor   (OSPF puhul)
+Router# show ip eigrp neighbors (EIGRP puhul)
 
-Passiivsete liideste kasutamine aitab vältida marsruutimisinfo jagamist mitteusaldusväärsete võrkudega:
-
-#### OSPF passiivne liides:
-```
-R1(config)# router ospf 1
-R1(config-router)# passive-interface FastEthernet0/1
+# Konkreetse protokolli seisundi vaatamine
+Router# show ip protocols
 ```
 
-#### EIGRP passiivne liides:
-```
-R1(config)# router eigrp 100
-R1(config-router)# passive-interface FastEthernet0/1
-```
+**Lihtne Mäletada:**
 
-## Praktilised soovitused
+| Protocol Type    | Meaning                | Example Protocols | How It Works                                      | Timing          | Internal/External | Think Of It As           |
+|------------------|------------------------|-------------------|--------------------------------------------------|------------------|-------------------|---------------------------|
+| Distance Vector  | Distance + Direction   | RIP, IGRP         | Shares hop counts with neighbors                 | Periodic (30s)   | Internal          | "How far? Which way?"     |
+| Link State       | Link status info       | OSPF              | Shares full link info with all routers           | Event-based      | Internal          | "Here's my map."          |
+| Hybrid           | Mix of both methods    | EIGRP             | Combines vector + link state ideas               | Event-based      | Internal (Cisco)  | "Smart vector routing"    |
+| Path Vector      | Full path awareness    | BGP               | Shares full AS path                              | Event-based      | External          | "Here's the full route."  |
 
-1. **Protokolli valimine**: Valige marsruutimisprotokoll vastavalt võrgu vajadustele ja skaleeritavuse nõuetele
-2. **Hierarhiline disain**: Kasutage OSPF alasid või EIGRP võrgukokkuvõtteid efektiivseks topoloogia haldamiseks
-3. **Konvergentsi optimeerimine**: Konfigureerige protokolli parameetrid (timers) optimaalse konvergentsi saavutamiseks
-4. **Autentimine**: Kasutage alati autentimist marsruutimisprotokollide turvamiseks
-5. **Jälgimine**: Jälgige regulaarselt marsruutimistabeleid ja protokollide olekut
+---
+
+### 🧠 Quick Revision Notes
+
+- **Link** = A connection between routers  
+- **State** = Whether it’s up/down, cost, etc.  
+- **Distance Vector** = "What my neighbor told me."  
+- **Link State** = "I know the whole map."  
+
+### 🔧 **Cost** and **Metrics** in routing = **how good or bad a path is**.
+
+Routers use **metrics** to choose the **best path**. Each protocol has its own way to calculate this.
+
+---
+
+### 🧮 **Metric** = A value used to rank paths.
+
+* **Lower = better** (in most cases)
+* Called **cost**, **hop count**, **delay**, etc., depending on the protocol
+
+---
+
+### 🚦 Examples by Protocol:
+
+| Protocol  | Metric Name      | What It Measures                       |
+| --------- | ---------------- | -------------------------------------- |
+| **RIP**   | Hop Count        | Number of routers to destination       |
+| **OSPF**  | Cost             | Bandwidth (lower = faster links)       |
+| **EIGRP** | Composite Metric | Delay, bandwidth, load, reliability    |
+| **BGP**   | Path Attributes  | AS path, policy, rules (not distance!) |
+
+---
+
+### 🎯 In simple terms:
+
+* **Cost = the “difficulty”** of using a path.
+* Router picks the path with the **lowest cost/metric**.
+
 
 [![YouTube Video Routing](https://img.youtube.com/vi/gQtgtKtvRdo/0.jpg)](https://www.youtube.com/watch?v=gQtgtKtvRdo)
