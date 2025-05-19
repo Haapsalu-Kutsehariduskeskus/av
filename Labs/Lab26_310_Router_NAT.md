@@ -1,51 +1,101 @@
-# Lab 26: Cisco 2901/2911 Router and Switch Configuration
+# Labor 26: Cisco 2901/2911 Marsruuteri ja Kommutaatori Seadistamine
 
-## Lab Overview
+## Labori Ülevaade
 
-In this lab, students will set up and configure a Cisco 2901/2911 router and Cisco Catalyst switch to create a small network with multiple VLANs, DHCP service, and NAT for future external connectivity. Students will learn how to physically connect network devices, perform initial configuration, set up VLANs, and verify their configuration with appropriate commands.
+Selles laboris seadistate ja konfigureerite Cisco 2901/2911 marsruuteri ja Cisco Catalyst kommutaatori, et luua väike võrk mitme VLAN-iga, DHCP teenusega ja NAT-iga tulevase välisühenduse jaoks. Õpite, kuidas füüsiliselt ühendada võrguseadmeid, teostada algset konfiguratsiooni, seadistada VLAN-e ja kontrollida oma konfiguratsiooni sobivate käskudega.
 
-## Equipment
+## Võrgukomponentide Eesmärgid ja Kasud
 
-- 1 Cisco 2901/2911 Router (per student/group)
-- 1 Cisco Catalyst Switch (per student/group)
-- 1 PC for console connections (Terminal PC)
-- 1 PC for client testing
-- Console cables (USB or RJ-45)
-- Ethernet patch cables
-- Patch panel (for lab connections)
+### VLAN-ide Seadistamine
+VLAN-ide (virtuaalsete kohtvõrkude) seadistamine võimaldab meil:
+- **Jagada võrku loogilisteks osadeks** ilma füüsilisi seadmeid lisamata
+- **Parandada turvalisust** eraldades erinevad kasutajagrupid (õpilased ja õpetajad) üksteisest
+- **Vähendada leviedastuse (broadcast) liiklust**, mis tõstab võrgu jõudlust
+- **Lihtsustada võrgu haldamist**, kuna muudatusi saab teha keskselt
+- **Optimeerida ressursside kasutust** ühel füüsilisel seadmel
 
-## Network Topology
+Praktikas tähendab see, et õpetajate arvutid VLAN 20-s ei näe õpilaste võrguliiklust VLAN 10-s, isegi kui nad on ühendatud sama kommutaatoriga.
+
+### DHCP Teenuse Seadistamine
+DHCP (Dynamic Host Configuration Protocol) seadistamine annab meile:
+- **Automaatne võrgukonfiguratsioon** klientseadmetele, mis vähendab vigade võimalust
+- **Tsentraalne IP-aadresside haldamine**, mis lihtsustab administreerimist
+- **Ressursside dünaamiline jaotamine**, mis tagab efektiivse IP-aadresside kasutuse
+- **Standardiseeritud konfiguratsioon** kõigile klientseadmetele (DNS serverid, vaikelüüs jne)
+- **Kergem skaleerimine**, kui võrku tuleb juurde uusi seadmeid
+
+Näiteks kui õpilane ühendab oma arvuti võrku, saab see automaatselt õige IP-aadressi vahemikust 10.10.10.11-254, ilma et administraator peaks käsitsi sekkuma.
+
+### NAT-i Seadistamine
+NAT (Network Address Translation) seadistamine võimaldab:
+- **Privaatse võrgu ühendamist internetiga** kasutades vähem avalikke IP-aadresse
+- **Võrgu turvalisuse suurendamist**, varjates sisemise võrgu struktuuri
+- **Kohalike võrkude taaskasutamist** ja konfigureerimist ilma IP konfliktideta
+- **Erinevate VLAN-ide ühendamist välisvõrku** üle ühe välisühenduse
+- **Liikluse suunamist** läbi tulemüüri või filtrite
+
+Meie seadistuses võivad nii õpilaste (10.10.10.0/24) kui ka õpetajate (10.20.20.0/24) arvutid tulevikus pääseda internetile ligi läbi ühe väljundpunkti (192.168.100.1).
+
+### Alamliideste (Subinterface) Kasutamine
+Alamliideste kasutamine marsruuteril annab järgmised eelised:
+- **Üks füüsiline port suudab teenindada mitut VLAN-i** läbi trunking protokolli
+- **Kokkuhoid riistvaras**, kuna pole vaja eraldi füüsilist liidest iga VLAN-i jaoks
+- **Tsentraalne marsruutimine** erinevate VLAN-ide vahel ühe seadmega
+- **Lihtsam haldamine**, kuna kõik seadistused on ühes kohas
+
+Meie juhul kasutatakse GigabitEthernet0/0 liidese peal alamliideseid .10 ja .20, mis võimaldab marsruuteril suhelda mõlema VLAN-iga üle ühe füüsilise pordi.
+
+### Trunk Pordi Seadistamine
+Trunk pordi seadistamine kommutaatoril:
+- **Võimaldab mitme VLAN-i liikluse transportimist** üle ühe füüsilise ühenduse
+- **Säilitab VLAN-ide märgendid** IEEE 802.1Q standardi abil
+- **Vähendab vajalike füüsiliste portide ja kaablite arvu**
+- **Tagab õige liikluse suunamise** erinevate VLAN-ide vahel
+
+Trunk port kommutaatoril (GE0/1) ja marsruuteri "koor"-port (GE0/0) moodustavad ühe loogilise ühenduse, mis kannab mõlema VLAN-i (10 ja 20) andmeid, säilitades nende eraldatuse.
+
+## Seadmed
+
+- 1 Cisco 2901/2911 marsruuter (iga õpilase/rühma kohta)
+- 1 Cisco Catalyst kommutaator (iga õpilase/rühma kohta)
+- 1 arvuti konsooli ühenduste jaoks (Terminal PC)
+- 1 arvuti kliendi testimiseks
+- Konsooli kaablid (USB või RJ-45)
+- Ethernet patch kaablid
+- Patch paneel (labori ühenduste jaoks)
+
+## Võrgu Topoloogia
 
 ```mermaid
 flowchart TB
-    subgraph "Lab Environment"
-        subgraph Router["Cisco 2901/2911 Router"]
-            RouterGE0["GE0/0 - Internal Network<br>Trunk Connection"]
-            RouterGE1["GE0/1 - Future External<br>192.168.100.1/24"]
-            RouterVLAN10["VLAN 10 Subinterface<br>10.10.10.1/24<br>NAT Inside<br>DHCP Server"]
-            RouterVLAN20["VLAN 20 Subinterface<br>10.20.20.1/24<br>NAT Inside<br>DHCP Server"]
-            ConsolePR["Console Port"]
+    subgraph "Labori Keskkond"
+        subgraph Router["Cisco 2901/2911 Marsruuter"]
+            RouterGE0["GE0/0 - Sisevõrk<br>Trunk ühendus"]
+            RouterGE1["GE0/1 - Tulevane Väline<br>192.168.100.1/24"]
+            RouterVLAN10["VLAN 10 Alamliides<br>10.10.10.1/24<br>NAT Inside<br>DHCP Server"]
+            RouterVLAN20["VLAN 20 Alamliides<br>10.20.20.1/24<br>NAT Inside<br>DHCP Server"]
+            ConsolePR["Konsooli Port"]
         end
 
-        subgraph Switch["Cisco Switch"]
-            SwitchTrunk["GE0/1 - Trunk Port<br>VLANs 10,20"]
-            SwitchPorts["Access Ports<br>VLAN 10 (Ports 1-12)<br>VLAN 20 (Ports 13-24)"]
-            ConsolePS["Console Port"]
+        subgraph Switch["Cisco Kommutaator"]
+            SwitchTrunk["GE0/1 - Trunk Port<br>VLANid 10,20"]
+            SwitchPorts["Access Pordid<br>VLAN 10 (Pordid 1-12)<br>VLAN 20 (Pordid 13-24)"]
+            ConsolePS["Konsooli Port"]
         end
 
-        subgraph PCs["Available PCs"]
-            TerminalPC["Terminal PC<br>(For Configuration)"]
-            ClientPC["Client PC<br>(For Testing)<br>DHCP Client"]
+        subgraph PCs["Saadaval Arvutid"]
+            TerminalPC["Terminal Arvuti<br>(Konfigureerimiseks)"]
+            ClientPC["Kliendi Arvuti<br>(Testimiseks)<br>DHCP Klient"]
         end
 
-        %% Physical connections
+        %% Füüsilised ühendused
         RouterGE0 <--> SwitchTrunk
-        RouterGE1 <-.-> Internet["Future: School Network<br>172.16.x.x"]
+        RouterGE1 <-.-> Internet["Tulevikus: Kooli Võrk<br>172.16.x.x"]
         TerminalPC <-..-> ConsolePR
         TerminalPC <-..-> ConsolePS
         ClientPC <--> SwitchPorts
         
-        %% Logical connections
+        %% Loogilised ühendused
         RouterGE0 <-.-> RouterVLAN10
         RouterGE0 <-.-> RouterVLAN20
     end
@@ -61,77 +111,77 @@ flowchart TB
     class Internet,RouterGE1 future;
 ```
 
-## IP Addressing Scheme
+## IP-aadresside Skeem
 
-| Device | Interface | IP Address | Subnet Mask | Description | VLAN | NAT Role |
+| Seade | Liides | IP-aadress | Võrgumask | Kirjeldus | VLAN | NAT Roll |
 |--------|-----------|------------|-------------|-------------|------|----------|
-| Student-Router | GigabitEthernet0/0 | N/A | N/A | Trunk to Switch | N/A | N/A |
-| Student-Router | GigabitEthernet0/0.10 | 10.10.10.1 | 255.255.255.0 | Student Network | 10 | Inside |
-| Student-Router | GigabitEthernet0/0.20 | 10.20.20.1 | 255.255.255.0 | Teacher Network | 20 | Inside |
-| Student-Router | GigabitEthernet0/1 | 192.168.100.1 | 255.255.255.0 | Future External | N/A | Outside |
-| Client PC | Ethernet | DHCP | 255.255.255.0 | Test Client | 10 or 20 | N/A |
+| Õpilase-Marsruuter | GigabitEthernet0/0 | N/A | N/A | Trunk Kommutaatoriga | N/A | N/A |
+| Õpilase-Marsruuter | GigabitEthernet0/0.10 | 10.10.10.1 | 255.255.255.0 | Õpilaste Võrk | 10 | Inside |
+| Õpilase-Marsruuter | GigabitEthernet0/0.20 | 10.20.20.1 | 255.255.255.0 | Õpetajate Võrk | 20 | Inside |
+| Õpilase-Marsruuter | GigabitEthernet0/1 | 192.168.100.1 | 255.255.255.0 | Tulevane Väline | N/A | Outside |
+| Kliendi Arvuti | Ethernet | DHCP | 255.255.255.0 | Testimise Klient | 10 või 20 | N/A |
 
-## Lab Tasks
+## Labori Ülesanded
 
-### Part 1: Physical Setup and Connections
+### Osa 1: Füüsiline Seadistamine ja Ühendused
 
-1. **Router Setup:**
-   - Locate your assigned Cisco 2901/2911 router
-   - Connect power cable and turn on the router
-   - Wait for the router to complete booting (solid green system LED)
+1. **Marsruuteri Seadistamine:**
+   - Leia oma määratud Cisco 2901/2911 marsruuter
+   - Ühenda toitekaabel ja lülita marsruuter sisse
+   - Oota, kuni marsruuter lõpetab käivitumise (püsiv roheline süsteemi LED)
 
-2. **Switch Setup:**
-   - Locate your assigned Cisco Catalyst switch
-   - Connect power cable and turn on the switch
-   - Wait for the switch to complete booting
+2. **Kommutaatori Seadistamine:**
+   - Leia oma määratud Cisco Catalyst kommutaator
+   - Ühenda toitekaabel ja lülita kommutaator sisse
+   - Oota, kuni kommutaator lõpetab käivitumise
 
-3. **Console Connections:**
-   - Connect your Terminal PC to the router's console port using the patch panel
-   - You will later switch this connection to the switch's console port
+3. **Konsooli Ühendused:**
+   - Ühenda Terminal PC marsruuteri konsooli pordiga patch paneeli kaudu
+   - Hiljem vahetad selle ühenduse kommutaatori konsooli pordiga
 
-4. **Network Connections:**
-   - Connect the router's GE0/0 port to the switch's GE0/1 port using the patch panel
-   - Connect the Client PC to a port on the switch (port 1-12 for VLAN 10 testing)
-   - Leave the router's GE0/1 port disconnected (for future external connection)
+4. **Võrgu Ühendused:**
+   - Ühenda marsruuteri GE0/0 port kommutaatori GE0/1 pordiga patch paneeli kaudu
+   - Ühenda Kliendi Arvuti kommutaatori pordiga (port 1-12 VLAN 10 testimiseks)
+   - Jäta marsruuteri GE0/1 port ühendamata (tulevase välisühenduse jaoks)
 
-### Part 2: Resetting Devices (If Needed)
+### Osa 2: Seadmete Lähtestamine (Vajadusel)
 
-#### Router Reset
-If you need to start with a clean configuration:
+#### Marsruuteri Lähtestamine
+Kui vajad puhast konfiguratsiooni:
 ```
 enable
 write erase
 reload
 ```
-When prompted to save the configuration, type "no"
+Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
 
-#### Switch Reset
-If you need to start with a clean configuration:
+#### Kommutaatori Lähtestamine
+Kui vajad puhast konfiguratsiooni:
 ```
 enable
 delete flash:vlan.dat
 erase startup-config
 reload
 ```
-When prompted to save the configuration, type "no"
+Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
 
-### Part 3: Router Configuration
+### Osa 3: Marsruuteri Konfigureerimine
 
-1. **Access the Router:**
-   - Open terminal emulation software on your Terminal PC
-   - Configure settings: 9600 baud, 8 data bits, no parity, 1 stop bit, no flow control
-   - Connect to the console port
+1. **Marsruuteriga Ühenduse Loomine:**
+   - Ava terminali emulatsiooni tarkvara oma Terminal PC-l
+   - Seadista parameetrid: 9600 baud, 8 andmebitti, paarsuseta, 1 stoppbitt, ilma vookontrollita
+   - Ühenda konsooli pordiga
 
-2. **Verify Hardware and NAT Support:**
-   - Enter privileged EXEC mode: `enable`
-   - Check router model and IOS: `show version` (TAKE SCREENSHOT #1)
-   - Check interface status: `show ip interface brief` (TAKE SCREENSHOT #2)
-   - Verify NAT support: `ip nat ?` (TAKE SCREENSHOT #3)
+2. **Riistvara ja NAT Toe Kontrollimine:**
+   - Sisene privilegeeritud EXEC režiimi: `enable`
+   - Kontrolli marsruuteri mudelit ja IOS-i: `show version`
+   - Kontrolli liideste olekut: `show ip interface brief`
+   - Kontrolli NAT tuge: `ip nat ?`
 
-3. **Basic Router Configuration:**
-   - Enter configuration mode: `configure terminal`
-   - Set hostname (use your name): `hostname [YourName]-Router`
-   - Configure basic security:
+3. **Marsruuteri Põhikonfiguratsioon:**
+   - Sisene konfiguratsiooni režiimi: `configure terminal`
+   - Määra hostnimi (kasuta oma nime): `hostname [SinuNimi]-Router`
+   - Seadista põhiline turvalisus:
      ```
      enable secret cisco
      line console 0
@@ -140,15 +190,15 @@ When prompted to save the configuration, type "no"
      exit
      ```
 
-4. **Interface Configuration:**
-   - Configure main interface:
+4. **Liideste Konfigureerimine:**
+   - Seadista peamine liides:
      ```
      interface GigabitEthernet0/0
      description Connection to Internal Switch
      no shutdown
      exit
      ```
-   - Configure VLAN subinterfaces:
+   - Seadista VLAN-i alamliidesed:
      ```
      interface GigabitEthernet0/0.10
      encapsulation dot1Q 10
@@ -160,7 +210,7 @@ When prompted to save the configuration, type "no"
      ip address 10.20.20.1 255.255.255.0
      exit
      ```
-   - Configure future external interface:
+   - Seadista tulevane väline liides:
      ```
      interface GigabitEthernet0/1
      description Future External Connection
@@ -169,8 +219,8 @@ When prompted to save the configuration, type "no"
      exit
      ```
 
-5. **NAT Configuration:**
-   - Mark inside interfaces:
+5. **NAT Konfigureerimine:**
+   - Märgi sisemised liidesed:
      ```
      interface GigabitEthernet0/0.10
      ip nat inside
@@ -180,21 +230,21 @@ When prompted to save the configuration, type "no"
      ip nat inside
      exit
      ```
-   - Mark outside interface:
+   - Märgi väline liides:
      ```
      interface GigabitEthernet0/1
      ip nat outside
      exit
      ```
-   - Create access list and NAT rule:
+   - Loo pääsuloend ja NAT reegel:
      ```
      access-list 1 permit 10.10.10.0 0.0.0.255
      access-list 1 permit 10.20.20.0 0.0.0.255
      ip nat inside source list 1 interface GigabitEthernet0/1 overload
      ```
 
-6. **DHCP Configuration:**
-   - Configure DHCP for VLAN 10:
+6. **DHCP Konfigureerimine:**
+   - Seadista DHCP VLAN 10 jaoks:
      ```
      ip dhcp excluded-address 10.10.10.1 10.10.10.10
      ip dhcp pool StudentNet
@@ -204,7 +254,7 @@ When prompted to save the configuration, type "no"
      domain-name lab.local
      exit
      ```
-   - Configure DHCP for VLAN 20:
+   - Seadista DHCP VLAN 20 jaoks:
      ```
      ip dhcp excluded-address 10.20.20.1 10.20.20.10
      ip dhcp pool TeacherNet
@@ -215,42 +265,40 @@ When prompted to save the configuration, type "no"
      exit
      ```
 
-7. **Verification Commands:**
-   - Verify subinterface configuration:
+7. **Kontrollimise Käsud:**
+   - Kontrolli alamliideste konfiguratsiooni: 
      ```
      show running-config interface GigabitEthernet0/0.10
-     show running-config interface GigabitEthernet0/0.20
      ```
-     (TAKE SCREENSHOT #4)
-   - Verify DHCP configuration:
-     ```
-     show ip dhcp pool
-     ```
-     (TAKE SCREENSHOT #5)
-   - Verify NAT configuration:
+     (TEE EKRAANIPILT #1)
+     
+     **Nõue ekraanipildile:** Peab olema näha encapsulation dot1Q seadistus, IP-aadress 10.10.10.1, ja "ip nat inside" seadistus
+     
+   - Kontrolli NAT konfiguratsiooni:
      ```
      show ip nat statistics
      ```
-     (TAKE SCREENSHOT #6)
+     (TEE EKRAANIPILT #2)
+     
+     **Nõue ekraanipildile:** Peab olema näha aktiivsed NAT tõlked, inside ja outside liidesed, pääsuloendi number 1 kasutus
 
-8. **Save Configuration:**
+8. **Salvesta Konfiguratsioon:**
    ```
    copy running-config startup-config
    ```
-   (TAKE SCREENSHOT #7)
 
-### Part 4: Switch Configuration
+### Osa 4: Kommutaatori Konfigureerimine
 
-1. **Access the Switch:**
-   - Disconnect the console cable from the router and connect it to the switch using the patch panel
-   - Connect to the console port in your terminal software
+1. **Kommutaatoriga Ühenduse Loomine:**
+   - Ühenda konsoolikaabel marsruuterist lahti ja ühenda see kommutaatoriga patch paneeli kaudu
+   - Ühenda konsooli pordiga oma terminali tarkvaras
 
-2. **Basic Switch Configuration:**
-   - Enter privileged EXEC mode: `enable`
-   - Verify switch model: `show version` (TAKE SCREENSHOT #8)
-   - Enter configuration mode: `configure terminal`
-   - Set hostname (use your name): `hostname [YourName]-Switch`
-   - Configure basic security:
+2. **Kommutaatori Põhikonfiguratsioon:**
+   - Sisene privilegeeritud EXEC režiimi: `enable`
+   - Kontrolli kommutaatori mudelit: `show version`
+   - Sisene konfiguratsiooni režiimi: `configure terminal`
+   - Määra hostnimi (kasuta oma nime): `hostname [SinuNimi]-Switch`
+   - Seadista põhiline turvalisus:
      ```
      enable secret cisco
      line console 0
@@ -259,8 +307,8 @@ When prompted to save the configuration, type "no"
      exit
      ```
 
-3. **VLAN Configuration:**
-   - Create VLANs:
+3. **VLAN-i Konfigureerimine:**
+   - Loo VLAN-id:
      ```
      vlan 10
      name Students
@@ -270,7 +318,7 @@ When prompted to save the configuration, type "no"
      name Teachers
      exit
      ```
-   - Configure access ports:
+   - Seadista juurdepääsu pordid:
      ```
      interface range fastethernet0/1-12
      switchport mode access
@@ -282,7 +330,7 @@ When prompted to save the configuration, type "no"
      switchport access vlan 20
      exit
      ```
-   - Configure trunk port:
+   - Seadista trunk port:
      ```
      interface gigabitethernet0/1
      switchport mode trunk
@@ -290,70 +338,114 @@ When prompted to save the configuration, type "no"
      exit
      ```
 
-4. **Verification Commands:**
-   - Verify VLAN configuration:
+4. **Kontrollimise Käsud:**
+   - Kontrolli VLAN-i konfiguratsiooni:
      ```
      show vlan brief
      ```
-     (TAKE SCREENSHOT #9)
-   - Verify trunk configuration:
+     (TEE EKRAANIPILT #3)
+     
+     **Nõue ekraanipildile:** Peab olema näha VLAN 10 (Students) ja VLAN 20 (Teachers) ning neile määratud pordid
+     
+   - Kontrolli trunk konfiguratsiooni:
      ```
      show interfaces gigabitethernet0/1 trunk
      ```
-     (TAKE SCREENSHOT #10)
-   - Verify interface status:
-     ```
-     show interfaces status
-     ```
-     (TAKE SCREENSHOT #11)
+     (TEE EKRAANIPILT #4)
+     
+     **Nõue ekraanipildile:** Peab olema näha trunk pordi režiim ja lubatud VLAN-id (10 ja 20)
 
-5. **Save Configuration:**
+5. **Salvesta Konfiguratsioon:**
    ```
    copy running-config startup-config
    ```
-   (TAKE SCREENSHOT #12)
 
-### Part 5: Client Testing
+### Osa 5: Kliendi Testimine
 
-1. **Testing VLAN 10:**
-   - Ensure Client PC is connected to a port in VLAN 10 (ports 1-12)
-   - Configure Client PC for DHCP (if not already)
-   - Open Command Prompt on Client PC
-   - Verify IP configuration: `ipconfig /all` (TAKE SCREENSHOT #13)
-   - Verify connectivity: `ping 10.10.10.1` (TAKE SCREENSHOT #14)
+1. **VLAN 10 Testimine:**
+   - Veendu, et Kliendi Arvuti on ühendatud VLAN 10 pordiga (pordid 1-12)
+   - Seadista Kliendi Arvuti DHCP-le (kui veel pole)
+   - Ava Käsurida Kliendi Arvutil
+   - Kontrolli IP-konfiguratsiooni: 
+     ```
+     ipconfig /all
+     ```
+     (TEE EKRAANIPILT #5)
+     
+     **Nõue ekraanipildile:** Peab olema näha DHCP-lt saadud IP-aadress 10.10.10.xx vahemikust, vaikelüüs 10.10.10.1, ja DNS serverid
+     
+   - Kontrolli ühenduvust: 
+     ```
+     ping 10.10.10.1
+     ```
 
-2. **Testing VLAN 20:**
-   - Move Client PC connection to a port in VLAN 20 (ports 13-24) using the patch panel
-   - Release/renew DHCP: `ipconfig /release` then `ipconfig /renew`
-   - Verify IP configuration: `ipconfig /all` (TAKE SCREENSHOT #15)
-   - Verify connectivity: `ping 10.20.20.1` (TAKE SCREENSHOT #16)
+2. **VLAN 20 Testimine:**
+   - Liiguta Kliendi Arvuti ühendus VLAN 20 pordile (pordid 13-24) patch paneeli kaudu
+   - Uuenda DHCP: 
+     ```
+     ipconfig /release
+     ipconfig /renew
+     ```
+   - Kontrolli IP-konfiguratsiooni: 
+     ```
+     ipconfig /all
+     ```
+   - Kontrolli ühenduvust: 
+     ```
+     ping 10.20.20.1
+     ```
 
-3. **Final Router Verification:**
-   - Reconnect console to router via patch panel
-   - Check DHCP bindings: `show ip dhcp binding` (TAKE SCREENSHOT #17)
-   - Check NAT statistics: `show ip nat statistics` (TAKE SCREENSHOT #18)
+3. **Lõplik Marsruuteri Kontrollimine:**
+   - Ühenda konsool uuesti marsruuteriga patch paneeli kaudu
+   - Kontrolli DHCP seoseid: 
+     ```
+     show ip dhcp binding
+     ```
+   - Kontrolli NAT statistikat: 
+     ```
+     show ip nat statistics
+     ```
 
-## Submission Requirements
+## Esitamise Nõuded
 
-Submit a document containing:
+### Tähtis: Esita dokument, mis sisaldab AINULT järgmised osad:
 
-1. Your name and date
-2. All 18 required screenshots with brief descriptions
-3. A short paragraph explaining what you learned from this lab
+1. **Päis**: 
+   - Sinu täisnimi (eesnimi ja perenimi)
 
-## Expected Results
+2. **Ekraanipildid**: Tee ja esita AINULT need 5 konkreetset ekraanipilti koos lühikirjeldustega:
+   - **Ekraanipilt 1**: Marsruuteri alamliideste konfiguratsioon (`show running-config interface GigabitEthernet0/0.10`)
+     * _Peab olema näha: encapsulation dot1Q seadistus, IP-aadress 10.10.10.1, ja "ip nat inside" seadistus_
+   
+   - **Ekraanipilt 2**: Marsruuteri NAT statistika (`show ip nat statistics`)
+     * _Peab olema näha: aktiivsed NAT tõlked, inside ja outside liidesed, pääsuloendi number 1 kasutus_
+   
+   - **Ekraanipilt 3**: Kommutaatori VLAN-i kokkuvõte (`show vlan brief`)
+     * _Peab olema näha: VLAN 10 (Students) ja VLAN 20 (Teachers) ning neile määratud pordid_
+   
+   - **Ekraanipilt 4**: Kommutaatori trunk pordi konfiguratsioon (`show interfaces gigabitethernet0/1 trunk`)
+     * _Peab olema näha: trunk pordi režiim ja lubatud VLAN-id (10 ja 20)_
+   
+   - **Ekraanipilt 5**: Kliendi arvuti IP konfiguratsiooni näidis (`ipconfig /all` VLAN 10 pordil)
+     * _Peab olema näha: DHCP-lt saadud IP-aadress 10.10.10.xx vahemikust, vaikelüüs 10.10.10.1, ja DNS serverid_
 
-1. Router should be configured with:
-   - Two VLAN subinterfaces (10.10.10.1/24 and 10.20.20.1/24)
-   - NAT configuration for future external connectivity
-   - DHCP service for both VLANs
+3. **Kokkuvõte**: 
+   - Kirjuta 5-7 lauset, kus selgitad konkreetselt:
+     a) Kirjelda täpset probleemi, millega SINA laboris kokku puutusid, ning milliseid käske kasutasid veaotsinguks ja probleemi lahendamiseks
 
-2. Switch should be configured with:
-   - Two VLANs (10 and 20)
-   - Ports 1-12 assigned to VLAN 10
-   - Ports 13-24 assigned to VLAN 20
-   - GE0/1 configured as a trunk port
+## Eeldatavad Tulemused
 
-3. Client PC should:
-   - Receive appropriate IP address from DHCP (10.10.10.x or 10.20.20.x)
-   - Successfully communicate with the router
+1. Marsruuter peaks olema konfigureeritud:
+   - Kahe VLAN-i alamliidesega (10.10.10.1/24 ja 10.20.20.1/24)
+   - NAT konfiguratsiooniga tulevase välisühenduse jaoks
+   - DHCP teenusega mõlema VLAN-i jaoks
+
+2. Kommutaator peaks olema konfigureeritud:
+   - Kahe VLAN-iga (10 ja 20)
+   - Pordid 1-12 määratud VLAN 10-le
+   - Pordid 13-24 määratud VLAN 20-le
+   - GE0/1 seadistatud trunk pordina
+
+3. Kliendi Arvuti peaks:
+   - Saama sobiva IP-aadressi DHCP-lt (10.10.10.x või 10.20.20.x)
+   - Edukalt suhtlema marsruuteriga
