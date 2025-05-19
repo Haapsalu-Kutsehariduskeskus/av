@@ -290,14 +290,16 @@ Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
 ### Osa 4: Kommutaatori Konfigureerimine
 
 1. **Kommutaatoriga Ühenduse Loomine:**
-   - Ühenda konsoolikaabel marsruuterist lahti ja ühenda see kommutaatoriga patch paneeli kaudu
-   - Ühenda konsooli pordiga oma terminali tarkvaras
+   - Ühenda konsoolikaabel marsruuterist lahti
+   - Ühenda konsoolikaabel kommutaatori konsooli pordiga patch paneeli kaudu
+   - Veendu, et terminal PC-l on terminali emulatsiooni tarkvara jätkuvalt avatud
+   - Kontrolli terminali seadeid: 9600 baud, 8-N-1, no flow control
 
 2. **Kommutaatori Põhikonfiguratsioon:**
    - Sisene privilegeeritud EXEC režiimi: `enable`
-   - Kontrolli kommutaatori mudelit: `show version`
+   - Kontrolli kommutaatori mudelit ja tarkvara versiooni: `show version`
    - Sisene konfiguratsiooni režiimi: `configure terminal`
-   - Määra hostnimi (kasuta oma nime): `hostname [SinuNimi]-Switch`
+   - Määra kommutaatorile oma nimi: `hostname [SinuNimi]-Switch`
    - Seadista põhiline turvalisus:
      ```
      enable secret cisco
@@ -305,41 +307,77 @@ Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
      password cisco
      login
      exit
+     service password-encryption
+     banner motd # Autoriseerimata juurdepääs on keelatud! #
      ```
 
 3. **VLAN-i Konfigureerimine:**
-   - Loo VLAN-id:
+   - Loo VLAN 10 õpilaste jaoks:
      ```
      vlan 10
      name Students
      exit
-     
+     ```
+   
+   - Loo VLAN 20 õpetajate jaoks:
+     ```
      vlan 20
      name Teachers
      exit
      ```
-   - Seadista juurdepääsu pordid:
+   
+   - Määra esimesed pordid VLAN 10-sse (õpilaste võrk):
      ```
      interface range fastethernet0/1-12
      switchport mode access
      switchport access vlan 10
+     description Student Access Ports
+     no shutdown
      exit
-     
+     ```
+   
+   - Määra järgmised pordid VLAN 20-sse (õpetajate võrk):
+     ```
      interface range fastethernet0/13-24
      switchport mode access
      switchport access vlan 20
+     description Teacher Access Ports
+     no shutdown
      exit
      ```
-   - Seadista trunk port:
+   
+   - Seadista trunk port marsruuteri ühenduse jaoks:
      ```
      interface gigabitethernet0/1
+     description Trunk to Router
      switchport mode trunk
      switchport trunk allowed vlan 10,20
+     switchport trunk native vlan 1
+     no shutdown
+     exit
+     ```
+   
+   - Lülita välja kõik kasutamata pordid (kui on):
+     ```
+     interface range gigabitethernet0/2-24
+     shutdown
      exit
      ```
 
-4. **Kontrollimise Käsud:**
-   - Kontrolli VLAN-i konfiguratsiooni:
+4. **Kommutaatori Haldusfunktsioonid (Valikuline):**
+   - Seadista SSH ligipääs (kui on vaja):
+     ```
+     ip domain-name lab.local
+     crypto key generate rsa modulus 1024
+     username admin secret cisco
+     line vty 0 15
+     transport input ssh
+     login local
+     exit
+     ```
+
+5. **Kontrollimise Käsud:**
+   - Kontrolli loodud VLAN-e ja nendega seotud porte:
      ```
      show vlan brief
      ```
@@ -347,18 +385,29 @@ Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
      
      **Nõue ekraanipildile:** Peab olema näha VLAN 10 (Students) ja VLAN 20 (Teachers) ning neile määratud pordid
      
-   - Kontrolli trunk konfiguratsiooni:
+   - Kontrolli trunk pordi seadistust:
      ```
      show interfaces gigabitethernet0/1 trunk
      ```
      (TEE EKRAANIPILT #4)
      
      **Nõue ekraanipildile:** Peab olema näha trunk pordi režiim ja lubatud VLAN-id (10 ja 20)
+   
+   - Kontrolli kõigi liideste olekut ja määranguid:
+     ```
+     show interfaces status
+     ```
+   
+   - Kontrolli kommutaatori jooksva konfiguratsiooni VLAN osa:
+     ```
+     show running-config | include interface|vlan|switchport
+     ```
 
-5. **Salvesta Konfiguratsioon:**
+6. **Salvesta Konfiguratsioon:**
    ```
    copy running-config startup-config
    ```
+   Kinnita küsimuse korral vajutades Enter
 
 ### Osa 5: Kliendi Testimine
 
@@ -412,6 +461,8 @@ Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
 
 1. **Päis**: 
    - Sinu täisnimi (eesnimi ja perenimi)
+   - Kuupäev (vormingus PP.KK.AAAA)
+   - Rühmatähis (näiteks IT24)
 
 2. **Ekraanipildid**: Tee ja esita AINULT need 5 konkreetset ekraanipilti koos lühikirjeldustega:
    - **Ekraanipilt 1**: Marsruuteri alamliideste konfiguratsioon (`show running-config interface GigabitEthernet0/0.10`)
@@ -430,8 +481,10 @@ Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
      * _Peab olema näha: DHCP-lt saadud IP-aadress 10.10.10.xx vahemikust, vaikelüüs 10.10.10.1, ja DNS serverid_
 
 3. **Kokkuvõte**: 
-   - Kirjuta 5-7 lauset, kus selgitad konkreetselt:
-     a) Kirjelda täpset probleemi, millega SINA laboris kokku puutusid, ning milliseid käske kasutasid veaotsinguks ja probleemi lahendamiseks
+   - Kirjuta 5-7 lauset, kus:
+     Kirjelda täpset probleemi, millega SINA laboris kokku puutusid, ning milliseid käske kasutasid veaotsinguks ja probleemi lahendamiseks
+
+Märkus: Dokument EI TOHI ületada 3 lehekülge kokku. Kogu tekst peab olema 12pt kirjasuurusega, Arial fondiga.
 
 ## Eeldatavad Tulemused
 
