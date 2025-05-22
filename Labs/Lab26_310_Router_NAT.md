@@ -4,6 +4,33 @@
 
 Selles laboris seadistate ja konfigureerite Cisco 2901/2911 marsruuteri ja Cisco Catalyst kommutaatori, et luua väike võrk mitme VLAN-iga, DHCP teenusega ja NAT-iga kooli võrgu ühenduseks. Õpite, kuidas füüsiliselt ühendada võrguseadmeid, teostada algset konfiguratsiooni, seadistada VLAN-e ja kontrollida oma konfiguratsiooni sobivate käskudega.
 
+## Võrgukomponentide Eesmärgid ja Kasud
+
+### VLAN-ide Seadistamine
+VLAN-ide (virtuaalsete kohtvõrkude) seadistamine võimaldab meil:
+- **Jagada võrku loogilisteks osadeks** ilma füüsilisi seadmeid lisamata
+- **Parandada turvalisust** eraldades erinevad kasutajagrupid (õpilased ja õpetajad) üksteisest
+- **Vähendada leviedastuse (broadcast) liiklust**, mis tõstab võrgu jõudlust
+- **Lihtsustada võrgu haldamist**, kuna muudatusi saab teha keskselt
+- **Optimeerida ressursside kasutust** ühel füüsilisel seadmel
+
+Praktikas tähendab see, et õpetajate arvutid VLAN 20-s ei näe õpilaste võrguliiklust VLAN 10-s, isegi kui nad on ühendatud sama kommutaatoriga.
+
+### DHCP Teenuse Seadistamine
+DHCP (Dynamic Host Configuration Protocol) seadistamine annab meile:
+- **Automaatne võrgukonfiguratsioon** klientseadmetele, mis vähendab vigade võimalust
+- **Tsentraalne IP-aadresside haldamine**, mis lihtsustab administreerimist
+- **Ressursside dünaamiline jaotamine**, mis tagab efektiivse IP-aadresside kasutuse
+- **Standardiseeritud konfiguratsioon** kõigile klientseadmetele (DNS serverid, vaikelüüs jne)
+- **Kergem skaleerimine**, kui võrku tuleb juurde uusi seadmeid
+
+### NAT-i Seadistamine
+NAT (Network Address Translation) seadistamine võimaldab:
+- **Privaatse võrgu ühendamist internetiga** kasutades vähem avalikke IP-aadresse
+- **Võrgu turvalisuse suurendamist**, varjates sisemise võrgu struktuuri
+- **Kohalike võrkude taaskasutamist** ja konfigureerimist ilma IP konfliktideta
+- **Erinevate VLAN-ide ühendamist välisvõrku** üle ühe välisühenduse
+
 ## Seadmed
 
 - 1 Cisco 2901/2911 marsruuter (iga õpilase/rühma kohta)
@@ -14,18 +41,32 @@ Selles laboris seadistate ja konfigureerite Cisco 2901/2911 marsruuteri ja Cisco
 - Ethernet patch kaablid
 - Patch paneel (labori ühenduste jaoks)
 
+## IP-aadressi Määramine
+
+**OLULINE:** Enne labori alustamist peate määrama oma IP-aadressi ja registreerima end järgmises Google Sheets dokumendis:
+
+**📋 IP-aadresside register:** https://docs.google.com/spreadsheets/d/1jkSfoy97GF3riLE1zJioKBctpNo7gy8rSXunM9aJIyE/edit?usp=sharing
+
+**Juhised:**
+1. Avage ülaltoodud link
+2. Valige vaba IP-aadress vahemikust 192.168.30.2 - 192.168.30.25
+3. Kirjutage oma nimi vastava IP-aadressi kõrvale
+4. See IP-aadress määratakse teie marsruuteri GE0/1 liidesele (WAN port)
+
 ## Võrgu Topoloogia
 
 ```mermaid
 flowchart TB
     subgraph "Labori Keskkond"
-        subgraph School["Kooli Võrk"]
-            Gateway["Kooli Gateway<br>192.168.35.1"]
+        subgraph School["Kooli Võrgu Infrastruktuur"]
+            Gateway["Kooli Gateway<br>192.168.30.1"]
+            PatchPanel["301 Patch Panel"]
+            RackK1["Rack K1 SW2"]
         end
         
         subgraph Router["Cisco 2901/2911 Marsruuter"]
             RouterGE0["GE0/0 - Sisevõrk<br>Trunk ühendus"]
-            RouterGE1["GE0/1 - Kooli Võrk<br>192.168.35.2-254/24"]
+            RouterGE1["GE0/1 - WAN Port<br>192.168.30.2-25/24"]
             RouterVLAN10["VLAN 10 Alamliides<br>10.10.10.1/24<br>NAT Inside<br>DHCP Server"]
             RouterVLAN20["VLAN 20 Alamliides<br>10.20.20.1/24<br>NAT Inside<br>DHCP Server"]
             ConsolePR["Konsooli Port"]
@@ -44,7 +85,9 @@ flowchart TB
 
         %% Füüsilised ühendused
         RouterGE0 <--> SwitchTrunk
-        RouterGE1 <--> Gateway
+        RouterGE1 --> RackK1
+        RackK1 --> PatchPanel
+        PatchPanel --> Gateway
         TerminalPC <-..-> ConsolePR
         TerminalPC <-..-> ConsolePS
         ClientPC <--> SwitchPorts
@@ -62,23 +105,23 @@ flowchart TB
     class Router,RouterGE0,RouterGE1,RouterVLAN10,RouterVLAN20,ConsolePR router;
     class Switch,SwitchTrunk,SwitchPorts,ConsolePS switch;
     class TerminalPC,ClientPC client;
-    class School,Gateway school;
+    class School,Gateway,PatchPanel,RackK1 school;
 ```
 
-## IP Aadresside Skeem
+## VLAN-ide ja IP-aadresside Plaan
 
-### Sisevõrgu VLAN-id
+### VLAN-id
 
-| VLAN ID | VLAN Nimi | IP Võrk | Vaikelüüs | DHCP Vahemik |
-|---------|-----------|----------|-----------|--------------|
-| 10 | Students | 10.10.10.0/24 | 10.10.10.1 | 10.10.10.11 - 10.10.10.254 |
-| 20 | Teachers | 10.20.20.0/24 | 10.20.20.1 | 10.20.20.11 - 10.20.20.254 |
+| VLAN ID | VLAN Nimi | Eesmärk | IP Võrk | Vaikelüüs | DHCP Vahemik |
+|---------|-----------|---------|----------|-----------|--------------|
+| 10 | Students | Õpilaste võrguliiklus | 10.10.10.0/24 | 10.10.10.1 | 10.10.10.11 - 10.10.10.254 |
+| 20 | Teachers | Õpetajate võrguliiklus | 10.20.20.0/24 | 10.20.20.1 | 10.20.20.11 - 10.20.20.254 |
 
 ### Välisühendus (Kooli Võrk)
 
 | Võrk | Gateway | Marsruuteri IP | Märkused |
 |------|---------|----------------|----------|
-| 192.168.35.0/24 | 192.168.35.1 | Vali vahemikust 192.168.35.2-254 | [Gdokist võtta endale](https://docs.google.com/spreadsheets/d/1jkSfoy97GF3riLE1zJioKBctpNo7gy8rSXunM9aJIyE/edit?usp=sharing) |
+| 192.168.30.0/24 | 192.168.30.1 | Vali vahemikust 192.168.30.2-25 | Google Sheets dokumendist |
 
 ### Seadmete IP-aadressid
 
@@ -87,35 +130,73 @@ flowchart TB
 | Õpilase-Marsruuter | GigabitEthernet0/0 | N/A | N/A | Trunk Kommutaatoriga | N/A | N/A |
 | Õpilase-Marsruuter | GigabitEthernet0/0.10 | 10.10.10.1 | 255.255.255.0 | Õpilaste Võrk | 10 | Inside |
 | Õpilase-Marsruuter | GigabitEthernet0/0.20 | 10.20.20.1 | 255.255.255.0 | Õpetajate Võrk | 20 | Inside |
-| Õpilase-Marsruuter | GigabitEthernet0/1 | 192.168.35.X | 255.255.255.0 | Kooli Võrk | N/A | Outside |
+| Õpilase-Marsruuter | GigabitEthernet0/1 | 192.168.30.X | 255.255.255.0 | Kooli Võrk | N/A | Outside |
 | Kliendi Arvuti | Ethernet | DHCP | 255.255.255.0 | Testimise Klient | 10 või 20 | N/A |
 
-**Märkus:** Iga õpilane/rühm peab võtam IP mida võttis https://docs.google.com/spreadsheets/d/1jkSfoy97GF3riLE1zJioKBctpNo7gy8rSXunM9aJIyE/edit?usp=sharing, millist IP-aadressi vahemikust 192.168.35.2-254 kasutada.
+### Füüsiliste Ühenduste Detailne Skeem
+
+| Allikas | Port | Sihtkoht | Port | Kaabli Tüüp | Märkused |
+|---------|------|----------|------|-------------|----------|
+| Terminal PC | Console | Marsruuter | Console | Console kaabel | Konfigureerimiseks |
+| Terminal PC | Console | Kommutaator | Console | Console kaabel | Konfigureerimiseks |
+| Marsruuter | GE0/0 | Kommutaator | GE0/1 | Ethernet | Trunk ühendus |
+| Marsruuter | GE0/1 | Rack K1 SW2 | Port X | Ethernet | WAN ühendus |
+| Rack K1 SW2 | Port Y | 301 Patch Panel | Port Z | Ethernet | Kooli võrk |
+| Kliendi PC | NIC | Kommutaator | Port 1-24 | Ethernet | Testimiseks |
 
 ## Labori Ülesanded
 
 ### Osa 1: Füüsiline Seadistamine ja Ühendused
 
-1. **Marsruuteri Seadistamine:**
+1. **IP-aadressi Registreerimine:**
+   - Avage Google Sheets dokument: https://docs.google.com/spreadsheets/d/1jkSfoy97GF3riLE1zJioKBctpNo7gy8rSXunM9aJIyE/edit?usp=sharing
+   - Valige vaba IP-aadress vahemikust 192.168.30.2-25
+   - Kirjutage oma nimi vastava IP-aadressi kõrvale
+
+2. **Marsruuteri Seadistamine:**
    - Leia oma määratud Cisco 2901/2911 marsruuter
    - Ühenda toitekaabel ja lülita marsruuter sisse
    - Oota, kuni marsruuter lõpetab käivitumise (püsiv roheline süsteemi LED)
 
-2. **Kommutaatori Seadistamine:**
+3. **Kommutaatori Seadistamine:**
    - Leia oma määratud Cisco Catalyst kommutaator
    - Ühenda toitekaabel ja lülita kommutaator sisse
    - Oota, kuni kommutaator lõpetab käivitumise
 
-3. **Konsooli Ühendused:**
+4. **Konsooli Ühendused:**
    - Ühenda Terminal PC marsruuteri konsooli pordiga patch paneeli kaudu
    - Hiljem vahetad selle ühenduse kommutaatori konsooli pordiga
 
-4. **Võrgu Ühendused:**
+5. **Võrgu Ühendused:**
    - Ühenda marsruuteri GE0/0 port kommutaatori GE0/1 pordiga patch paneeli kaudu
    - Ühenda Kliendi Arvuti kommutaatori pordiga (port 1-12 VLAN 10 testimiseks)
-   - **UUS:** Ühenda marsruuteri GE0/1 port kooli võrgu külge patch paneeli kaudu
+   - **Kooli võrgu ühendus:** 
+     1. Ühenda marsruuteri GE0/1 port → Rack K1 SW2
+     2. Rack K1 SW2 → 301 patch panel
+     3. 301 patch panel → Kooli võrk (192.168.30.0/24)
 
-### Osa 2: Marsruuteri Konfigureerimine
+### Osa 2: Seadmete Lähtestamine (Vajadusel)
+
+#### Marsruuteri Lähtestamine
+Kui vajad puhast konfiguratsiooni:
+```
+enable
+write erase
+reload
+```
+Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
+
+#### Kommutaatori Lähtestamine
+Kui vajad puhast konfiguratsiooni:
+```
+enable
+delete flash:vlan.dat
+erase startup-config
+reload
+```
+Kui küsitakse konfiguratsiooni salvestamist, kirjuta "no"
+
+### Osa 3: Marsruuteri Konfigureerimine
 
 1. **Marsruuteriga Ühenduse Loomine:**
    - Ava terminali emulatsiooni tarkvara oma Terminal PC-l
@@ -124,9 +205,9 @@ flowchart TB
 
 2. **Kontrolli Riistvara ja NAT Tuge:**
    - Sisene privilegeeritud EXEC režiimi: `enable`
-   - Kontrolli marsruuteri mudelit: `show version` **(EKRAANIPILT #1)**
-   - Kontrolli liideste olekut: `show ip interface brief` **(EKRAANIPILT #2)**
-   - Kontrolli NAT tuge: `ip nat ?` **(EKRAANIPILT #3)**
+   - Kontrolli marsruuteri mudelit: `show version`
+   - Kontrolli liideste olekut: `show ip interface brief`
+   - Kontrolli NAT tuge: `ip nat ?`
 
 3. **Põhikonfiguratsioon:**
    ```
@@ -137,6 +218,8 @@ flowchart TB
    password cisco
    login
    exit
+   service password-encryption
+   banner motd # Autoriseerimata juurdepääs on keelatud! #
    ```
 
 4. **Liideste Konfigureerimine:**
@@ -162,16 +245,16 @@ flowchart TB
    **Väline liides (kooli võrk):**
    ```
    interface GigabitEthernet0/1
-   description Connection to School Network
-   ip address 192.168.35.[X] 255.255.255.0
+   description Connection to School Network via Rack K1 SW2
+   ip address 192.168.30.[X] 255.255.255.0
    no shutdown
    exit
    ```
-   *Asenda [X] oma määratud IP-aadressiga (2-254 vahemikust)*
+   *Asenda [X] oma Google Sheets dokumendist valitud IP-aadressiga (2-25 vahemikust)*
 
    **Vaikimisi marsruut:**
    ```
-   ip route 0.0.0.0 0.0.0.0 192.168.35.1
+   ip route 0.0.0.0 0.0.0.0 192.168.30.1
    ```
 
 5. **NAT Konfigureerimine:**
@@ -215,27 +298,20 @@ flowchart TB
 7. **Marsruuteri Kontrollimine:**
    ```
    show running-config interface GigabitEthernet0/0.10
-   show running-config interface GigabitEthernet0/0.20
    ```
-   **(EKRAANIPILT #4)**
-   
-   ```
-   show ip dhcp pool
-   ```
-   **(EKRAANIPILT #5)**
+   **(EKRAANIPILT #1)**
    
    ```
    show ip nat statistics
    ```
-   **(EKRAANIPILT #6)**
+   **(EKRAANIPILT #2)**
 
 8. **Salvesta Konfiguratsioon:**
    ```
    copy running-config startup-config
    ```
-   **(EKRAANIPILT #7)**
 
-### Osa 3: Kommutaatori Konfigureerimine
+### Osa 4: Kommutaatori Konfigureerimine
 
 1. **Kommutaatori Juurdepääs:**
    - Ühenda konsool kommutaatoriga patch paneeli kaudu
@@ -250,6 +326,8 @@ flowchart TB
    password cisco
    login
    exit
+   service password-encryption
+   banner motd # Autoriseerimata juurdepääs on keelatud! #
    ```
 
 3. **VLAN-ide Konfigureerimine:**
@@ -265,62 +343,58 @@ flowchart TB
    interface range fastethernet0/1-12
    switchport mode access
    switchport access vlan 10
+   description Student Access Ports
+   no shutdown
    exit
    
    interface range fastethernet0/13-24
    switchport mode access
    switchport access vlan 20
+   description Teacher Access Ports
+   no shutdown
    exit
    
    interface gigabitethernet0/1
+   description Trunk to Router
    switchport mode trunk
    switchport trunk allowed vlan 10,20
+   switchport trunk native vlan 1
+   no shutdown
    exit
    ```
 
 4. **Kommutaatori Kontrollimine:**
    ```
-   show version
-   ```
-   **(EKRAANIPILT #8)**
-   
-   ```
    show vlan brief
    ```
-   **(EKRAANIPILT #9)**
+   **(EKRAANIPILT #3)**
    
    ```
    show interfaces gigabitethernet0/1 trunk
    ```
-   **(EKRAANIPILT #10)**
-   
-   ```
-   show interfaces status
-   ```
-   **(EKRAANIPILT #11)**
+   **(EKRAANIPILT #4)**
 
 5. **Salvesta Konfiguratsioon:**
    ```
    copy running-config startup-config
    ```
-   **(EKRAANIPILT #12)**
 
-### Osa 4: Kliendi Testimine
+### Osa 5: Kliendi Testimine
 
 1. **VLAN 10 Testimine:**
    - Ühenda klient VLAN 10 porti (pordid 1-12)
-   - Kontrolli IP konfiguratsiooni: `ipconfig /all` **(EKRAANIPILT #13)**
-   - Testi ühenduvust: `ping 10.10.10.1` **(EKRAANIPILT #14)**
+   - Kontrolli IP konfiguratsiooni: `ipconfig /all` **(EKRAANIPILT #5)**
+   - Testi ühenduvust: `ping 10.10.10.1`
 
 2. **VLAN 20 Testimine:**
    - Liiguta klient VLAN 20 porti (pordid 13-24)
    - Uuenda IP: `ipconfig /release` ja `ipconfig /renew`
-   - Kontrolli IP konfiguratsiooni: `ipconfig /all` **(EKRAANIPILT #15)**
-   - Testi ühenduvust: `ping 10.20.20.1` **(EKRAANIPILT #16)**
+   - Kontrolli IP konfiguratsiooni: `ipconfig /all`
+   - Testi ühenduvust: `ping 10.20.20.1`
 
 3. **Interneti Ühenduvuse Testimine:**
-   - Testi ühenduvust kooli võrgu väravaga: `ping 192.168.35.1` **(EKRAANIPILT #17)**
-   - Testi interneti ühenduvust: `ping 8.8.8.8` **(EKRAANIPILT #18)**
+   - Testi ühenduvust kooli võrgu väravaga: `ping 192.168.30.1`
+   - Testi interneti ühenduvust: `ping 8.8.8.8`
 
 4. **Lõplik Marsruuteri Kontrollimine:**
    - Ühenda konsool tagasi marsruuterile
@@ -329,28 +403,51 @@ flowchart TB
 
 ## Esitamise Nõuded
 
-Esita dokument, mis sisaldab:
+Esita dokument, mis sisaldab AINULT järgmised osad:
 
 1. **Päis:**
-   - Sinu täisnimi
-   - Kuupäev
-   - Kasutatud välise IP-aadressi (192.168.35.X)
+   - Sinu täisnimi (eesnimi ja perenimi)
+   - Kuupäev (vormingus PP.KK.AAAA)
+   - Kasutatud välise IP-aadressi (192.168.30.X)
 
-2. **Nõutavad ekraanipildid (18 tk):**
-   - Kõik eelpool märgitud ekraanipildid koos lühikirjeldustega
+2. **Nõutavad ekraanipildid (5 tk):**
+   - **Ekraanipilt 1**: Marsruuteri alamliideste konfiguratsioon (`show running-config interface GigabitEthernet0/0.10`)
+     * _Peab olema näha: encapsulation dot1Q seadistus, IP-aadress 10.10.10.1, ja "ip nat inside" seadistus_
+   
+   - **Ekraanipilt 2**: Marsruuteri NAT statistika (`show ip nat statistics`)
+     * _Peab olema näha: aktiivsed NAT tõlked, inside ja outside liidesed, pääsuloendi number 1 kasutus_
+   
+   - **Ekraanipilt 3**: Kommutaatori VLAN-i kokkuvõte (`show vlan brief`)
+     * _Peab olema näha: VLAN 10 (Students) ja VLAN 20 (Teachers) ning neile määratud pordid_
+   
+   - **Ekraanipilt 4**: Kommutaatori trunk pordi konfiguratsioon (`show interfaces gigabitethernet0/1 trunk`)
+     * _Peab olema näha: trunk pordi režiim ja lubatud VLAN-id (10 ja 20)_
+   
+   - **Ekraanipilt 5**: Kliendi arvuti IP konfiguratsiooni näidis (`ipconfig /all` VLAN 10 pordil)
+     * _Peab olema näha: DHCP-lt saadud IP-aadress 10.10.10.xx vahemikust, vaikelüüs 10.10.10.1, ja DNS serverid_
 
 3. **Kokkuvõte:**
-   - Lühike kirjeldus, mida õppisid
-   - Probleemid, mis tekkisid, ja kuidas neid lahendasid
+   - Kirjuta 5-7 lauset, kus kirjelda täpset probleemi, millega SINA laboris kokku puutusid, ning milliseid käske kasutasid veaotsinguks ja probleemi lahendamiseks
 
 ## Eeldatavad Tulemused
 
-1. **Marsruuter:** Konfigureeritud VLAN-ide, DHCP ja NAT-iga
-2. **Kommutaator:** Seadistatud VLAN-id ja trunk port
-3. **Klient:** Saab DHCP-lt IP-aadressi ja pääseb internetile ligi
-4. **Ühenduvus:** Toimib nii sisevõrgus kui ka välismaailmaga
+1. **Marsruuter peaks olema konfigureeritud:**
+   - Kahe VLAN-i alamliidesega (10.10.10.1/24 ja 10.20.20.1/24)
+   - NAT konfiguratsiooniga kooli võrgu ühenduse jaoks
+   - DHCP teenusega mõlema VLAN-i jaoks
+
+2. **Kommutaator peaks olema konfigureeritud:**
+   - Kahe VLAN-iga (10 ja 20)
+   - Pordid 1-12 määratud VLAN 10-le
+   - Pordid 13-24 määratud VLAN 20-le
+   - GE0/1 seadistatud trunk pordina
+
+3. **Kliendi Arvuti peaks:**
+   - Saama sobiva IP-aadressi DHCP-lt (10.10.10.x või 10.20.20.x)
+   - Edukalt suhtlema marsruuteriga
+   - Omama juurdepääsu internetile läbi NAT-i
 
 **Märkus:** Kui interneti ühenduvus ei tööta, kontrolli:
-- Kas GE0/1 on ühendatud kooli võrku
-- Kas välise IP-aadressi konfiguratsioon on õige
-- Kas vaikimisi marsruut on seadistatud
+- Kas GE0/1 on ühendatud Rack K1 SW2 külge
+- Kas välise IP-aadressi konfiguratsioon vastab Google Sheets dokumendis valitule
+- Kas vaikimisi marsruut on seadistatud (192.168.30.1)
